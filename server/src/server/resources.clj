@@ -1,30 +1,23 @@
 (ns server.resources
   (:require [liberator.core :refer [resource defresource]]
             [cheshire.core :as cheshire]
-            [clojure.java.jdbc :as jdbc]
-            [clojure.java.jdbc.sql :as sql]))
-
-;; TODO: relocate to a config file
-(def db-spec "postgres://postgres:postgres@localhost:5432/raiseyourgame-dev")
+            [server.db :as db]))
 
 (defresource users []
   :available-media-types ["application/json"]
   :exists?
   (fn [_]
-    {:users (jdbc/query db-spec (sql/select * :users))})
+    {:users (db/all-users)})
   :handle-ok
   (fn [context]
     (cheshire/generate-string (:users context))))
 
 (defresource user [id]
-  :allowed-methods [:get]
+  :allowed-methods [:get :put :post]
   :available-media-types ["application/json"]
   :exists?
   (fn [_]
-    (if-let [resultset (jdbc/query db-spec
-                         (sql/select * :users
-                           (sql/where {:id (. Integer parseInt id)})))]
-      {:user (first resultset)}))
+    {:user (db/get-user (. Integer parseInt id))})
   :handle-ok
   (fn [context]
     (cheshire/generate-string (:user context)))
@@ -32,11 +25,9 @@
   (fn [context]
     (let [body (slurp (get-in context [:request :body]))
           data (cheshire/parse-string body)]
-      ;; TODO: update in database
-      nil))
+      (db/update-user (-> context :user :id) data)))
   :post!
   (fn [context]
     (let [body (slurp (get-in context [:request :body]))
           data (cheshire/parse-string body)]
-      ;; TODO: insert into database
-      nil)))
+      (db/insert-user data))))
