@@ -6,5 +6,6 @@
                  [compojure "1.1.3"]
                  [ring/ring-jetty-adapter "1.1.0"]
                  [org.clojure/java.jdbc "0.3.0-alpha4"]
-                 [postgresql/postgresql "8.4-702.jdbc4"]]
+                 [postgresql/postgresql "8.4-702.jdbc4"]
+                 [cheshire "5.2.0"]]
   :main server.core)

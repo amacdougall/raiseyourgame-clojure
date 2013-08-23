@@ -2,14 +2,11 @@
   (:require [liberator.core :refer [resource defresource]]
             [ring.adapter.jetty :refer [run-jetty]]
             [compojure.core :refer [defroutes ANY GET POST]]
-            [clojure.data.json :as json]
+            [cheshire.core :as cheshire]
             [clojure.java.jdbc :as jdbc]
             [clojure.java.jdbc.sql :as sql]))
 
 (def db-spec "postgres://postgres:postgres@localhost:5432/raiseyourgame-dev")
-
-(defn created-to-string [m]
-  (assoc m :created (-> m :created .toString)))
 
 (defresource users []
   :available-media-types ["application/json"]
@@ -18,7 +15,7 @@
     {:users (jdbc/query db-spec (sql/select * :users))})
   :handle-ok
   (fn [context]
-    (json/write-str (map created-to-string (:users context)))))
+    (cheshire/generate-string (:users context))))
 
 (defresource user [id]
   :allowed-methods [:get]
@@ -31,11 +28,11 @@
       {:user (first resultset)}))
   :handle-ok
   (fn [context]
-    (json/write-str (created-to-string (:user context))))
+    (cheshire/generate-string (:user context)))
   :put!
   (fn [context]
     (let [body (slurp (get-in context [:request :body]))
-          data (json/read-str body)]
+          data (cheshire/parse-string body)]
       ;; TODO: update in database
       nil)))
 
@@ -48,7 +45,7 @@
   :post!
   (fn [context]
     (let [body (slurp (get-in context [:request :body]))
-          data (json/read-str body)]
+          data (cheshire/parse-string body)]
       ;; TODO: insert into database
       nil)))
 
