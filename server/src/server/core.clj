@@ -6,6 +6,10 @@
 (defroutes app
   (GET "/users" [] (users))
   (GET "/user/:id" [id] (user id))
-  (POST "/user" [] (user)))
+  (POST "/user" [] (user))
+
+  (GET "/videos" [] (videos))
+  (GET "/video/:id" [id] (video id))
+  (POST "/video" [] (video)))
 
 (run-jetty #'app {:join? false :port 3000})

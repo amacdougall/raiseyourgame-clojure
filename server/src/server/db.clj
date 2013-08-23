@@ -23,3 +23,22 @@
 
 (defn delete-user [id]
   (jdbc/delete! db-spec :users (sql/where {:id id})))
+
+;; videos
+(defn all-videos []
+  (jdbc/query db-spec
+    (sql/select * :videos)))
+
+(defn get-video [id]
+  (first (jdbc/query db-spec
+           (sql/select * :videos
+             (sql/where {:id id})))))
+
+(defn update-video [id data]
+  (jdbc/update! db-spec :videos data (sql/where {:id id})))
+
+(defn insert-video [data]
+  (jdbc/insert! db-spec :videos data))
+
+(defn delete-video [id]
+  (jdbc/delete! db-spec :videos (sql/where {:id id})))

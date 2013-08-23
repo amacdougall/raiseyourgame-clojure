@@ -3,6 +3,7 @@
             [cheshire.core :as cheshire]
             [server.db :as db]))
 
+;; users
 (defresource users []
   :available-media-types ["application/json"]
   :exists?
@@ -31,3 +32,33 @@
     (let [body (slurp (get-in context [:request :body]))
           data (cheshire/parse-string body)]
       (db/insert-user data))))
+
+;; videos
+(defresource videos []
+  :available-media-types ["application/json"]
+  :exists?
+  (fn [_]
+    {:videos (db/all-videos)})
+  :handle-ok
+  (fn [context]
+    (cheshire/generate-string (:videos context))))
+
+(defresource video [id]
+  :allowed-methods [:get :put :post]
+  :available-media-types ["application/json"]
+  :exists?
+  (fn [_]
+    {:video (db/get-video (. Integer parseInt id))})
+  :handle-ok
+  (fn [context]
+    (cheshire/generate-string (:video context)))
+  :put!
+  (fn [context]
+    (let [body (slurp (get-in context [:request :body]))
+          data (cheshire/parse-string body)]
+      (db/update-video (-> context :video :id) data)))
+  :post!
+  (fn [context]
+    (let [body (slurp (get-in context [:request :body]))
+          data (cheshire/parse-string body)]
+      (db/insert-video data))))
