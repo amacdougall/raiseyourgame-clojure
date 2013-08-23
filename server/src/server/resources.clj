@@ -31,7 +31,10 @@
   (fn [context]
     (let [body (slurp (get-in context [:request :body]))
           data (cheshire/parse-string body)]
-      (db/insert-user data))))
+      (db/insert-user data)))
+  :delete!
+  (fn [context]
+    (db/delete-user (-> context :user :id))))
 
 ;; videos
 (defresource videos []
@@ -61,4 +64,7 @@
   (fn [context]
     (let [body (slurp (get-in context [:request :body]))
           data (cheshire/parse-string body)]
-      (db/insert-video data))))
+      (db/insert-video data)))
+  :delete!
+  (fn [context]
+    (db/delete-video (-> context :video :id))))
