@@ -1,0 +1,20 @@
+<!doctype html>
+<html ng-app="raiseyourgame.web">
+  <head>
+    <script src="js/angular.js"></script>
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
+    <h2>Videos</h2>
+    <div class="main" ng-controller="Videos">
+      <h3>{{(count @characters)}} characters</h3>
+			<ul>
+				<li clang-repeat="character in @characters">
+					<b>{{(:name @character)}}</b>: {{(:health @character)}}
+				</li>
+			</ul>
+    </div>
+  </body>
+</html>
+
