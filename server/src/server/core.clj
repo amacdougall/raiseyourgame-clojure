@@ -5,11 +5,11 @@
 
 (defroutes app
   (ANY "/users" [] (users))
-  (ANY "/users/:id" [id] (user id))
+  (ANY "/users/:id" [id] (users id))
   ;; TODO: "/users/:id/videos" for get/post
 
   (ANY "/videos" [] (videos))
-  (ANY "/videos/:id" [id] (video id)))
+  (ANY "/videos/:id" [id] (videos id)))
   ;; TODO: "/videos/:id/annotations" for get/post
 
 (run-jetty #'app {:join? false :port 3000})
