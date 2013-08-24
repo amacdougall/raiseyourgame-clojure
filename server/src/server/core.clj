@@ -4,12 +4,12 @@
             [compojure.core :refer [defroutes ANY GET POST]]))
 
 (defroutes app
-  (GET "/users" [] (users))
-  (GET "/user/:id" [id] (user id))
-  (POST "/user" [] (user))
+  (ANY "/users" [] (users))
+  (ANY "/users/:id" [id] (user id))
+  ;; TODO: "/users/:id/videos" for get/post
 
-  (GET "/videos" [] (videos))
-  (GET "/video/:id" [id] (video id))
-  (POST "/video" [] (video)))
+  (ANY "/videos" [] (videos))
+  (ANY "/videos/:id" [id] (video id)))
+  ;; TODO: "/videos/:id/annotations" for get/post
 
 (run-jetty #'app {:join? false :port 3000})

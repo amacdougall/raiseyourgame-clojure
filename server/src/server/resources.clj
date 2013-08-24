@@ -5,13 +5,19 @@
 
 ;; users
 (defresource users []
+  :allowed-methods [:get :post]
   :available-media-types ["application/json"]
   :exists?
   (fn [_]
     {:users (db/all-users)})
   :handle-ok
   (fn [context]
-    (cheshire/generate-string (:users context))))
+    (cheshire/generate-string (:users context)))
+  :post!
+  (fn [context]
+    (let [body (slurp (get-in context [:request :body]))
+          data (cheshire/parse-string body)]
+      (db/insert-user data))))
 
 (defresource user [id]
   :allowed-methods [:get :put :post]
@@ -27,24 +33,25 @@
     (let [body (slurp (get-in context [:request :body]))
           data (cheshire/parse-string body)]
       (db/update-user (-> context :user :id) data)))
-  :post!
-  (fn [context]
-    (let [body (slurp (get-in context [:request :body]))
-          data (cheshire/parse-string body)]
-      (db/insert-user data)))
   :delete!
   (fn [context]
     (db/delete-user (-> context :user :id))))
 
 ;; videos
 (defresource videos []
+  :allowed-methods [:get :post]
   :available-media-types ["application/json"]
   :exists?
   (fn [_]
     {:videos (db/all-videos)})
   :handle-ok
   (fn [context]
-    (cheshire/generate-string (:videos context))))
+    (cheshire/generate-string (:videos context)))
+  :post!
+  (fn [context]
+    (let [body (slurp (get-in context [:request :body]))
+          data (cheshire/parse-string body)]
+      (db/insert-video data))))
 
 (defresource video [id]
   :allowed-methods [:get :put :post]
@@ -60,11 +67,6 @@
     (let [body (slurp (get-in context [:request :body]))
           data (cheshire/parse-string body)]
       (db/update-video (-> context :video :id) data)))
-  :post!
-  (fn [context]
-    (let [body (slurp (get-in context [:request :body]))
-          data (cheshire/parse-string body)]
-      (db/insert-video data)))
   :delete!
   (fn [context]
     (db/delete-video (-> context :video :id))))
