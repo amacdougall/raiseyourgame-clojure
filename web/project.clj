@@ -12,23 +12,7 @@
   ; CLASSPATH=./client:$CLASSPATH lein shegon
   ; -> http://localhost:19000/
 
-
-  :cljsbuild {:repl-launch-commands {"firefox" ; lein cljsbuild trampoline repl-launch firefox path/to/html
-                                       ["/Users/dw/Applications/Firefox.app/Contents/MacOS/firefox"
-                                        "-jsconsole"
-                                        :stdout ".repl-firefox-out"
-                                        :stderr ".repl-firefox-err"]
-                                     "ff"
-                                       ["/Users/dw/Applications/Firefox.app/Contents/MacOS/firefox"
-                                        "-jsconsole"
-                                        "resources/public/index.html"
-                                        :stdout ".repl-firefox-out"
-                                        :stderr ".repl-firefox-err"]
-                                     }
-              :repl-listen-port 9000
-              ;:notify-command ["growlnotify" "-m"]
-
-              :builds
+  :cljsbuild {:builds
               {:dev
                {:source-paths ["cljs-src"]
                 :compiler {:output-to "resources/public/js/main.js"
