@@ -1,7 +1,28 @@
 (ns server.resources
   (:require [liberator.core :refer [resource defresource]]
             [cheshire.core :as cheshire]
-            [server.db :as db]))
+            [server.db :as db]
+            [clojure.java.io :as io]
+            [ring.util.mime-type :refer [ext-mime-type]]))
+
+(let [static-dir (io/file "resources/public")]
+  ;; Since this is NOT a parameterized resource, we assign it to a route by
+  ;; providing it directly instead of invoking it. This may be a weakness in
+  ;; the API, really.
+  (defresource static
+    :available-media-types
+    (fn [context]
+      (let [path (get-in context [:request :route-params :*])]
+        (if-let [mime-type (ext-mime-type path)]
+          [mime-type]
+          [])))
+    :exists?
+    (fn [context]
+      (let [path (get-in context [:request :route-params :*])]
+        (let [f (io/file static-dir path)]
+          [(.exists f) {::file f}])))
+    :handle-ok (fn [{f ::file}] f)
+    :last-modified (fn [{f ::file}] (.lastModified f))))
 
 (defn users
   ([]
