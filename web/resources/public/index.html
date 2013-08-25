@@ -8,10 +8,10 @@
   <body>
     <h2>Videos</h2>
     <div class="main" ng-controller="Videos">
-      <h3>{{(count @characters)}} characters</h3>
+      <h3>{{(count @videos)}} videos</h3>
 			<ul>
-				<li clang-repeat="character in @characters">
-					<b>{{(:name @character)}}</b>: {{(:health @character)}}
+				<li clang-repeat="video in @videos">
+					<b>{{(:title @video)}}</b>: {{(:description @video)}}
 				</li>
 			</ul>
     </div>
