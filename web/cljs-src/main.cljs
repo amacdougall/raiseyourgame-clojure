@@ -2,13 +2,23 @@
   (:require-macros [clang.angular :refer [def.controller defn.scope def.filter fnj]])
   (:require [clojure.string :as cs]
             clang.js-types
-            clang.directive.clangRepeat)
+            clang.directive.clangRepeat
+            goog.net.XhrIo)
   (:use [clang.util :only [? module]]))
 
-(def m (module "raiseyourgame.web" ["clang"]))
+;; NOTE: this is equivalent to (.module (.-angular js/window)), kinda
+;; ...see clang/util.js
+(def main (module "raiseyourgame.web" ["clang"]))
+;; could apply .config, etc after this, to do routes
 
-(def.controller m Videos [$scope]
-  (assoc! $scope :characters (atom [(atom {:name "Matthew" :health 100})
-                                    (atom {:name "Mark" :health 97})
-                                    (atom {:name "Luke" :health 94})
-                                    (atom {:name "John" :health 99})])))
+(def.controller main Videos [$scope]
+  (. goog.net.XhrIo send
+     "http://localhost:3000/videos"
+     (fn [event]
+       (? event)
+       (let [xhr (:target event)
+             data (js->clj (.getResponseJSON xhr))]
+         (assoc! $scope :videos (atom (map atom data))))))
+
+  (assoc! $scope :videos (atom [(atom {:title "Video 1" :description "foo"})
+                                (atom {:title "Video 2" :description "bar"})])))
