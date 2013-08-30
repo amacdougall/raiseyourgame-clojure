@@ -8,6 +8,8 @@
   (str "/api/v1" route))
 
 (defroutes app
+  (GET "/" [] index)
+
   (ANY (v1 "/users") [] (users))
   (ANY (v1 "/users/:id") [id] (users id))
   ;; TODO: "/users/:id/videos" for get/post

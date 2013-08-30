@@ -7,7 +7,8 @@
                  [ring/ring-jetty-adapter "1.1.0"]
                  [org.clojure/java.jdbc "0.3.0-alpha4"]
                  [postgresql/postgresql "8.4-702.jdbc4"]
-                 [cheshire "5.2.0"]]
+                 [cheshire "5.2.0"]
+                 [enlive "1.1.4"]]
   :plugins [[lein-cljsbuild "0.3.2"]]
   :cljsbuild {:builds
               {:dev
@@ -15,4 +16,6 @@
                 :compiler {:output-to "resources/public/js/main.js"
                            :optimizations :whitespace
                            :pretty-print true}}}}
+  :profiles {:dev
+             {:plugins [[com.cemerick/austin "0.1.1"]]}}
   :main server.core)

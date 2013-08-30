@@ -3,6 +3,8 @@
             [cheshire.core :as cheshire]
             [server.db :as db]
             [clojure.java.io :as io]
+            [cemerick.austin.repls :refer [browser-connected-repl-js]]
+            [net.cgrand.enlive-html :as enlive]
             [ring.util.mime-type :refer [ext-mime-type]]))
 
 (let [static-dir (io/file "resources/public")]
@@ -22,7 +24,23 @@
         (let [f (io/file static-dir path)]
           [(.exists f) {::file f}])))
     :handle-ok (fn [{f ::file}] f)
-    :last-modified (fn [{f ::file}] (.lastModified f))))
+    :last-modified (fn [{f ::file}] (.lastModified f)))
+
+  (enlive/deftemplate index-template
+    (io/file static-dir "index.html")
+    []
+    [:body] (enlive/append
+              (enlive/html [:script (browser-connected-repl-js)])))
+
+  (defresource index
+    :available-media-types ["text/html"]
+    :exists?
+    (fn [context]
+      (let [f (io/file static-dir "index.html")]
+        [(.exists f) {::file f}]))
+    ;; TODO: this is kind of a hack: we should use the real file
+    :handle-ok (fn [{f ::file}] (apply str (index-template)))
+    :last-modified (fn [{f ::file}] (new java.util.Date))))
 
 (defn users
   ([]
