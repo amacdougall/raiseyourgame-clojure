@@ -11,6 +11,11 @@ pom.xml.asc
 .lein-failures
 .lein-plugins
 .lein-repl-history
+.repl
+/out
+
+# Update build location: maybe a cljs-out folder?
+/resources/public/js/main.js
 
 # Random artifacts
 scratch.*
