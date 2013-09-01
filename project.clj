@@ -8,7 +8,8 @@
                  [org.clojure/java.jdbc "0.3.0-alpha4"]
                  [postgresql/postgresql "8.4-702.jdbc4"]
                  [cheshire "5.2.0"]
-                 [enlive "1.1.4"]]
+                 [enlive "1.1.4"]
+                 [fetch "0.1.1"]]
   :plugins [[lein-cljsbuild "0.3.2"]]
   :cljsbuild {:builds
               {:dev
