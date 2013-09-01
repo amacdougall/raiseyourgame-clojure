@@ -11,17 +11,20 @@
 (def main (module "raiseyourgame.web" ["clang"]))
 ;; could apply .config, etc after this, to do routes
 
-(def.controller main Videos [$scope]
-  (xhr [:get "/api/v1/videos"]
-       nil
+(defn load-list [$scope uri key]
+  (xhr [:get uri]
+       nil ;; no data sent
        (fn [data]
          (let [items (-> data JSON/parse js->clj)
                item-atoms (vec (map atom items))
-               videos-atom (atom item-atoms)]
-           ;; TODO: make prettier, but this totally works!
+               list-atom (atom item-atoms)]
            (.$apply $scope
                     (fn []
-                      (assoc! $scope :videos videos-atom))))))
+                      (assoc! $scope key list-atom)))))))
 
+(def.controller main Videos [$scope]
+  (load-list $scope "/api/v1/videos" :videos)
+
+  ;; provide initial data
   (assoc! $scope :videos (atom [(atom {:title "Video 1" :description "foo"})
                                 (atom {:title "Video 2" :description "bar"})])))
