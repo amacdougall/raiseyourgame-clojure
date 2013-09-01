@@ -7,6 +7,14 @@
             [net.cgrand.enlive-html :as enlive]
             [ring.util.mime-type :refer [ext-mime-type]]))
 
+(defn inject-repl-js [f]
+  (let [action (enlive/append
+                 (enlive/html [:script (browser-connected-repl-js)]))
+        template (enlive/template f [] [:body] action)]
+    ;; template returns a seq of strings; apply str to concatenate
+    ;; TODO: this approach may not hold up as index.html gets bigger?
+    (apply str (template))))
+
 (let [static-dir (io/file "resources/public")]
   ;; Since this is NOT a parameterized resource, we assign it to a route by
   ;; providing it directly instead of invoking it. This may be a weakness in
@@ -26,15 +34,6 @@
     :handle-ok (fn [{f ::file}] f)
     :last-modified (fn [{f ::file}] (.lastModified f)))
 
-  ;; TODO: this creates the template once at server start; in dev mode, at
-  ;; least, we want to reload it on each request, or at least when the
-  ;; file changes.
-  (enlive/deftemplate index-template
-    (io/file static-dir "index.html")
-    []
-    [:body] (enlive/append
-              (enlive/html [:script (browser-connected-repl-js)])))
-
   (defresource index
     :available-media-types ["text/html"]
     :exists?
@@ -42,7 +41,7 @@
       (let [f (io/file static-dir "index.html")]
         [(.exists f) {::file f}]))
     ;; TODO: this is kind of a hack: we should use the real file
-    :handle-ok (fn [{f ::file}] (apply str (index-template)))
+    :handle-ok (fn [{f ::file}] (inject-repl-js f))
     ;; DEBUG: always provide new last-modified timestamp in dev mode
     :last-modified (fn [{f ::file}] (new java.util.Date))))
 
