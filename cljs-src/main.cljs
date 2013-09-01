@@ -18,9 +18,7 @@
          (let [items (-> data JSON/parse js->clj)
                item-atoms (vec (map atom items))
                list-atom (atom item-atoms)]
-           (.$apply $scope
-                    (fn []
-                      (assoc! $scope key list-atom)))))))
+           (.$apply $scope #(assoc! $scope key list-atom))))))
 
 (def.controller main Videos [$scope]
   (load-list $scope "/api/v1/videos" :videos)
