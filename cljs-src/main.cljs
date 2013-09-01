@@ -21,6 +21,9 @@
            (.$apply $scope #(assoc! $scope key list-atom))))))
 
 (def.controller main Videos [$scope]
+  (defn.scope update-scope [k v]
+    (assoc! $scope k (atom v)))
+
   (load-list $scope "/api/v1/videos" :videos)
 
   ;; provide initial data
