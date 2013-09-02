@@ -8,8 +8,6 @@
   (str "/api/v1" route))
 
 (defroutes app
-  (GET "/" [] index)
-
   (ANY (v1 "/users") [] (users))
   (ANY (v1 "/users/:id") [id] (users id))
   ;; TODO: "/users/:id/videos" for get/post
@@ -18,7 +16,10 @@
   (ANY (v1 "/videos/:id") [id] (videos id))
   ;; TODO: "/videos/:id/annotations" for get/post
 
-  (GET "/static/*" [] static))
+  (GET "/static/*" [] static)
+
+  ;; all other URLs serve up the index page and let AngularJS routing take over
+  (GET "/*" [] index))
 
 
 (run-jetty #'app {:join? false :port 3000})

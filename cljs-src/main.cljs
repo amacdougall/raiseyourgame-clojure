@@ -6,10 +6,18 @@
             [clang.util :refer [? module]]
             [fetch.core :refer [xhr]]))
 
-;; NOTE: this is equivalent to (.module (.-angular js/window)), kinda
-;; ...see clang/util.js
-(def main (module "raiseyourgame.web" ["clang"]))
-;; could apply .config, etc after this, to do routes
+(def main (module "raiseyourgame" ["clang" "ngRoute"]))
+
+(defn routes [$routeProvider, $locationProvider]
+  (.html5Mode $locationProvider true)
+  (-> $routeProvider
+    (.when "/videos" (clj->js {:templateUrl "static/partials/videoList.html"
+                               :controller "VideoListController"}))
+    (.when "/video/:id" (clj->js {:templateUrl "static/partials/video.html"
+                                  :controller "VideoController"}))
+    (.otherwise (clj->js {:redirectTo "/videos"}))))
+
+(.config main routes)
 
 (defn load-list [$scope uri key]
   (xhr [:get uri]
@@ -20,7 +28,7 @@
                list-atom (atom item-atoms)]
            (.$apply $scope #(assoc! $scope key list-atom))))))
 
-(def.controller main Videos [$scope]
+(def.controller main VideoListController [$scope]
   (defn.scope update-scope [k v]
     (assoc! $scope k (atom v)))
 
