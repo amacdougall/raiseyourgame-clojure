@@ -1,6 +1,7 @@
 (ns raiseyourgame
   (:require [cljs.core.async :refer [>! <! chan]]
             [secretary.core :as secretary] ;; used by expanded defroute macro
+            [shoreleave.browser.history :as h]
             [raiseyourgame.lib.async :as async]
             [raiseyourgame.lib.ui :as ui]
             [clojure.browser.repl])
@@ -18,19 +19,31 @@
      :pathname (.-pathname parser)
      :host     (.-host parser)}))
 
+(defn url->pathname [url]
+  (-> url parse-url :pathname))
+
+(defn handle-navigation [{:keys [token type navigation]}]
+  (secretary/dispatch! (url->pathname token)))
+
 ;; jayq/async test
 (defn setup []
-  (.log js/console (str "Location: " (.-location js/window)))
+  (h/navigate-callback handle-navigation)
+
+  ;; load initial state
   (secretary/dispatch! (-> (.-location js/window) parse-url :pathname))
 
+  ;; set up link navigations
   (let [event->pathname #(-> % .-target .-href parse-url :pathname)
         internal-links (->> (ui/listen "a.internal" :click #(.preventDefault %))
                          (async/map event->pathname))]
     (go (loop []
           (let [pathname (<! internal-links)]
-            (secretary/dispatch! pathname))
+            ;; this set-token will trigger h/navigate-callback, which
+            ;; triggers secretary/dispatch! in turn.
+            (h/set-token! h/history pathname))
           (recur))))
                          
+  ;; test jQuery event handlers
   (let [clicks (->> (ui/listen :.jayq-test :click)
                  (async/always :test-click))]
     (go (loop []
@@ -39,6 +52,7 @@
           (recur)))))
 
 ;; Client-side Secretary route test
+;; TODO: actual logic on route execution
 (defroute "/users/:id/food/:name" {:as params}
   (.log js/console (str "User: " (:id params) " Food: " (:name params))))
 
