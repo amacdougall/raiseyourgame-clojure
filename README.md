@@ -42,3 +42,8 @@ From the Clojure REPL:
 Now, ClojureScript commands you enter in the REPL in your terminal will be
 interpreted by the browser. In a reversal of the natural order, the terminal
 REPL can be considered the client, while the browser is the host.
+
+Finally, to execute ClojureScript code in the context of a namespace in the
+running app, first use an `ns` directive with _all_ the require statements from
+the original code. It's safe to just copy and paste the entire `ns` block from
+your source file.
