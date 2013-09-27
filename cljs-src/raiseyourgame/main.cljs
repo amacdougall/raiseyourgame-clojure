@@ -59,4 +59,4 @@
 (defroute "/users/:id" {:keys [id]}
   (.log js/console (str "User: " id)))
 
-(ui/document-ready setup)
+(ui/onload setup)

@@ -5,9 +5,12 @@
 (ns raiseyourgame.lib.ui
   (:refer-clojure :exclude [map filter remove distinct concat take-while])
   (:require [cljs.core.async :refer [>! <! chan put! close! timeout]]
-            [jayq.core :as jq :refer [$]]
+            [enfocus.core :as ef :refer [at]]
+            [enfocus.events :as events]
+            [enfocus.effects :as effects]
             [raiseyourgame.lib.async :as async])
-  (:require-macros [cljs.core.async.macros :refer [go alt!]]))
+  (:require-macros [cljs.core.async.macros :refer [go alt!]]
+                   [enfocus.macros :as em]))
 
 ;; Begin listening on the selected element or elements for events of the
 ;; specified type or types, putting each one in an output channel. Returns the
@@ -18,13 +21,11 @@
   ([selector type] (listen selector type nil))
   ([selector type f] (listen selector type f (chan)))
   ([selector type f out]
-    (-> ($ selector)
-      (jq/on type (fn [e]
-                    (when f (f e)) ;; side effect, if desired
-                    (put! out e))))
+    (at [selector]
+      (events/listen type (fn [e]
+                            (when f (f e)) ;; side effect, if desired
+                            (put! out e))))
    out))
 
-;; Pass f through to jayq/document-ready
-;; TODO: a better way to set up the app
-(defn document-ready [f]
-  (jq/document-ready f))
+(defn onload [f]
+  (set! (.-onload js/window) f))
