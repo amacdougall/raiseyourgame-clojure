@@ -1,9 +1,9 @@
 (ns raiseyourgame
   (:require [cljs.core.async :refer [>! <! chan]]
             [secretary.core :as secretary] ;; used by expanded defroute macro
-            [shoreleave.browser.history :as h]
             [raiseyourgame.lib.async :as async]
             [raiseyourgame.lib.ui :as ui]
+            [raiseyourgame.lib.history :as history]
             [clojure.browser.repl])
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [secretary.macros :refer [defroute]]))
@@ -22,37 +22,34 @@
 (defn url->pathname [url]
   (-> url parse-url :pathname))
 
-(defn handle-navigation [{:keys [token type navigation]}]
-  (secretary/dispatch! (url->pathname token)))
+(defn handle-navigation [state]
+  (secretary/dispatch! (history/state->route state)))
 
 ;; jayq/async test
 (defn setup []
-  (h/navigate-callback handle-navigation)
+  (history/bind-navigation-handler handle-navigation)
 
-  ;; load initial state
-  (secretary/dispatch! (-> (.-location js/window) parse-url :pathname))
+  ;; push initial state
+  (history/push-state (url->pathname (.-location js/window)))
+
+  ;; run initial route
+  (secretary/dispatch! (url->pathname (.-location js/window)))
+
+  ;; TODO: combine those in one function?
 
   ;; set up link navigations
-  (let [event->pathname #(-> % .-target .-href parse-url :pathname)
+  (let [event->pathname #(-> % .-target .-href url->pathname)
         internal-links (->> (ui/listen "a.internal" :click #(.preventDefault %))
                          (async/map event->pathname))]
     (go (loop []
-          (let [pathname (<! internal-links)]
-            ;; this set-token will trigger h/navigate-callback, which
-            ;; triggers secretary/dispatch! in turn.
-            (h/set-token! h/history pathname))
-          (recur))))
-                         
-  ;; test jQuery event handlers
-  (let [clicks (->> (ui/listen :.jayq-test :click)
-                 (async/always :test-click))]
-    (go (loop []
-          (let [e (<! clicks)]
-            (.log js/console (str "Received event: " (name e))))
+          (history/push-state (<! internal-links))
           (recur)))))
 
 ;; Client-side Secretary route test
 ;; TODO: actual logic on route execution
+(defroute "/" {:as params}
+  (.log js/console "root route"))
+
 (defroute "/users/:id/food/:name" {:as params}
   (.log js/console (str "User: " (:id params) " Food: " (:name params))))
 
