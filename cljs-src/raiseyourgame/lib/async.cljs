@@ -1,5 +1,7 @@
 ;; Heavily based on David Nolen's blog.util.reactive;
 ;; https://github.com/swannodette/swannodette.github.com/blob/master/code/blog/src/blog/utils/reactive.cljs
+;; And since many of these features are getting merged into core.async itself,
+;; soon: TODO: use core.async builtin features instead.
 (ns raiseyourgame.lib.async
   (:refer-clojure :exclude [map filter remove distinct concat take-while])
   (:require [cljs.core.async :refer [>! <! chan put! close! timeout]])

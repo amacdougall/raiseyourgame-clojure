@@ -25,7 +25,7 @@
 (defn handle-navigation [state]
   (secretary/dispatch! (history/state->route state)))
 
-;; jayq/async test
+;; Initial setup
 (defn setup []
   (history/bind-navigation-handler handle-navigation)
 

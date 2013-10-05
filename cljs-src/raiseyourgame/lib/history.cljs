@@ -1,6 +1,7 @@
 (ns raiseyourgame.lib.history)
 
-;; Takes function expecting a history state
+;; Takes function expecting a history state; invokes that function whenever a
+;; history navigation occurs.
 (defn bind-navigation-handler [f]
   (let [history (.-History js/window)
         adapter (.-Adapter history)
