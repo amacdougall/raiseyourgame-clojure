@@ -1,1 +1,5 @@
 /* raiseyourgame styles here */
+body {
+  background-color: #222;
+  color: #ddd;
+}
