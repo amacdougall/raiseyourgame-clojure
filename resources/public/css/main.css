@@ -7,12 +7,13 @@ button,
 input,
 select,
 textarea {
-    color: #222;
+    color: #ddd;
 }
 
 body {
     font-size: 1em;
     line-height: 1.4;
+    background-color: #222;
 }
 
 ::-moz-selection {
