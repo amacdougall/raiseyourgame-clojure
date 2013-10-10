@@ -16,8 +16,7 @@
                  [enlive "1.1.4"] ;; templating
                  [org.clojure/core.async "0.1.222.0-83d0c2-alpha"]
                  ;; clojurescript-specific
-                 [enfocus "2.0.0-beta3"]
-                 [shoreleave/shoreleave-browser "0.3.0"] ;; HTML5 history
+                 [enfocus "2.0.0-beta3"] ;; DOM interaction, templating
                  [secretary "0.2.0-SNAPSHOT"]] ;; client-side routing
 
   :plugins [[lein-cljsbuild "0.3.2"]]
