@@ -39,3 +39,21 @@
               (recur))
             (close! out))))
     out))
+
+;; Given a seq of input channels and optionally an output channel, returns an
+;; output channel which is given all items from all input channels. When an
+;; input channel has a nil value, it is removed from the set of input channels.
+;; The origin of the name was not obvious to me:
+;; http://en.wikipedia.org/wiki/Fan-in
+(defn fan-in
+  ([ins] (fan-in ins (chan)))
+  ([ins out]
+    (go (loop [ins (vec ins)]
+          (when (> (count ins) 0)
+            (let [[x in] (alts! ins)]
+              (when x
+                (>! out x)
+                (recur ins))
+              (recur (vec (disj (set ins) in))))))
+        (close! out))
+    out))

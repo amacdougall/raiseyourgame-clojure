@@ -1,9 +1,10 @@
 (ns raiseyourgame
-  (:require [cljs.core.async :refer [>! <! chan]]
+  (:require [cljs.core.async :refer [>! <! chan put!]]
             [secretary.core :as secretary] ;; used by expanded defroute macro
             [raiseyourgame.lib.async :as async]
             [raiseyourgame.lib.ui :as ui]
             [raiseyourgame.lib.history :as history]
+            [raiseyourgame.controllers :as controllers]
             [clojure.browser.repl])
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [secretary.macros :refer [defroute]]))
@@ -45,15 +46,27 @@
           (history/push-state (<! internal-links))
           (recur)))))
 
-;; Client-side Secretary route test
-;; TODO: actual logic on route execution
-(defroute "/" {:as params}
-  (.log js/console "root route"))
+;; Secretary routes
+(let [home (chan)
+      users (chan)
+      controller-out (async/fan-in [(controllers/home home)
+                                    (controllers/users users)])]
 
-(defroute "/users/:id/food/:name" {:as params}
-  (.log js/console (str "User: " (:id params) " Food: " (:name params))))
+  (defroute "/" {:as params}
+    (put! home (or params :none)))
 
-(defroute "/users/:id" {:keys [id]}
-  (.log js/console (str "User: " id)))
+  (defroute "/users/:id/food/:food" {:as params}
+    (put! users params))
+
+  ;; instead of {:as params}, can use {:keys [foo bar ...]}
+  (defroute "/users/:id" {:as params}
+    (put! users params))
+
+  (go (loop []
+        (when-let [[template context] (<! controller-out)]
+          ;; TODO: should templates be channel-based as well?
+          ;; Do they need to do anything asynchronous?
+          (template context)
+          (recur)))))
 
 (ui/onload setup)
