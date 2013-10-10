@@ -3,3 +3,15 @@ body {
   background-color: #222;
   color: #ddd;
 }
+
+#content {
+  margin-left: 20px;
+}
+
+a {
+  color: #fff;
+}
+
+a:visited {
+  color: #ccc;
+}
