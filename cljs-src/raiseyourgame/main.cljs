@@ -40,7 +40,7 @@
 
   ;; set up link navigations
   (let [event->pathname #(-> % .-target .-href url->pathname)
-        internal-links (->> (ui/listen "a.internal" :click #(.preventDefault %))
+        internal-links (->> (ui/listen "a.internal" :click :prevent-default)
                          (async/map event->pathname))]
     (go (loop []
           (history/push-state (<! internal-links))
@@ -64,8 +64,6 @@
 
   (go (loop []
         (when-let [[template context] (<! controller-out)]
-          ;; TODO: should templates be channel-based as well?
-          ;; Do they need to do anything asynchronous?
           (template context)
           (recur)))))
 

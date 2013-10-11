@@ -16,14 +16,18 @@
 ;; specified type or types, putting each one in an output channel. Returns the
 ;; output channel. The optional function can be used for event preprocessing
 ;; side effects -- most prominently, calling .preventDefault on events before
-;; putting them in the channel.
+;; putting them in the channel. To make this more convenient, the symbol
+;; :prevent-default may be provided in place of the side-effect function.
 (defn listen
   ([selector type] (listen selector type nil))
   ([selector type f] (listen selector type f (chan)))
   ([selector type f out]
     (at [selector]
       (events/listen type (fn [e]
-                            (when f (f e)) ;; side effect, if desired
+                            (cond
+                              ;; prevent default or perform side effect
+                              (= f :prevent-default) (.preventDefault e)
+                              (fn? f) (f e))
                             (put! out e))))
    out))
 
