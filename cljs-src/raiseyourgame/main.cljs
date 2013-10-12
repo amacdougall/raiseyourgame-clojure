@@ -47,20 +47,19 @@
           (recur)))))
 
 ;; Secretary routes
-(let [home (chan)
-      users (chan)
+(let [home (chan)   ; input channel
+      videos (chan) ; input channel
       controller-out (async/fan-in [(controllers/home home)
-                                    (controllers/users users)])]
+                                    (controllers/videos videos)])]
 
   (defroute "/" {:as params}
     (put! home (or params :none)))
 
-  (defroute "/users/:id/food/:food" {:as params}
-    (put! users params))
+  (defroute "/videos" {:as params}
+    (put! videos params))
 
-  ;; instead of {:as params}, can use {:keys [foo bar ...]}
-  (defroute "/users/:id" {:as params}
-    (put! users params))
+  (defroute "/videos/:id" {:as params}
+    (put! videos params))
 
   (go (loop []
         (when-let [[template context] (<! controller-out)]
