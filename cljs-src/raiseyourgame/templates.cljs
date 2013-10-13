@@ -5,6 +5,10 @@
   (:require-macros [enfocus.macros :as em]))
 
 (defn home [context]
-  (at ["#video-list"]
-    (ef/content (-> context :videos str))))
-;; TODO: actual render of video list; this was a test
+  (at ["#video-list li.video-item"]
+    ; video list is a JS array of JS objects; see issue #1
+    (em/clone-for [video (:videos context)]
+      "span.title" (ef/content (.-title video))
+      "span.description" (ef/content (.-description video)))))
+
+(defn video [context])
