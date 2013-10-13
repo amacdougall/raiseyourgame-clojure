@@ -10,7 +10,7 @@
 (defn home [in]
   (let [out (chan)]
     (dochan [params in]
-      (let [response (<! (data/GET "/api/v1/videos"))
+      (let [response (<! (data/GET "/api/v1/videos" :application-json))
             data (.parse js/JSON response)]
         (>! out [templates/home {:videos data}])))
     out))
