@@ -15,6 +15,16 @@
     ;; TODO: this approach may not hold up as index.html gets bigger?
     (apply str (template))))
 
+;; Given a resource context containing a :data key, generates an appropriate
+;; representation based on the negotiated media type. We could leave this
+;; entirely to Liberator's discretion, but it uses the default Clojure JSON
+;; writer, which cannot handle SQL timestamps. Cheshire generates JS-parseable
+;; date strings, bless its heart.
+(defn represent [context]
+  (condp = (get-in context [:representation :media-type])
+    "application/json" (cheshire/generate-string (:data context))
+    "application/edn" (:data context)))
+
 (let [static-dir (io/file "resources/public")]
   ;; Since this is NOT a parameterized resource, we assign it to a route by
   ;; providing it directly instead of invoking it. This may be a weakness in
@@ -49,13 +59,11 @@
   ([]
    (fn [req]
      (resource
-       :available-media-types ["application/json"]
+       :available-media-types ["application/edn", "application/json"]
        :exists?
        (fn [_]
          {:users (db/all-users)})
-       :handle-ok
-       (fn [context]
-         (cheshire/generate-string (:users context)))
+       :handle-ok represent
        :post!
        (fn [context]
          (let [body (slurp (get-in context [:request :body]))
@@ -64,13 +72,11 @@
   ([id]
    (fn [req]
      (resource
-       :available-media-types ["application/json"]
+       :available-media-types ["application/edn", "application/json"]
        :exists?
        (fn [_]
          {:user (db/get-user (. Integer parseInt id))})
-       :handle-ok
-       (fn [context]
-         (cheshire/generate-string (:user context)))
+       :handle-ok represent
        :put!
        (fn [context]
          (let [body (slurp (get-in context [:request :body]))
@@ -84,13 +90,12 @@
   ([]
    (fn [req]
      (resource
-       :available-media-types ["application/json"]
+       ; default to JSON, but permit EDN
+       :available-media-types ["application/json" "application/edn;q=0.9"]
        :exists?
        (fn [_]
-         {:videos (db/all-videos)})
-       :handle-ok
-       (fn [context]
-         (cheshire/generate-string (:videos context)))
+         {:data (db/all-videos)})
+       :handle-ok represent
        :post!
        (fn [context]
          (let [body (slurp (get-in context [:request :body]))
@@ -99,13 +104,11 @@
   ([id]
    (fn [req]
      (resource
-       :available-media-types ["application/json"]
+       :available-media-types ["application/edn", "application/json"]
        :exists?
        (fn [_]
          {:video (db/get-video (. Integer parseInt id))})
-       :handle-ok
-       (fn [context]
-         (cheshire/generate-string (:video context)))
+       :handle-ok represent
        :put!
        (fn [context]
          (let [body (slurp (get-in context [:request :body]))
