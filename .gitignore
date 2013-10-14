@@ -14,11 +14,13 @@ pom.xml.asc
 .repl
 /out
 
-# Update build location: maybe a cljs-out folder?
+# Build locations
 /resources/public/js/main.js
+/resources/public/css/*.css
 
 # Random artifacts
 scratch.*
+.sass-cache
 
 # Vim swapfiles
 *.sw[a-p]
