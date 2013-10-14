@@ -4,7 +4,11 @@ body {
   color: #ddd;
 }
 
-#content {
+div {
+  position: relative;
+}
+
+#content, #header, #footer {
   margin-left: 20px;
 }
 
@@ -14,4 +18,18 @@ a {
 
 a:visited {
   color: #ccc;
+}
+
+div.video-item {
+  margin-bottom: 1em;
+}
+
+div.video-item h2 {
+  margin: 0;
+}
+
+div.video-item > div {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 1em;
 }

@@ -7,16 +7,23 @@
 (defn- template [filename]
   (str "/static/templates/" filename))
 
-(em/defsnippet video-item (template "video_list.html") "li.video-item" [video]
-  "span.title" (ef/content (.-title video))
-  "span.description" (ef/content (.-description video)))
+(defn- video-link [video]
+  (str "/videos/" (.-id video)))
 
-(em/deftemplate home-template (template "video_list.html") [videos]
-  "ul.video-list" (ef/content (map #(video-item %) videos)))
+(em/defsnippet video-item (template "video_list.html") ".video-item" [video]
+  ".thumbnail img" (ef/set-attr :src (.-thumbnail video))
+  ".thumbnail > a" (ef/set-attr :href (video-link video))
+  ".title > a" (ef/do->
+                 (ef/content (.-title video))
+                 (ef/set-attr :href (video-link video)))
+  ".description" (ef/content (.-description video)))
+
+(em/defsnippet home-view (template "video_list.html") ".video-list" [videos]
+  ".video-list" (ef/content (map #(video-item %) videos)))
 
 (defn home [context]
-  (at ["#template"]
+  (at ["#content"]
     ; video list is a JS array of JS objects; see issue #1
-    (ef/content (home-template (:videos context)))))
+    (ef/content (home-view (:videos context)))))
 
 (defn video [context])
