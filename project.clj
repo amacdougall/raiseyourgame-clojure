@@ -29,4 +29,4 @@
                            :pretty-print true}}}}
   :profiles {:dev
              {:plugins [[com.cemerick/austin "0.1.1"]]}}
-  :main server.core)
+  :main raiseyourgame.core)
