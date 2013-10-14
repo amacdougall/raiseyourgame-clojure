@@ -1,4 +1,4 @@
-(ns server.db
+(ns raiseyourgame.db
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.java.jdbc.sql :as sql]))
 

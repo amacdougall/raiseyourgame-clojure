@@ -1,5 +1,5 @@
-(ns server.core
-  (:require [server.resources :refer :all]
+(ns raiseyourgame.core
+  (:require [raiseyourgame.resources :refer :all]
             [ring.adapter.jetty :refer [run-jetty]]
             [compojure.core :refer [defroutes ANY GET POST]]))
 

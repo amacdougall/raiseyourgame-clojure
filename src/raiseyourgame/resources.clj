@@ -1,7 +1,7 @@
-(ns server.resources
+(ns raiseyourgame.resources
   (:require [liberator.core :refer [resource defresource]]
             [cheshire.core :as cheshire]
-            [server.db :as db]
+            [raiseyourgame.db :as db]
             [clojure.java.io :as io]
             [cemerick.austin.repls :refer [browser-connected-repl-js]]
             [net.cgrand.enlive-html :as enlive]
