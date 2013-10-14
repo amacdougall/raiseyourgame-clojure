@@ -7,6 +7,8 @@
             [net.cgrand.enlive-html :as enlive]
             [ring.util.mime-type :refer [ext-mime-type]]))
 
+(def default-media-types ["application/json" "application/edn;q=0.9"])
+
 (defn inject-repl-js [f]
   (let [action (enlive/append
                  (enlive/html [:script (browser-connected-repl-js)]))
@@ -20,6 +22,9 @@
 ;; entirely to Liberator's discretion, but it uses the default Clojure JSON
 ;; writer, which cannot handle SQL timestamps. Cheshire generates JS-parseable
 ;; date strings, bless its heart.
+;;
+;; Of course, this means that when an :exists? function adds data to the
+;; context, it must be under the key :data.
 (defn represent [context]
   (condp = (get-in context [:representation :media-type])
     "application/json" (cheshire/generate-string (:data context))
@@ -59,10 +64,10 @@
   ([]
    (fn [req]
      (resource
-       :available-media-types ["application/edn", "application/json"]
+       :available-media-types default-media-types
        :exists?
        (fn [_]
-         {:users (db/all-users)})
+         {:data (db/all-users)})
        :handle-ok represent
        :post!
        (fn [context]
@@ -72,10 +77,10 @@
   ([id]
    (fn [req]
      (resource
-       :available-media-types ["application/edn", "application/json"]
+       :available-media-types default-media-types
        :exists?
        (fn [_]
-         {:user (db/get-user (. Integer parseInt id))})
+         {:data (db/get-user (. Integer parseInt id))})
        :handle-ok represent
        :put!
        (fn [context]
@@ -91,7 +96,7 @@
    (fn [req]
      (resource
        ; default to JSON, but permit EDN
-       :available-media-types ["application/json" "application/edn;q=0.9"]
+       :available-media-types default-media-types
        :exists?
        (fn [_]
          {:data (db/all-videos)})
@@ -104,10 +109,10 @@
   ([id]
    (fn [req]
      (resource
-       :available-media-types ["application/edn", "application/json"]
+       :available-media-types default-media-types
        :exists?
        (fn [_]
-         {:video (db/get-video (. Integer parseInt id))})
+         {:data (db/get-video (. Integer parseInt id))})
        :handle-ok represent
        :put!
        (fn [context]
