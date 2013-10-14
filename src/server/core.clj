@@ -18,7 +18,7 @@
 
   (GET "/static/*" [] static)
 
-  ;; all other URLs serve up the index page and let AngularJS routing take over
+  ;; all other URLs serve up the index page and let client-side routing take over
   (GET "/*" [] index))
 
 
