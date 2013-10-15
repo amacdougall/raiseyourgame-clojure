@@ -40,8 +40,8 @@
 
   ;; set up link navigations
   (let [event->pathname #(-> % .-target .-href url->pathname)
-        internal-links (->> (ui/listen "a.internal" :click :prevent-default)
-                         (async/map event->pathname))]
+        clicks (ui/listen-live "a.internal" :click :prevent-default)
+        internal-links (async/map event->pathname clicks)]
     (go (loop []
           (history/push-state (<! internal-links))
           (recur)))))

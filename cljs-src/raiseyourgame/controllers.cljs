@@ -18,6 +18,7 @@
 (defn videos [in]
   (let [out (chan)]
     (dochan [params in]
-      ; TODO: stuff
-      )
+      (let [response (<! (data/GET (str "/api/v1/videos/" (:id params))))
+            data (.parse js/JSON response)]
+        (>! out [templates/video {:video data}])))
     out))

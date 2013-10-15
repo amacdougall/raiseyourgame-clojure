@@ -26,4 +26,14 @@
     ; video list is a JS array of JS objects; see issue #1
     (ef/content (home-view (:videos context)))))
 
-(defn video [context])
+(em/defsnippet video-view (template "video.html") ".video" [video]
+  ".thumbnail img" (ef/set-attr :src (.-thumbnail video))
+  ".thumbnail > a" (ef/set-attr :href (video-link video))
+  ".title > a" (ef/do->
+                 (ef/content (.-title video))
+                 (ef/set-attr :href (video-link video)))
+  ".description" (ef/content (.-description video)))
+
+(defn video [context]
+  (at ["#content"]
+    (ef/content (video-view (:video context)))))
