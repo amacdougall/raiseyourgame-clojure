@@ -1,0 +1,47 @@
+/*------------------------------------*\
+    $CAROUSELS
+\*------------------------------------*/
+
+.carousel-blur, .carousel-contrast, .carousel-image {
+  $loader-size: 30px;
+  &:before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: floor(-($loader-size / 2));
+    margin-left: floor(-($loader-size / 2));
+    font-size: $loader-size;
+    line-height: $loader-size;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    color: $carousel-blur-controls-color;
+    -moz-animation: spin 2s infinite linear;
+    -o-animation: spin 2s infinite linear;
+    -webkit-animation: spin 2s infinite linear;
+    animation: spin 2s infinite linear;
+    @include icon($spinner);
+    @include transition(opacity $transition-duration-base);
+  }
+
+  &.fade-loading {
+    &:before {
+      @include opacity(0);
+    }
+  }
+}
+
+.lt-ie9 {
+  .carousel-blur, .carousel-contrast, .carousel-image {
+    &.fade-loading {
+      &:before {
+        display: none;
+      }
+    }
+  }
+}
+
+@import "carousel-default";
+@import "carousel-blur";
+@import "carousel-contrast";
+@import "carousel-image";

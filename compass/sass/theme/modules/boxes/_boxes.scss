@@ -1,0 +1,39 @@
+/*------------------------------------*\
+    $BOXES
+\*------------------------------------*/
+@import "text";
+@import "image_list";
+@import "icon_list";
+@import "portfolio_boxes";
+@import "profile_boxes";
+
+.author-box {
+  padding: 30px 0;
+  margin: 20px 0;
+  border-top: 2px solid $panel-border-color;
+  border-bottom: 2px solid $panel-border-color;
+  text-align: center;
+
+  @include sm-plus {
+    text-align: left;
+  }
+
+  .title {
+    margin: 20px 0;
+    color: $contrast;
+
+    @include sm-plus {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    line-height: 22px;
+  }
+}
+
+.lt-ie9 {
+  .author-box .img-responsive {
+    width: 100% !important;
+  }
+}

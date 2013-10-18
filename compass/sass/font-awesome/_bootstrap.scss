@@ -1,0 +1,84 @@
+/* BOOTSTRAP SPECIFIC CLASSES
+ * -------------------------- */
+
+/* Bootstrap 2.0 sprites.less reset */
+[class^="fa-icon-"],
+[class*=" fa-icon-"] {
+  display: inline;
+  width: auto;
+  height: auto;
+  line-height: normal;
+  vertical-align: baseline;
+  background-image: none;
+  background-position: 0% 0%;
+  background-repeat: repeat;
+  margin-top: 0;
+}
+
+/* more sprites.less reset */
+.fa-icon-white,
+.nav-pills > .active > a > [class^="fa-icon-"],
+.nav-pills > .active > a > [class*=" fa-icon-"],
+.nav-list > .active > a > [class^="fa-icon-"],
+.nav-list > .active > a > [class*=" fa-icon-"],
+.navbar-inverse .nav > .active > a > [class^="fa-icon-"],
+.navbar-inverse .nav > .active > a > [class*=" fa-icon-"],
+.dropdown-menu > li > a:hover > [class^="fa-icon-"],
+.dropdown-menu > li > a:hover > [class*=" fa-icon-"],
+.dropdown-menu > .active > a > [class^="fa-icon-"],
+.dropdown-menu > .active > a > [class*=" fa-icon-"],
+.dropdown-submenu:hover > a > [class^="fa-icon-"],
+.dropdown-submenu:hover > a > [class*=" fa-icon-"] {
+  background-image: none;
+}
+
+
+/* keeps Bootstrap styles with and without icons the same */
+.btn, .nav {
+  [class^="fa-icon-"],
+  [class*=" fa-icon-"] {
+    //    display: inline;
+    &.fa-icon-large { line-height: .9em; }
+    &.fa-icon-spin { display: inline-block; }
+  }
+}
+.nav-tabs, .nav-pills {
+  [class^="fa-icon-"],
+  [class*=" fa-icon-"] {
+    &, &.fa-icon-large { line-height: .9em; }
+  }
+}
+.btn {
+  [class^="fa-icon-"],
+  [class*=" fa-icon-"] {
+    &.pull-left, &.pull-right {
+      &.fa-icon-2x { margin-top: .18em; }
+    }
+    &.fa-icon-spin.fa-icon-large { line-height: .8em; }
+  }
+}
+.btn.btn-sm {
+  [class^="fa-icon-"],
+  [class*=" fa-icon-"] {
+    &.pull-left, &.pull-right {
+      &.fa-icon-2x { margin-top: .25em; }
+    }
+  }
+}
+.btn.btn-lg {
+  [class^="fa-icon-"],
+  [class*=" fa-icon-"] {
+    margin-top: 0; // overrides bootstrap default
+    &.pull-left, &.pull-right {
+      &.fa-icon-2x { margin-top: .05em; }
+    }
+    &.pull-left.fa-icon-2x { margin-right: .2em; }
+    &.pull-right.fa-icon-2x { margin-left: .2em; }
+  }
+}
+
+/* Fixes alignment in nav lists */
+.nav-list [class^="fa-icon-"],
+.nav-list [class*=" fa-icon-"] {
+  line-height: inherit;
+}

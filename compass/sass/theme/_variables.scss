@@ -1,0 +1,265 @@
+// bootstrap
+$container-sm: 750px;
+$container-md: 970px;
+$container-lg: 1170px;
+
+$screen-xs: 480px;
+$screen-sm: 768px;
+$screen-md: 992px;
+$screen-lg: 1200px;
+$screen-xs-max: ($screen-sm - 1);
+$screen-sm-max: ($screen-md - 1);
+$screen-md-max: ($screen-lg - 1);
+
+// jednotka
+$white: #fff !default;
+$black: #000 !default;
+
+$orange: #ff8041 !default;
+$blue: #01a9e0 !default;
+$green: #8dc153 !default;
+$salmon: #ff6d6a !default;
+$mint: #0cbfb3 !default;
+$red: #e74c3c !default;
+$yellow: #f8bd27 !default;
+
+$contrast: $green !default;
+$very-light: #eaedf2 !default;
+$medium-light: #9ca4af !default;
+$light: #676f7a !default;
+$medium: #434955 !default;
+$dark: #353b47 !default;
+
+$default: $medium !default;
+$primary: #428bca !default;
+$success: #5cb85c !default;
+$warning: #f0ad4e !default;
+$danger: #d9534f !default;
+$information: #5dc3de !default;
+
+$colors: ($white, $black, $contrast, $dark, $medium, $light, $medium-light, $very-light, $primary, $success, $warning, $danger, $information);
+$colors-names: ("white", "black", "contrast", "dark", "medium", "light", "medium-light", "very-light", "primary", "success", "warning", "danger", "info");
+
+// zindexes
+$zindex-minimum: 1000 !default;
+$zindex-carousel-controls: $zindex-minimum - 1 !default;
+
+// common
+$body-bg: $dark !default;
+$border-radius-base: 5px !default;
+$image-border-radius: $border-radius-base * 2 !default;
+$transition-duration-base: 300ms !default;
+$selection-bg: lighten($contrast, 30%) !default;
+
+//content
+$main-content-bg: $white !default;
+
+// panels
+$panel-border-radius: $border-radius-base * 2 !default;
+$panel-border-color: $very-light !default;
+$panel-description-color: $light !default;
+$panel-icon-size: 80px !default;
+$panel-icon-color: $white !default;
+$panel-icon-border: 10px !default;
+
+// typography
+$font-family-base: "Open Sans" !default;
+$font-family-headings: "Roboto" !default;
+$headings-color: $medium !default;
+$headings-small-color: $light !default;
+$lead-color: $headings-color !default;
+$hr-margin: 50px !default;
+$p-color: $light !default;
+$page-header-with-icon-border: $very-light !default;
+$page-header-with-icon-size: 50px !default;
+$main-content-header-color: $white !default;
+
+// header
+$header-toggle-color: $white !default;
+$header-toggle-hover-color: $contrast !default;
+
+// navigation
+$nav-height: 90px !default;
+$nav-border-color: rgba($white, .25) !default;
+$nav-item-color: $white !default;
+$nav-item-stripe-color: $contrast !default;
+$nav-dropdown-bg: $contrast !default;
+$nav-dropdown-border-color: $white !default;
+$nav-dropdown-color: $white !default;
+$nav-dropdown-width: 200px !default;
+
+// navigation collapsed (mobile)
+$nav-collapsed-item-color: $nav-item-color !default;
+$nav-collapsed-item-hover-bg: rgba($white, .1) !default;
+$nav-collapsed-item-active-bg: $contrast !default;
+$nav-collapsed-item-border-color: rgba($white, .1) !default;
+$nav-collapsed-border-radius: 5px !default;
+$nav-collapsed-bg: rgba($dark, .98) !default;
+
+// buttons and links
+$link-color: $contrast !default;
+
+// carousels
+$carousel-default-padding-bottom: 100px !default;
+$carousel-default-min-height: 380px !default;
+$carousel-default-pagination-color: $very-light !default;
+$carousel-default-pagination-active: $contrast !default;
+
+// carousel contrast
+$carousel-contrast-pagination-color: $medium-light !default;
+$carousel-contrast-pagination-active: $contrast !default;
+$carousel-contrast-pagination-size: 18px !default;
+$carousel-contrast-text-color: $white !default;
+$carousel-contrast-controls-color: $white !default;
+$carousel-contrast-controls-size: 26px !default;
+$carousel-contrast-control-opacity: .25 !default;
+
+// carousel blur
+$carousel-blur-pagination-color: $white !default;
+$carousel-blur-pagination-size: 18px !default;
+$carousel-blur-text-color: $white !default;
+$carousel-blur-controls-color: $white !default;
+$carousel-blur-controls-size: 40px !default;
+$carousel-blur-control-opacity: .15 !default;
+
+// carousel image
+$carousel-image-pagination-color: $white !default;
+$carousel-image-pagination-active: $contrast !default;
+$carousel-image-pagination-size: 12px !default;
+$carousel-image-controls-color: $white !default;
+$carousel-image-controls-size: 50px !default;
+$carousel-image-control-opacity: .10 !default;
+
+// footer
+$footer-bg: $medium !default;
+$footer-color: #aab2bd !default;
+$footer-title-color: $white !default;
+$footer-icon-color: $contrast !default;
+$footer-input-background: $body-bg !default;
+$footer-input-color: $footer-color !default;
+$footer-link-color: $white !default;
+
+// quotes (testimonials)
+$quotes-color: $light !default;
+$quotes-client-line-color: $very-light !default;
+$quotes-client-line-active: $contrast !default;
+$quotes-client-color: $dark !default;
+
+// portfolio
+$portfolio-category-color: lighten($headings-color, 40%) !default;
+$portfolio-category-color-active: darken($portfolio-category-color, 10%) !default;
+$portfolio-hover-background: rgba($dark, .80) !default;
+$portfolio-color: $medium !default;
+$portfolio-color-active: $contrast !default;
+$portfolio-icon-size: 30px !default;
+$portfolio-icon-color: $white !default;
+
+// profile list
+$profile-hover-background: rgba($dark, .80) !default;
+$profile-icon-size: 30px !default;
+$profile-icon-color: $white !default;
+$profile-image-size: 165px !default;
+
+// team members
+$team-member-name-color: $headings-color !default;
+$team-member-position-color: $medium-light !default;
+$team-member-position-font-family: $font-family-base !default;
+$team-member-position-font-size: 14px !default;
+
+// icon list
+$icon-list-icon-color: $contrast !default;
+$icon-list-icon-lg-color: $white !default;
+$icon-list-icon-lg-bg: $contrast !default;
+$icon-list-icon-lg-size: 60px !default;
+$icon-list-icon-size: 14px !default;
+
+// timeline
+$timeline-line-color: $very-light !default;
+$timeline-title-color: $headings-color !default;
+$timeline-title-color-active: $contrast !default;
+$timeline-desc-color: $medium-light !default;
+$timeline-date-color: $timeline-title-color !default;
+$timeline-image-size: 120px !default;
+$timeline-image-border-color: $timeline-line-color !default;
+$timeline-image-border-color-active: $contrast !default;
+
+// accordions
+$accordion-toggle-color: $white !default;
+$accordion-toggle-bg: $contrast !default;
+$accordion-toggle-active-bg: darken($contrast, 5%) !default;
+$accordion-toggle-closed-bg: $dark !default;
+$accordion-toggle-closed-active-bg: lighten($dark, 5%) !default;
+$accordion-bordered-toggle-border-color: $panel-border-color !default;
+$accordion-bordered-toggle-color: $contrast !default;
+$accordion-bordered-toggle-closed-color: $dark !default;
+$accordion-bordered-toggle-closed-active-color: $contrast !default;
+
+// tabs
+$tabs-border-color: $panel-border-color !default;
+$tabs-color: $dark !default;
+$tabs-active-color: $contrast !default;
+$tabs-active-bg: darken($very-light, 2%) !default;
+$tabs-active-stripe-color: $contrast !default;
+
+// pricing tables
+$pricing-table-title-font-size: 24px !default;
+$pricing-table-price-font-family: $font-family-base !default;
+$pricing-table-price-font-size: 48px !default;
+$pricing-table-price-color: $contrast !default;
+$pricing-table-currency-color: $medium-light !default;
+$pricing-table-currency-font-size: 24px !default;
+$pricing-table-currency-font-family: $font-family-headings !default;
+$pricing-table-period-color: $pricing-table-currency-color !default;
+$pricing-table-item-color: $medium !default;
+
+// elements
+$well-bg: $very-light !default;
+$jumbotron-bg: $very-light !default;
+
+// pagination
+$pagination-color: $dark !default;
+$pagination-bg: transparent !default;
+$pagination-active-bg: $panel-border-color !default;
+$pagination-active-color: $pagination-color !default;
+$pagination-active-border: $contrast !default;
+$pagination-border-color: $panel-border-color !default;
+
+// form elements
+$input-border-color: $panel-border-color !default;
+$input-active-border-color: darken($input-border-color, 15%) !default;
+
+// media
+$media-border-color: $panel-border-color !default;
+$media-time-color: $medium-light !default;
+$media-border-staff-color: $contrast !default;
+
+// sidebar
+$sidebar-border-color: $panel-border-color !default;
+$sidebar-toggle-bars-bg: $white !default;
+
+// boxed layout
+$boxed-layout-padding: 30px !default;
+$boxed-body-bg: #e8e8e8 !default;
+
+// bootstrap
+$state-warning-text: #c09853 !default;
+$state-warning-bg: #fcf8e3 !default;
+$state-warning-border: darken(adjust-hue($state-warning-bg, -10), 3%) !default;
+$state-danger-text: #b94a48 !default;
+$state-danger-bg: #f2dede !default;
+$state-danger-border: darken(adjust-hue($state-danger-bg, -10), 3%) !default;
+$state-success-text: #468847 !default;
+$state-success-bg: #dff0d8 !default;
+$state-success-border: darken(adjust-hue($state-success-bg, -10), 5%) !default;
+$state-info-text: #3a87ad !default;
+$state-info-bg: #d9edf7 !default;
+$state-info-border: darken(adjust-hue($state-info-bg, -10), 7%) !default;
+
+// tables
+$table-bg: transparent !default;
+$table-bg-accent: lighten($very-light, 5%) !default;
+$table-bg-hover: darken($table-bg-accent, 2%) !default;
+$table-bg-active: $table-bg-hover !default;
+$table-border-color: $panel-border-color !default;
+$table-cell-padding: 12px !default;
+$table-condensed-cell-padding: 6px !default;

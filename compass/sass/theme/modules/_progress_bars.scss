@@ -1,0 +1,14 @@
+/*------------------------------------*\
+    $PROGRESS BARS
+\*------------------------------------*/
+.progress {
+  height: 20px;
+  @include box-shadow(none);
+
+  &.progress-md { height: 30px; }
+  &.progress-lg { height: 40px; }
+
+  .progress-bar {
+    @include box-shadow(none);
+  }
+}

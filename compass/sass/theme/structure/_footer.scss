@@ -1,0 +1,178 @@
+/*------------------------------------*\
+    $FOOTER
+\*------------------------------------*/
+#footer {
+  #footer-main {
+    padding: 50px 0;
+    background-color: $footer-bg;
+    text-align: center;
+
+    @include sm-plus {
+      text-align: left;
+    }
+
+    [class^="fa-icon-"], [class*=" fa-icon-"] {
+      color: $footer-icon-color;
+      font-size: 15px;
+      margin-top: 2px;
+    }
+
+    .title {
+      color: $footer-title-color;
+      font-size: 18px;
+      font-weight: 500;
+      text-transform: uppercase;
+      margin: 0 0 25px 0;
+    }
+
+    .info-box {
+      margin-top: 50px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      @include sm-plus {
+        &:nth-child(2) {
+          margin-top: 0;
+        }
+      }
+
+      @include md-plus {
+        margin-top: 0;
+      }
+
+      a {
+        color: $footer-link-color;
+
+        &:hover {
+          color: $footer-link-color;
+        }
+      }
+
+      .icon-box {
+        .icon {
+          @include xs-only {
+            margin-top: 20px;
+            margin-bottom: 10px;
+
+            &:first-child {
+              margin-top: 0;
+            }
+          }
+
+          [class^="fa-icon-"], [class*=" fa-icon-"] {
+            font-size: 22px;
+          }
+
+          @include sm-plus {
+            [class^="fa-icon-"], [class*=" fa-icon-"] {
+              font-size: 15px;
+            }
+          }
+        }
+      }
+
+      &.social-box {
+        .time {
+          color: darken($footer-color, 20%);
+        }
+      }
+
+      .logo-container {
+        height: 55px;
+        max-height: 55px;
+      }
+    }
+
+    .image-list-box {
+      > li > a img {
+        border-color: $light;
+
+        &:hover {
+          border-color: lighten($light, 10%);
+        }
+      }
+    }
+
+    .button-cloud-box {
+      .btn-bordered {
+        margin-bottom: 10px;
+        font-weight: normal;
+      }
+    }
+
+    form {
+      margin-top: 25px;
+
+      [class^="fa-icon-"], [class*=" fa-icon-"] {
+        display: inline-block;
+        @include scaleX(-1);
+      }
+
+      .form-group {
+        padding-right: 0;
+      }
+
+      .form-control {
+        background-color: $footer-input-background;
+        border-color: $footer-input-background;
+        color: $footer-input-color;
+        @include placeholder(darken($footer-input-color, 20%));
+
+        &:focus {
+          @include box-shadow(0 0 8px rgba($contrast, 0.6));
+        }
+      }
+
+      .btn {
+        @include text-shadow(1px 1px 1px rgba($black, .3));
+      }
+    }
+
+    .info-box, ul, p, ol, ul li, ol li {
+      color: $footer-color;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 24px;
+    }
+
+    ul, ol {
+      margin-bottom: 0;
+    }
+  }
+
+  #footer-copyright {
+    background-color: $body-bg;
+    color: lighten($body-bg, 15%);
+    padding: 20px 0;
+    text-align: center;
+
+    @include sm-plus {
+      text-align: left;
+    }
+
+    .copyright {
+      margin: 5px 0 0 0;
+
+      @include sm-plus {
+        float: left;
+      }
+    }
+
+    .links {
+      margin-top: 20px;
+
+      @include sm-plus {
+        float: right;
+        margin-top: 0;
+
+        .btn {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}

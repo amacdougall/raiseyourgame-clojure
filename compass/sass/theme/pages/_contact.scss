@@ -1,0 +1,33 @@
+/*------------------------------------*\
+    $CONTACT PAGE
+\*------------------------------------*/
+body.contact-page {
+  #map-canvas {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+
+    @include sm-plus {
+      height: 326px;
+    }
+  }
+
+  textarea {
+    min-height: 215px;
+  }
+
+  &.contact-page-wide-map {
+    #main-content {
+      padding-top: 0;
+    }
+
+    #map-canvas {
+      margin-bottom: 70px;
+      height: 300px;
+
+      @include sm-plus {
+        height: 400px;
+      }
+    }
+  }
+}

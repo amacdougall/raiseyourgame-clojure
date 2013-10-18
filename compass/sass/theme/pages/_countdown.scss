@@ -1,0 +1,148 @@
+/*------------------------------------*\
+    $COUNTDOWN PAGE
+\*------------------------------------*/
+html {
+  &.no-touch {
+    body.countdown-page {
+      height: 100%;
+
+      #wrapper {
+        display: table;
+        height: 100%;
+        @include center-block;
+
+        .container {
+          vertical-align: middle;
+          display: table-cell;
+        }
+      }
+    }
+  }
+}
+
+body.countdown-page {
+  background: image-url("bg_fullsize.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  text-align: center;
+  font-family: $font-family-headings;
+
+  // The url is relative to the document, not to the css file!
+  // Prefer absolute urls to avoid confusion.
+  -ms-behavior: url("/assets/images/ie/backgroundsize.min.htc");
+
+  #wrapper {
+    padding: 20px 0;
+    background-image: none !important;
+  }
+
+  .icon {
+    border: 5px solid $white;
+    @include border-radius(30px);
+    display: inline-block;
+    line-height: 120px;
+    position: relative;
+    margin-top: 15px;
+    @include square(120px);
+    @include rotate(45deg);
+
+    [class^="fa-icon-"], [class*=" fa-icon-"] {
+      color: $white;
+      font-size: 60px;
+      position: absolute;
+      display: inline-block;
+      top: 50%;
+      left: 50%;
+      margin-top: -30px;
+      margin-left: -30px;
+      @include square(60px);
+      @include rotate(-45deg);
+    }
+  }
+
+  .title {
+    color: $white;
+    font-size: 40px;
+    line-height: 40px;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-top: 30px;
+    margin-bottom: 0;
+  }
+
+  .message {
+    font-size: 18px;
+    line-height: 24px;
+    margin-top: 50px;
+    margin-bottom: 0;
+    font-weight: 300;
+    color: $white;
+
+    @include sm-plus {
+      font-size: 24px;
+      line-height: 34px;
+    }
+  }
+
+  form {
+    margin-top: 50px;
+
+    .form-control {
+      border-color: transparent;
+    }
+  }
+
+  .logo {
+    margin-top: 40px;
+    display: inline-block;
+  }
+
+  $countdown-size: 120px;
+  $countdown-bg: $contrast;
+  $countdown-color: $white;
+  .countdown {
+    margin-top: 60px;
+
+    .countdown-item {
+      display: inline-block;
+      position: relative;
+      background-color: $countdown-bg;
+      margin-right: 10px;
+      margin-bottom: 20px;
+      @include square($countdown-size);
+      @include border-radius(100%);
+
+      @include sm-plus {
+        margin-right: 20px;
+        margin-bottom: 0;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .countdown-time, .countdown-label {
+        position: absolute;
+        left: 0;
+        color: $countdown-color;
+        width: $countdown-size;
+        text-align: center;
+      }
+
+      .countdown-time {
+        top: 25px;
+        font-size: 40px;
+        line-height: 40px;
+        font-weight: 500;
+      }
+
+      .countdown-label {
+        bottom: 25px;
+        font-size: 18px;
+        line-height: 18px;
+      }
+    }
+  }
+}

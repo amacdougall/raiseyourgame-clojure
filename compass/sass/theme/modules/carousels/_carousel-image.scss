@@ -1,0 +1,181 @@
+body.boxed {
+  .carousel-image .flex-direction-nav .flex-prev { left: 0; width: $boxed-layout-padding; }
+  .carousel-image .flex-direction-nav .flex-next { right: 0; width: $boxed-layout-padding; }
+}
+
+.carousel-image {
+  position: relative;
+  min-height: $carousel-default-min-height;
+
+  .slides {
+    margin: 0;
+    padding: 0;
+    @include clearfix;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .big {
+    color: $carousel-blur-text-color;
+    font-family: $font-family-headings;
+    font-weight: 500;
+    margin: 0;
+    margin-top: 54px;
+    @include font(36px);
+
+    @include sm-only {
+      margin-top: 72px;
+      @include font(48px); // 0.8
+    }
+
+    @include md-plus {
+      margin-top: 90px;
+      @include font(60px); // 1.0
+    }
+  }
+
+  .normal {
+    @extend .big;
+    font-weight: 300;
+    margin: 0;
+    margin-top: 24px;
+    @include font(18px);
+
+    @include sm-only {
+      margin-top: 32px;
+      @include font(24px); // 0.8
+    }
+
+    @include md-plus {
+      margin-top: 40px;
+      @include font(30px); // 1.0
+    }
+  }
+
+  .btn.btn-lg {
+    margin-top: 50px;
+    margin-bottom: 95px;
+    font-size: 16px;
+    padding: 12px 40px;
+    font-weight: 500;
+    @include text-shadow(1px 1px 1px rgba($black, .4));
+  }
+
+  .item {
+    display: none;
+  }
+
+  .flex-control-paging {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    left: 50%;
+    width: 60%;
+    margin-left: -30%;
+    text-align: center;
+    list-style: none;
+    z-index: $zindex-carousel-controls;
+    bottom: floor($carousel-image-pagination-size*2.5);
+    height: $carousel-image-pagination-size;
+
+    li {
+      display: inline-block;
+      margin: 0 4px;
+      @include square($carousel-image-pagination-size);
+    }
+
+    a {
+      display: inline-block;
+      cursor: pointer;
+      text-indent: -9999px;
+      @include border-radius(50%);
+      @include square($carousel-image-pagination-size);
+      @include rgba-fallback(rgba($carousel-image-pagination-color, .3), "background-color");
+
+      &:hover, &.flex-active {
+        background-color: $carousel-image-pagination-active;
+      }
+    }
+  }
+
+  .flex-direction-nav {
+    position: absolute;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    left: 0;
+    overflow: visible;
+    display: none;
+    @include square(100%);
+
+    @include md-only { display: block; }
+    @include lg-plus { display: block; }
+
+    .flex-next, .flex-prev {
+      top: 50%;
+      position: absolute;
+      text-decoration: none;
+      margin-top: floor(-($carousel-image-controls-size / 2));
+      z-index: $zindex-carousel-controls;
+      color: $carousel-image-controls-color;
+      text-align: center;
+      vertical-align: middle;
+      line-height: $carousel-image-controls-size;
+      @include rgba-fallback(rgba($carousel-image-controls-color, $carousel-image-control-opacity), "background-color");
+      @include square($carousel-image-controls-size);
+      @include transition(background-color $transition-duration-base);
+
+      &:before {
+        @include icon($chevron-right);
+        position: relative;
+        font-size: floor($carousel-image-controls-size / 2.5);
+      }
+    }
+
+    .flex-prev {
+      left: 0;
+      @include border-right-radius($border-radius-base);
+
+      &:before { content: $chevron-left; margin-left: -2px; }
+    }
+
+    .flex-next {
+      right: 0;
+      @include border-left-radius($border-radius-base);
+
+      &:before { content: $chevron-right; margin-right: -2px; }
+    }
+  }
+
+  &:hover {
+    .flex-direction-nav {
+      .flex-next, .flex-prev {
+        @include rgba-fallback(rgba($carousel-image-controls-color, $carousel-image-control-opacity * 2), "background-color");
+      }
+    }
+  }
+}
+
+.carousel-image, .carousel-image .item {
+  height: 388px;
+  @include sm-only { height: 393px; }
+  @include md-plus { height: 437px; }
+}
+
+.lt-ie9 {
+  .carousel-image .flex-direction-nav .flex-next, .carousel-image .flex-direction-nav .flex-prev {
+    background-color: transparent;
+    border: 1px solid $carousel-image-controls-color;
+  }
+
+  .carousel-image .flex-direction-nav .flex-next {
+    border-right: none;
+  }
+
+  .carousel-image .flex-direction-nav .flex-prev {
+    border-left: none;
+  }
+}

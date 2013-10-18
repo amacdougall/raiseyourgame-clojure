@@ -1,0 +1,81 @@
+/*------------------------------------*\
+    $SIDEBAR
+\*------------------------------------*/
+.sidebar {
+  border-bottom: 2px solid $sidebar-border-color;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+
+  @include sm-plus {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 20px;
+  }
+
+  .title {
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 20px 0;
+  }
+
+  .box {
+    margin-bottom: 30px;
+
+    &:first-child {
+      .title {
+        margin-top: 0;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .sidebar-collapse {
+    &.in {
+      overflow-y: auto;
+    }
+
+    @include sm-plus {
+      width: auto;
+
+      &.collapse {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      &.in {
+        overflow-y: visible;
+      }
+    }
+  }
+
+  .sidebar-toggle {
+    position: relative;
+    display: block;
+    padding: 15px 0;
+    margin-bottom: 20px;
+
+    @include sm-plus {
+      display: none;
+    }
+
+    .icon-bar {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background-color: $sidebar-toggle-bars-bg;
+      @include center-block;
+    }
+
+    .icon-bar + .icon-bar {
+      margin-top: 4px;
+    }
+  }
+}

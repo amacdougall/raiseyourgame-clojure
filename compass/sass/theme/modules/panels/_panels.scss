@@ -1,0 +1,74 @@
+/*------------------------------------*\
+    $PANELS
+\*------------------------------------*/
+@import "custom";
+@import "image";
+@import "big";
+@import "circle_big_contrast";
+@import "circle_contrast";
+
+.panels-wrapper {
+  .panels {
+    margin-top: 22px;
+
+    @include sm-plus {
+      margin-top: 45px;
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.panel-bordered {
+  @include panel-custom;
+
+  .panel-body {
+    padding: 15px;
+  }
+
+  > .panel-heading, > .panel-footer {
+    background-color: $panel-border-color;
+  }
+
+  > .panel-heading {
+    border-bottom: 2px solid $panel-border-color;
+  }
+
+  > .panel-footer {
+    border-top: 2px solid $panel-border-color;
+  }
+}
+
+@for $i from 1 through length($colors) {
+  $name: nth($colors-names, $i);
+  $color: nth($colors, $i);
+
+  .panel-#{$name} {
+    border-color: $color;
+
+    > .panel-heading {
+      color: $white;
+      background-color: $color;
+      border-color: $color;
+
+      .panel-title {
+        color: inherit;
+      }
+
+      + .panel-collapse .panel-body {
+        border-top-color: $color;
+      }
+    }
+    > .panel-footer {
+      color: $white;
+      background-color: $color;
+      border-color: $color;
+
+      + .panel-collapse .panel-body {
+        border-bottom-color: $color;
+      }
+    }
+  }
+}

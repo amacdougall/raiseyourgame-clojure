@@ -1,0 +1,94 @@
+/*------------------------------------*\
+    $CONTENT
+\*------------------------------------*/
+html {
+  height: 100%;
+}
+
+body {
+  background-color: $body-bg;
+  width: 100%;
+  overflow-x: hidden;
+
+  &.boxed {
+    background-color: $boxed-body-bg;
+    background-image: image-url("bg_patterns/bg_boxed.png");
+    @include image-2x("bg_patterns/bg_boxed.png", 200px, 200px);
+
+    #wrapper {
+      @include sm-plus {
+        max-width: $container-sm + 2*$boxed-layout-padding;
+        @include center-block;
+        @include box-shadow(0 0 10px rgba($black, .3));
+
+        #header, #main-content, #footer-main, #footer-copyright {
+          padding-left: $boxed-layout-padding;
+          padding-right: $boxed-layout-padding;
+        }
+      }
+
+      @include md-plus {
+        max-width: $container-md + 2*$boxed-layout-padding;;
+      }
+
+      @include lg-plus {
+        max-width: $container-lg + 2*$boxed-layout-padding;;
+      }
+    }
+  }
+}
+
+#wrapper {
+  background-repeat: no-repeat;
+  background-position: center 0;
+  background-image: image-url("bg_wrapper.jpg");
+  @include image-2x("bg_wrapper@2x.jpg", 1920px, 535px);
+}
+
+#main-content {
+  padding: 70px 0 80px 0;
+  background-color: $main-content-bg;
+}
+
+body.boxed {
+  #scroll-to-top {
+    border-color: $medium-light;
+    color: $light;
+    background-color: $very-light;
+
+    &.fade.in {
+      &:hover {
+        border-color: darken($medium-light, 10%);
+        background-color: lighten($very-light, 2%);
+      }
+    }
+  }
+}
+
+#scroll-to-top {
+  right: 10px;
+  border: 2px solid $very-light;
+  color: $contrast;
+  line-height: 45px;
+  text-align: center;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  display: none;
+
+  @include md-plus {
+    display: block;
+  }
+
+  @include border-radius($border-radius-base * 2);
+  @include square(50px);
+  @include rgba-fallback(rgba($white, .1), "background-color");
+  @include transition(opacity $transition-duration-base, border-color $transition-duration-base, background-color $transition-duration-base);
+
+  &.fade.in {
+    &:hover {
+      cursor: pointer;
+      border-color: darken($very-light, 10%);
+    }
+  }
+}

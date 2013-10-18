@@ -1,0 +1,85 @@
+/*------------------------------------*\
+    $STATISTICS
+\*------------------------------------*/
+ul.circle-stats {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-align: justify;
+
+  &:after {
+    width: 100%; display: inline-block; content: ""; visibility: hidden;
+  }
+
+  li {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    margin-bottom: 20px;
+    @include center-block;
+
+    @include xs-only-land {
+      max-width: 200px;
+    }
+
+    @include sm-plus {
+      max-width: 150px;
+    }
+
+    @include md-plus {
+      max-width: 200px;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  li {
+    text-align: center;
+
+    .circle-stat-wrapper {
+      position: relative;
+    }
+
+    canvas {
+      max-width: 120px;
+      max-height: 120px;
+    }
+
+    .percent {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      margin-top: -19px;
+      margin-bottom: 0;
+      font-family: $font-family-headings;
+      font-weight: 400;
+      font-size: 24px;
+      color: $medium;
+    }
+
+    &.circle-stat-small {
+      canvas {
+        max-width: 80px;
+        max-height: 80px;
+      }
+    }
+  }
+
+  .title {
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .description {
+    font-size: 14px;
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+}

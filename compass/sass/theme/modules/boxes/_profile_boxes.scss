@@ -1,0 +1,115 @@
+.profile-boxes {
+  .row:last-child {
+    .profile-box {
+      @include sm-plus {
+        margin-bottom: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.profile-boxes {
+  .profile-box {
+    margin-bottom: 50px;
+    text-align: center;
+
+    @include sm-plus {
+      text-align: left;
+    }
+
+    .image-link {
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      @include border-radius(50%);
+      @include inline-block;
+
+
+      &:before {
+        content: '';
+        background-color: transparent;
+        position: absolute;
+        display: block;
+        left: 0;
+        top: 0;
+        @include square(100%);
+        @include transition(background-color $transition-duration-base);
+        @include border-radius(50%);
+      }
+
+      [class^="fa-icon-"], [class*=" fa-icon-"] {
+        position: absolute;
+        left: 50%;
+        top: -50%;
+        font-size: $profile-icon-size;
+        margin-left: -($profile-icon-size)/2;
+        margin-top: -($profile-icon-size)/2;
+        color: $profile-icon-color;
+        @include transition(top $transition-duration-base);
+        @include text-shadow(1px 1px 1px $black);
+        @include square($profile-icon-size);
+      }
+
+      &:hover {
+        &:before {
+          @include rgba-fallback($profile-hover-background, "background-color");
+        }
+
+        [class^="fa-icon-"], [class*=" fa-icon-"] {
+          top: 50%;
+        }
+      }
+    }
+
+    .name {
+      color: $team-member-name-color;
+      margin: 0;
+      margin-top: 20px;
+
+      @include sm-plus {
+        margin-top: 0;
+      }
+    }
+
+    .position {
+      color: $team-member-position-color;
+      font-family: $team-member-position-font-family;
+      font-size: $team-member-position-font-size;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    img {
+      @include border-radius(50%);
+      @include center-block;
+      @include img-responsive;
+    }
+
+    @include sm-plus {
+      .links {
+        .btn {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}
+
+.lt-ie9 {
+  .profile-box .image-link:hover {
+    [class^="fa-icon-"], [class*=" fa-icon-"] { display: none; }
+    &:before { background-color: transparent; }
+  }
+
+  .profile-box .image-link {
+    min-width: 100%;
+  }
+}

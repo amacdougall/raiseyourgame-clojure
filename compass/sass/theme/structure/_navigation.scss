@@ -1,0 +1,311 @@
+.navbar {
+  height: $nav-height;
+}
+
+.navbar-default {
+  border: none;
+  background: none;
+  margin: 0;
+  border-bottom: 1px solid;
+  @include rgba-fallback($nav-border-color, "border-color", $dark);
+  @include border-radius(0);
+
+  .navbar-collapse {
+    @include rgba-fallback($nav-collapsed-bg, "background-color");
+    border: none;
+    @include box-shadow(none);
+    @include border-bottom-left-radius($nav-collapsed-border-radius);
+    @include border-bottom-right-radius($nav-collapsed-border-radius);
+
+    @include sm-plus {
+      background-color: transparent;
+      @include border-bottom-left-radius(0);
+      @include border-bottom-right-radius(0);
+    }
+  }
+
+  .navbar-brand {
+    padding: 0;
+    float: none;
+    height: $nav-height;
+    @include vertical-align;
+  }
+
+  .navbar-toggle {
+    margin: floor(($nav-height - 36) / 2) 0 0;
+    border-color: $header-toggle-color;
+    border-width: 2px;
+    @include border-radius($border-radius-base);
+
+    .icon-bar {
+      background-color: $header-toggle-color;
+    }
+
+    &:hover, &:focus {
+      border-color: $header-toggle-hover-color;
+      background-color: $header-toggle-hover-color;
+    }
+  }
+
+  .navbar-nav {
+    > .open {
+      > a {
+        @include rgba-fallback($nav-collapsed-item-hover-bg, "background-color", $nav-collapsed-bg);
+
+        @include sm-plus {
+          background-color: transparent;
+        }
+      }
+
+      .dropdown-menu {
+        padding: 0;
+
+        > li {
+          > a {
+            color: $nav-collapsed-item-active-bg;
+            border-bottom: 1px solid;
+            padding: 10px 15px 10px 25px;
+            @include rgba-fallback(darken($nav-collapsed-item-border-color, 40%), "border-color", $nav-collapsed-bg);
+
+            @include sm-plus {
+              color: $nav-dropdown-color;
+              @include rgba-fallback(rgba($nav-dropdown-border-color, .3), "border-bottom-color");
+              text-align: center;
+              padding: 10px 20px;
+              white-space: normal;
+              @include text-shadow(1px 1px 1px rgba($black, .3));
+
+              &:hover, &:focus {
+                background-color: darken($nav-dropdown-bg, 10%);
+              }
+            }
+          }
+
+          &.dropdown-submenu {
+            position: relative;
+
+            &:after {
+              content: '';
+              position: absolute;
+              width: 16px;
+              height: 100%;
+              top: 0;
+              right: -17px;
+              display: block;
+            }
+
+            .fa-icon-angle-right {
+              position: absolute;
+              top: 13px;
+              right: 13px;
+            }
+
+            .dropdown-menu {
+              top: -20px;
+              right: -123px;
+
+              &:before {
+                content: '';
+                border-top: 5px solid transparent;
+                border-bottom: 5px solid transparent;
+                border-right: 5px solid rgba(255, 255, 255, 0.4);
+                border-bottom-color: transparent;
+                position: absolute;
+                left: -5px;
+                top: 15px;
+                margin-left: -5px;
+                @include square(0);
+                //@include rgba-fallback(rgba($nav-dropdown-border-color, .4), "border-bottom-color", $dark);
+              }
+            }
+          }
+
+          @include last-child {
+            > a {
+              border-bottom-color: transparent;
+            }
+          }
+        }
+      }
+    }
+
+    @include sm-minus {
+      .open .dropdown-menu > .active {
+        > a, > a:hover, > a:focus {
+          color: $nav-collapsed-item-color;
+          background-color: $nav-collapsed-item-active-bg;
+        }
+      }
+    }
+
+    > li {
+      > a {
+        border-bottom: 1px solid;
+        @include rgba-fallback($nav-collapsed-item-border-color, "border-color", $nav-collapsed-bg);
+
+        span {
+          color: $nav-collapsed-item-color;
+        }
+
+        [class^="fa-icon-"], [class*=" fa-icon-"] {
+          margin: 3px 0 0 0;
+          float: right;
+        }
+      }
+
+      &.active {
+        > a, > a:hover, > a:focus {
+          background-color: $nav-collapsed-item-active-bg;
+        }
+      }
+
+      &:last-child {
+        > a {
+          border-bottom: none;
+        }
+      }
+
+      @include sm-plus {
+        .dropdown-menu {
+          margin-top: 15px;
+          background-color: $nav-dropdown-bg;
+          border: 5px solid;
+          width: $nav-dropdown-width + 16px;
+          right: 50%;
+          margin-right: floor(-(($nav-dropdown-width + 16px) / 2));
+          @include rgba-fallback(rgba($nav-dropdown-border-color, .4), "border-color", $dark);
+          @include border-radius(floor($border-radius-base * 2));
+
+          &:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 15px;
+            top: -20px;
+            left: 0;
+            display: block;
+          }
+
+          > .active {
+            > a {
+              background-color: darken($nav-dropdown-bg, 10%);
+            }
+          }
+
+          > li:first-child {
+            position: relative;
+
+            > a {
+              @include border-top-left-radius($border-radius-base);
+              @include border-top-right-radius($border-radius-base);
+            }
+          }
+
+          > li:last-child {
+            > a {
+              @include border-bottom-left-radius($border-radius-base);
+              @include border-bottom-right-radius($border-radius-base);
+            }
+          }
+        }
+      }
+    }
+
+    @include sm-plus {
+      > li {
+        margin: 0;
+
+        > a {
+          margin-top: 1px;
+          padding: 0 15px;
+          background-color: transparent;
+          border: none;
+
+          [class^="fa-icon-"], [class*=" fa-icon-"] {
+            margin: 0 0 0 5px;
+            float: none;
+          }
+
+          span {
+            color: $nav-item-color;
+            height: $nav-height;
+            border-bottom: 3px solid transparent;
+            @include text-shadow(1px 1px 1px rgba($black, .8));
+            @include vertical-align;
+          }
+
+          &:hover, &:focus {
+            background-color: transparent;
+
+            span {
+              @include rgba-fallback(rgba($nav-item-color, .85), "color");
+              border-bottom-color: $nav-item-stripe-color;
+            }
+          }
+        }
+
+        &.open, &.active {
+          > a, > a:hover, > a:focus {
+            color: $nav-item-color;
+            background-color: transparent;
+
+            span {
+              color: $nav-item-color;
+              border-bottom-color: $nav-item-stripe-color;
+            }
+          }
+
+          > a:hover, > a:focus {
+            span {
+              @include rgba-fallback(rgba($nav-item-color, .85), "color");
+            }
+          }
+        }
+
+        &.open {
+          &:before {
+            content: '';
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid;
+            position: absolute;
+            left: 50%;
+            bottom: -15px;
+            margin-left: -5px;
+            @include square(0);
+            @include rgba-fallback(rgba($nav-dropdown-border-color, .4), "border-bottom-color", $dark);
+          }
+        }
+
+        &:last-child {
+          margin-right: 0;
+
+          > a {
+            padding-right: 0;
+          }
+
+          &.open {
+            &:before {
+              margin-left: 2px;
+            }
+          }
+
+          .dropdown-menu {
+            right: 0;
+            margin-right: 0;
+            left: auto;
+          }
+        }
+
+        // Only for IE
+        &.last-child {
+          .dropdown-menu {
+            right: 15px;
+            margin-right: 0;
+            left: auto;
+          }
+        }
+      }
+    }
+  }
+}

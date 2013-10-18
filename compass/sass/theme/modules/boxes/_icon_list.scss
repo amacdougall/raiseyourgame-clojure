@@ -1,0 +1,82 @@
+.icon-boxes, .icon-boxes.icon-boxes-lg {
+  .row:last-child {
+    .icon-box {
+      @include sm-plus {
+        margin-bottom: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.icon-boxes {
+  text-align: center;
+
+  @include sm-plus {
+    text-align: left;
+  }
+
+  .icon-box {
+    margin-bottom: 15px;
+  }
+
+  .icon {
+    float: none;
+    margin-bottom: 20px;
+    vertical-align: top;
+
+    &.icon-circle {
+      vertical-align: middle;
+    }
+
+    @include sm-plus {
+      float: left;
+      margin-bottom: 0;
+      margin-right: 10px;
+
+      &.icon-lg { margin-right: 30px; }
+      &.icon-md { margin-right: 25px; }
+    }
+  }
+
+  .content {
+    overflow: hidden;
+    zoom: 1;
+
+    .title {
+      margin-top: 0;
+      font-weight: 500;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  &.icon-boxes-nowrap {
+    text-align: left;
+
+    .icon {
+      float: left;
+      margin-right: 10px;
+
+      &.icon-lg { margin-right: 30px; }
+      &.icon-md { margin-right: 25px; }
+    }
+  }
+}
+
+.icon-boxes.icon-boxes-lg {
+  .icon-box {
+    margin-bottom: 50px;
+  }
+
+  .content {
+    p {
+      line-height: 22px;
+    }
+  }
+}

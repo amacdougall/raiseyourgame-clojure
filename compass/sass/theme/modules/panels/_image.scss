@@ -1,0 +1,92 @@
+$padding: 0px;
+$total-size: floor(($panel-icon-size + $panel-icon-border));
+$total-padded-size: $total-size + $padding;
+$half-size: floor($total-size / 2);
+$half-padded-size: floor($total-padded-size / 2);
+
+.panels {
+  .panel-item:first-child {
+    .panel-image {
+      margin-top: $half-size;
+    }
+  }
+}
+
+.panel.panel-image {
+  @include panel_custom;
+  margin-top: $total-size;
+  border: none;
+  @include border-radius(0);
+
+  @include sm-plus {
+    margin-top: $half-size;
+  }
+
+  .panel-icon {
+    position: absolute;
+    top: -$half-size;
+    left: 50%;
+    margin-left: -$half-padded-size;
+    text-align: center;
+    line-height: $total-size;
+    @include size($total-padded-size, $total-size);
+
+    .icon {
+      background-color: $contrast;
+      border: $panel-icon-border solid $main-content-bg;
+      color: $panel-icon-color;
+      display: inline-block;
+      font-size: floor($half-size);
+      line-height: floor($total-size / 1.28);
+      @include border-radius(50%);
+      @include square($total-size);
+    }
+  }
+
+  .panel-heading {
+    padding: 0;
+    border: none;
+    max-height: 125px;
+    overflow: hidden;
+    @include border-top-radius($panel-border-radius);
+
+    img {
+      @include img-responsive;
+      @include border-top-radius($panel-border-radius);
+    }
+  }
+
+  .panel-body {
+    border: 2px solid $panel-border-color;
+    padding-top: 5px;
+    border-top: none;
+    text-align: center;
+    @include border-bottom-radius($panel-border-radius);
+
+
+    .panel-title {
+      margin: 20px 0;
+    }
+  }
+
+  &:hover {
+    .panel-icon {
+      $total-size: floor(($panel-icon-size + $panel-icon-border) * 0.8 );
+      $half-size: floor($total-size / 2);
+
+      top: -($half-size * 1.2);
+
+      @include md-plus {
+        top: -($half-size * 1.5);
+      }
+    }
+  }
+}
+
+.lt-ie9 {
+  .panel.panel-image {
+    .panel-heading img {
+      max-height: 141px;
+    }
+  }
+}

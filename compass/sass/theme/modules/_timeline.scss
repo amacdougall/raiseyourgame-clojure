@@ -1,0 +1,187 @@
+/*------------------------------------*\
+    $TIMELINE
+\*------------------------------------*/
+$borders: 10px + 10px;
+$total-timeline-image-size: $timeline-image-size + $borders;
+
+ol.timeline {
+  list-style: none;
+  position: relative;
+  padding: 0;
+  margin: 0;
+
+  @include sm-plus {
+    margin-top: floor($total-timeline-image-size / 2.5);;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 4px;
+      left: 50%;
+      margin-left: -2px;
+      background-color: $timeline-line-color;
+      z-index: $zindex-minimum - 3;
+    }
+  }
+
+  li {
+    position: relative;
+    text-align: center;
+    margin-bottom: floor($total-timeline-image-size / 2.5);
+
+    @include sm-plus {
+      margin-bottom: floor($total-timeline-image-size / 1.5);
+    }
+
+    @include sm-plus {
+      width: 50%;
+    }
+
+    .image {
+      margin-bottom: $borders;
+      border: 10px solid $timeline-image-border-color;
+      outline: 10px solid $main-content-bg;
+      @include border-radius(50%);
+      @include square($total-timeline-image-size);
+      @include center-block;
+      @include transition(border-color $transition-duration-base linear);
+
+      @include sm-plus {
+        position: absolute;
+        top: floor(-($total-timeline-image-size / 2.5));
+        z-index: $zindex-minimum - 1;
+        margin-bottom: 0;
+      }
+
+      img {
+        position: relative;
+        @include border-radius(50%);
+      }
+
+      @include sm-plus {
+        &:before {
+          content: '';
+          position: absolute;
+          z-index: $zindex-minimum - 1;
+          display: block;
+          top: 50%;
+          margin-top: -6px;
+          @include transition(border-color $transition-duration-base linear);
+        }
+      }
+    }
+
+    .time {
+      color: $timeline-date-color;
+      font-family: $font-family-headings;
+      font-weight: 700;
+      font-size: 22px;
+      margin-bottom: 15px;
+      @include transition(color $transition-duration-base);
+    }
+
+    .title {
+      color: $timeline-title-color;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    p {
+      color: $timeline-desc-color;
+      line-height: 22px;
+      margin-bottom: 0;
+    }
+
+    &:hover {
+      .image {
+        border-color: $timeline-image-border-color-active;
+      }
+
+      .time {
+        color: $timeline-title-color-active;
+      }
+    }
+
+    @include nth-child-odd {
+      @include sm-plus {
+        left: 50%;
+        text-align: left;
+        padding-left: floor($total-timeline-image-size*0.8);
+      }
+
+      .image {
+        left: floor(-($total-timeline-image-size / 2));
+
+        &:before {
+          right: -15px;
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          border-left: 6px solid $timeline-image-border-color;
+        }
+      }
+
+      &:hover {
+        .image {
+          &:before {
+            border-left-color: $timeline-image-border-color-active;
+          }
+        }
+      }
+    }
+
+    @include nth-child-even {
+      @include sm-plus {
+        padding-right: floor($total-timeline-image-size*0.8);
+        text-align: right;
+      }
+
+      .image {
+        right: floor(-($total-timeline-image-size / 2));
+
+        &:before {
+          left: -15px;
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          border-right: 6px solid $timeline-image-border-color;
+        }
+      }
+
+      &:hover {
+        .image {
+          &:before {
+            border-right-color: $timeline-image-border-color-active;
+          }
+        }
+      }
+    }
+
+    @include last-child {
+      margin-bottom: 0;
+
+      @include sm-plus {
+        &:before {
+          content: '';
+          display: block;
+          width: 10px;
+          height: 100%;
+          position: absolute;
+          z-index: $zindex-minimum - 2;
+          background-color: $main-content-bg;
+        }
+
+        @include nth-child-odd {
+          &:before { left: -5px; }
+        }
+
+        @include nth-child-even {
+          &:before { right: -5px; }
+        }
+      }
+    }
+
+    &:last-child { @include last-child; }
+    &.last-child { @include last-child; }
+  }
+}

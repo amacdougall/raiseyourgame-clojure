@@ -47,3 +47,18 @@ Finally, to execute ClojureScript code in the context of a namespace in the
 running app, first use an `ns` directive with _all_ the require statements from
 the original code. It's safe to just copy and paste the entire `ns` block from
 your source file.
+
+### To Compile Sass Stylesheets
+
+We're using the Jednotka template from Themeforest. Its Sass files are found at
+/compass/sass; to compile them, run `compass compile compass`. To recompile on
+changes, run `compass watch compass`.
+
+Jednotka comes with several possible accent colors, each with its own SCSS file.
+To switch easily between them, I set up index.html to expect a compiled
+"jednotka_active.css" file. Before compiling the Sass project, create
+"jednotka_active.scss" as a symlink:
+
+```bash
+ln -s jednotka_green.scss jednotka_active.scss
+```

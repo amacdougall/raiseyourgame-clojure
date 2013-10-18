@@ -1,0 +1,67 @@
+/*------------------------------------*\
+    $ICONS
+\*------------------------------------*/
+.icon-wrap {
+  display: inline-block;
+  text-align: center;
+  font-size: 1em;
+  @include square(30px);
+
+  i {
+    width: (16em/14);
+  }
+
+  &.icon-circle {
+    line-height: 30px;
+    @include border-radius(100%);
+
+    i {
+      width: auto;
+    }
+
+    &.icon-md {
+      line-height: 45px;
+    }
+
+    &.icon-lg {
+      line-height: 60px;
+    }
+  }
+
+  &.icon-rounded-square {
+    line-height: 30px;
+    @include border-radius(5px);
+
+    i {
+      width: auto;
+    }
+
+    &.icon-md {
+      line-height: 45px;
+      @include border-radius(10px);
+    }
+
+    &.icon-lg {
+      line-height: 60px;
+      @include border-radius(15px);
+    }
+  }
+
+  &.icon-bordered {
+    border: 2px solid transparent;
+    line-height: 26px;
+
+    &.icon-md { line-height: 41px; }
+    &.icon-lg { line-height: 56px; }
+  }
+
+  &.icon-md {
+    font-size: 1.5em;
+    @include square(45px);
+  }
+
+  &.icon-lg {
+    font-size: 2em;
+    @include square(60px);
+  }
+}

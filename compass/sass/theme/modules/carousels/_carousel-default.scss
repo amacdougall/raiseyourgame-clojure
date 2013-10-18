@@ -1,0 +1,54 @@
+.carousel-indicators {
+  margin-bottom: 0;
+  bottom: 0;
+
+  .active {
+    margin: 3px;
+    border-color: transparent;
+    background-color: $carousel-default-pagination-active;
+    @include square(10px);
+
+    &:hover {
+      background-color: $carousel-default-pagination-active;
+    }
+  }
+
+  li {
+    margin: 3px;
+    border-color: transparent;
+    background-color: $carousel-default-pagination-color;
+    @include square(10px);
+
+    &:hover {
+      background-color: darken($carousel-default-pagination-color, 10%);
+    }
+  }
+}
+
+.carousel {
+  .carousel-inner {
+    padding-bottom: 50px;
+
+    > .item {
+      z-index: $zindex-minimum - 1;
+    }
+  }
+
+  &.carousel-fade {
+    .item {
+      -webkit-transition: opacity .25s;
+      transition: opacity .25s;
+      @include backface-visibility(hidden);
+      @include opacity(0);
+
+      &.active {
+        @include opacity(1);
+
+        &.left, &.right {
+          left: 0;
+          @include opacity(0);
+        }
+      }
+    }
+  }
+}

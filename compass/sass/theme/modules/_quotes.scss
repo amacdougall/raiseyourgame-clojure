@@ -1,0 +1,69 @@
+/*------------------------------------*\
+    $QUOTES
+\*------------------------------------*/
+.no-touch {
+  .quotes {
+    .quote {
+      &:hover {
+        .author-wrapper .author {
+          border-top-color: $quotes-client-line-active;
+
+          &:before {
+            border-top-color: $quotes-client-line-active;
+          }
+        }
+      }
+    }
+  }
+}
+
+.quotes {
+  .carousel .carousel-inner {
+    padding-bottom: 20px;
+  }
+
+  .quote {
+    .lead {
+      font-size: 18px;
+      line-height: 30px;
+      color: $quotes-color;
+      margin-bottom: 25px;
+      font-family: $font-family-base;
+    }
+
+    .author-wrapper {
+      .author {
+        border-top: 2px solid $quotes-client-line-color;
+        padding: 25px 45px 0 70px;
+        margin: 0;
+        margin-bottom: 25px;
+        display: inline-block;
+        position: relative;
+        font-size: 16px;
+        color: $quotes-client-color;
+        @include transition(border-color $transition-duration-base * 1.5);
+
+        &:before {
+          content: '';
+          border-left: 15px solid transparent;
+          border-top: 15px solid $quotes-client-line-color;
+          position: absolute;
+          left: 30px;
+          top: 0;
+          @include square(0);
+          @include transition(border-color $transition-duration-base * 1.5);
+        }
+
+        &:after {
+          content: '';
+          border-left: 11px solid transparent;
+          border-top: 12px solid $main-content-bg;
+          position: absolute;
+          left: 32px;
+          top: -2px;
+          @include square(0);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,93 @@
+/*------------------------------------*\
+    $UTILITIES
+\*------------------------------------*/
+.no-mg {margin: 0 !important;}
+.no-mg-t { margin-top: 0 !important; }
+.no-mg-r { margin-right: 0 !important; }
+.no-mg-b { margin-bottom: 0 !important; }
+.no-mg-l { margin-left: 0 !important; }
+
+.no-mg-xso { @include xs-only { margin: 0 !important; } }
+.no-mg-t-xso { @include xs-only { margin-top: 0 !important; } }
+.no-mg-r-xso { @include xs-only { margin-right: 0 !important; } }
+.no-mg-b-xso { @include xs-only { margin-top: 0 !important; } }
+.no-mg-l-xso { @include xs-only { margin-left: 0 !important; } }
+
+.no-pd {padding: 0 !important;}
+.no-pd-t { padding-top: 0 !important; }
+.no-pd-r { padding-right: 0 !important; }
+.no-pd-b { padding-bottom: 0 !important; }
+.no-pd-l { padding-left: 0 !important; }
+
+.no-pd-xso { @include xs-only { padding: 0 !important; } }
+.no-pd-t-xso { @include xs-only { padding-top: 0 !important; } }
+.no-pd-r-xso { @include xs-only { padding-right: 0 !important; } }
+.no-pd-b-xso { @include xs-only { padding-top: 0 !important; } }
+.no-pd-l-xso { @include xs-only { padding-left: 0 !important; } }
+
+$margins: (40px, 30px, 20px, 10px, 5px);
+$margins-names: ("-lg", "-md", "", "-sm", "-xs");
+
+@for $i from 1 through length($margins) {
+  $name: nth($margins-names, $i);
+  $margin: nth($margins, $i);
+
+  .mg#{$name} { margin: $margin; }
+  .pd#{$name} { padding: $margin; }
+
+  .mg-t#{$name} { margin-top: $margin; }
+  .mg-r#{$name} { margin-right: $margin; }
+  .mg-b#{$name} { margin-bottom: $margin; }
+  .mg-l#{$name} { margin-left: $margin; }
+
+  .pd-t#{$name} { padding-top: $margin; }
+  .pd-r#{$name} { padding-right: $margin; }
+  .pd-b#{$name} { padding-bottom: $margin; }
+  .pd-l#{$name} { padding-left: $margin; }
+
+  .mg-t-xso#{$name} { @include xs-only { margin-top: $margin; } }
+  .mg-r-xso#{$name} { @include xs-only { margin-right: $margin; } }
+  .mg-b-xso#{$name} { @include xs-only { margin-bottom: $margin; } }
+  .mg-l-xso#{$name} { @include xs-only { margin-left: $margin; } }
+
+  .pd-t-xso#{$name} { @include xs-only { padding-top: $margin; } }
+  .pd-r-xso#{$name} { @include xs-only { padding-right: $margin; } }
+  .pd-b-xso#{$name} { @include xs-only { padding-bottom: $margin; } }
+  .pd-l-xso#{$name} { @include xs-only { padding-left: $margin; } }
+}
+
+@for $i from 1 through length($colors) {
+  $name: nth($colors-names, $i);
+  $color: nth($colors, $i);
+
+  .text-#{$name} {
+    color: $color !important;
+  }
+
+  .#{$name}-bg {
+    background-color: $color !important;
+  }
+
+  .#{$name}-border {
+    border-color: $color !important;
+  }
+
+  .label-#{$name} { background-color: $color !important; }
+  .badge-#{$name} { background-color: $color !important; }
+  .progress-bar-#{$name} { background: $color; }
+}
+
+.center-block { @include center-block; }
+.right-block { @include right-block; }
+.left-block { @include left-block; }
+.text-justify { text-align: justify; }
+.text-uppercase { text-transform: uppercase; }
+.text-center-xs { @include xs-only { text-align: center; } }
+
+.pos-rel { position: relative !important; }
+.pos-abs { position: absolute !important; }
+.pos-sta { position: static !important; }
+
+.img-rounded { @include border-radius($image-border-radius); }
+.img-rounded-half { @include border-radius(floor($image-border-radius/2)); }
+.img-responsive-sm { @include sm-plus { @include img-responsive; } }

@@ -1,0 +1,3024 @@
+<!DOCTYPE html>
+<!--
+  Name: Jednotka - Multipurpose Website HTML Template
+  Author: http://themeforest.net/user/BublinaStudio
+  Version: 1.2
+-->
+<!--[if lt IE 9]> <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if !IE] -->
+<html lang='en'>
+  <!-- <![endif] -->
+  <head>
+    <title>Documentation | Jednotka - Multipurpose Template</title>
+    <meta content='blog, business, clean, multipurpose template, twitter bootstrap 3, responsive' name='keywords'>
+    <meta content='Jednotka is multipurpose Twitter Bootstrap 3 template which is suitable for any type of business or online project. ' name='description'>
+    <meta content='BublinaStudio.com' name='author'>
+    <meta content='all' name='robots'>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <!--[if IE]> <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'> <![endif]-->
+    <link href='assets/images/meta_icons/favicon.ico' rel='shortcut icon' type='image/x-icon'>
+    <link href='assets/images/meta_icons/apple-touch-icon.png' rel='apple-touch-icon-precomposed'>
+    <!-- / required stylesheets -->
+    <link href="assets/stylesheets/bootstrap/bootstrap.min.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="assets/stylesheets/jednotka_green.css" media="all" id="colors" rel="stylesheet" type="text/css" />
+    <!-- / not required stylesheets -->
+    <link href="assets/stylesheets/docs.css" media="all" rel="stylesheet" type="text/css" />
+    <!--[if lt IE 9]>
+      <script src="assets/javascripts/ie/html5shiv.js" type="text/javascript"></script>
+      <script src="assets/javascripts/ie/respond.min.js" type="text/javascript"></script>
+    <![endif]-->
+  </head>
+  <body class='documentation'>
+    <div id='wrapper'>
+      <div class='container'>
+        <div class='row'>
+          <nav id='doc-navigation'>
+              <a href="#introduction"><h5 class='doc-title'>Introduction</h5>
+            </a>
+          
+              <a href="#getting-started"><h5 class='doc-title'>Getting started</h5>
+            </a>
+          
+            <ul class='list-unstyled'>
+              <li>
+                <a href="#files">Files</a>
+              </li>
+              <li>
+                <a href="#html-templates">HTML Templates</a>
+                <ul>
+                  <li><a href="#html-template">Main HTML template</a></li>
+                  <li><a href="#body-structure">Body</a></li>
+                  <li>
+                    <a href="#header-structure">Header</a>
+                    <ul>
+                      <li><a href="#header-single-menu-item">Single menu item</a></li>
+                      <li><a href="#header-dropdown-menu-item">Dropdown menu item</a></li>
+                      <li><a href="#header-multilevel-dropdown-menu-item">Multilevel dropdown menu item</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#main-content-without-title">Main content</a>
+                    <ul>
+                      <li><a href="#main-content-without-title">Without title</a></li>
+                      <li><a href="#main-content-with-title">With title</a></li>
+                      <li><a href="#main-content-with-breadcrumb">With title and breadcrumb</a></li>
+                      <li><a href="#main-content-directional">With title and directional arrows</a></li>
+                      <li><a href="#main-content-scrolltop">Scroll top</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#footer">Footer</a>
+                    <ul>
+                      <li><a href="#footer-info-box">Info box</a></li>
+                      <li><a href="#footer-social-box">Social box</a></li>
+                      <li><a href="#footer-form">Form</a></li>
+                      <li><a href="#footer-photostream">Photostream</a></li>
+                      <li><a href="#footer-tagcloud">Tag cloud</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#sidebar">Collapsible sidebar</a></li>
+                </ul>
+              </li>
+            </ul>
+              <a href="#sass"><h5 class='doc-title'>Sass & Compass</h5>
+            </a>
+          
+              <a href="#utilities"><h5 class='doc-title'>Utilities</h5>
+            </a>
+          
+            <ul class='list-unstyled'>
+              <li><a href="#coloring">Coloring</a></li>
+              <li><a href="#paddingsandmargins">Paddings & Margins</a></li>
+            </ul>
+              <a href="#layouts"><h5 class='doc-title'>Layouts</h5>
+            </a>
+          
+            <ul class='list-unstyled'>
+              <li><a href="#layout-boxed">Boxed</a></li>
+            </ul>
+              <a href="#components"><h5 class='doc-title'>Componenets</h5>
+            </a>
+          
+            <ul class='list-unstyled'>
+              <li>
+                <a href="#panels">Panels</a>
+                <ul class='list-unstyled'>
+                  <li><a href="#panel-bordered">Bordered</a></li>
+                  <li><a href="#panel-image">Image</a></li>
+                  <li><a href="#panel-big">Big</a></li>
+                  <li><a href="#panel-circlebig">Big circle</a></li>
+                  <li><a href="#panel-circle">Circle</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class='list-unstyled'>
+              <li>
+                <a href="#pricing-tables">Pricing tables</a>
+                <ul class='list-unstyled'>
+                  <li><a href="#pricing-tables-circle">Circle</a></li>
+                  <li><a href="#pricing-tables-solid">Solid</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class='list-unstyled'>
+              <li>
+                <a href="#text-boxes">Text boxes</a>
+                <ul class='list-unstyled'>
+                  <li><a href="#textbox-basic">Basic</a></li>
+                  <li><a href="#textbox-title-above">Title above content</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class='list-unstyled'>
+              <li>
+                <a href="#carousels">Carousels</a>
+                <ul class='list-unstyled'>
+                  <li><a href="#carousels-blur">Blur</a></li>
+                  <li><a href="#carousels-contrast">Contrast</a></li>
+                  <li><a href="#carousels-image">Image</a></li>
+                  <li><a href="#disabling-carousel-loading-symbol">Disabling loading symbol</a></li>
+                </ul>
+              </li>
+              <li><a href="#portfolio-boxes">Portfolio boxes</a></li>
+              <li><a href="#profiles">Profiles</a></li>
+              <li><a href="#circle-statistics">Circle statistics</a></li>
+              <li><a href="#icon-lists">Icon lists</a></li>
+              <li>
+                <a href="#icons">Icons</a>
+                <ul class='list-unstyled'>
+                  <li><a href="#icons">Circle icons</a></li>
+                  <li><a href="#icons">Rounded icons</a></li>
+                  <li><a href="#icons">Bordered icons</a></li>
+                </ul>
+              </li>
+              <li><a href="#timeline">Timeline</a></li>
+              <li><a href="#comments">Comments</a></li>
+              <li><a href="#buttons">Buttons</a></li>
+              <li><a href="#progress-bars">Progress bars</a></li>
+              <li><a href="#accordions">Accordions</a></li>
+              <li><a href="#lightbox-def">Lightbox</a></li>
+              <li><a href="#quotes">Quotes (Testimonials)</a></li>
+              <li><a href="#logo-carousel">Client slideshow (Logo carousel)</a></li>
+              <li><a href="#animations">Animations</a></li>
+              <li><a href="#typography">Typography</a></li>
+            </ul>
+              <a href="#pages"><h5 class='doc-title'>Pages</h5>
+            </a>
+          
+            <ul class='list-unstyled'>
+              <li>
+                <a href="#page-portfolio">Portfolio</a>
+                <ul class='list-unstyled'>
+                  <li><a href="#page-portfolio-filter">Filter</a></li>
+                  <li><a href="#page-portfolio-browser">Browser</a></li>
+                </ul>
+              </li>
+              <li><a href="#page-error">Error page (404, 500)</a></li>
+              <li><a href="#page-countdown">Countdown page</a></li>
+              <li><a href="#page-contact">Contact</a></li>
+              <li><a href="#page-faq">FAQ</a></li>
+            </ul>
+              <a href="#changelog"><h5 class='doc-title'>Changelog</h5>
+            </a>
+          
+          </nav>
+          <div id='main-content'>
+            <section class='big-section' id='introduction'>
+              <h1 class='doc-title'>Jednotka documentation</h1>
+              <div class='lead lead-md'>
+                Thank you for purchasing our theme. If you have any questions that are beyond the scope of this help file, please feel free to
+                    <a href="http://themeforest.net/user/BublinaStudio">contact us
+                  </a>
+                
+                  <i class='fa-icon-envelope-alt'></i>.
+              </div>
+              <hr>
+              <h3>What do you need to know?</h3>
+              <p>Jednotka is built on Twitter Bootstrap framework. If you are not familiar with Twitter Bootstrap, you should check it out because this documentation expects a basic knowledge of this framework.</p>
+              <p>
+                This documentation will not teach you HTML & CSS, it's just showcase of custom elements used in template. Elements from Bootstrap aren't described (documentation for these elements can be found
+                <a target="_blank" href="http://getbootstrap.com">here</a>).
+              </p>
+              <hr class='hr-half hr-invisible'>
+              <a href='#changelog'>
+                <h3>
+                  Show
+                  <span class='text-contrast'>changelog</span>
+                </h3>
+              </a>
+            </section>
+            <section class='big-section' id='getting-started'>
+              <h2 class='doc-title'>Getting started</h2>
+              <section id='files'>
+                <h3 class='doc-title'>Files</h3>
+                <h4 class='doc-title'>What files I need to load to get it working?</h4>
+                <p class='doc-help'>
+                  <strong>Stylesheets:</strong>
+                  <br>
+                  <ul>
+                    <li><a href="http://getbootstrap.com/">bootstrap/bootstrap.min.css</a></li>
+                    <li>jednotka_[your-color].css</li>
+                  </ul>
+                </p>
+                <p class='doc-help'>
+                  <strong>JavaScripts:</strong>
+                  <br>
+                  <ul>
+                    <li><a href="http://jquery.com/">jquery/jquery.min.js</a></li>
+                    <li><a href="http://getbootstrap.com/">bootstrap/bootstrap.min.js</a></li>
+                    <li>jednotka.js</li>
+                  </ul>
+                  <strong>Optional JavaScripts:</strong>
+                  <br>
+                  <i>(these JavaScripts are optional; loading is based on your needs)</i>
+                  <br>
+                  <br>
+                  <ul>
+                    <li><a href="https://github.com/CWSpear/twitter-bootstrap-hover-dropdown">plugins/hover_dropdown/twitter-bootstrap-hover-dropdown.min.js</a></li>
+                    <li><a href="http://jquerymobile.com/">jquery/jquery.mobile.custom.min.js</a></li>
+                    <li><a href="http://modernizr.com/">plugins/modernizr/modernizr.custom.min.js</a></li>
+                    <li><a href="http://retinajs.com/">plugins/retina/retina.min.js</a></li>
+                    <li><a href="http://anthonyterrien.com/knob/">plugins/knob/jquery.knob.js</a></li>
+                    <li>
+                      <a href="http://isotope.metafizzy.co/">plugins/isotope/jquery.isotope.min.js</a> +
+                      <a href="https://github.com/cubica/isotope-sloppy-masonry">plugins/isotope/jquery.isotope.sloppy-masonry.min.js</a>
+                    </li>
+                    <li><a href="http://jqueryvalidation.org/">plugins/validate/jquery.validate.min.js</a></li>
+                    <li><a href="http://www.woothemes.com/flexslider/">plugins/flexslider/jquery.flexslider.min.js</a></li>
+                    <li>plugins/countdown/countdown.js</li>
+                    <li><a href="http://demo.dev7studios.com/nivo-lightbox/">plugins/nivo_lightbox/nivo-lightbox.min.js</a></li>
+                    <li><a href="http://jquery.malsup.com/cycle2/">plugins/cycle/jquery.cycle.all.min.js</a></li>
+                  </ul>
+                </p>
+                <h4 class='doc-title'>What is included in main files?</h4>
+                <p class='doc-help'>
+                  <strong>Main stylesheet contains:</strong>
+                  <ul>
+                    <li><a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome 3.2.1 icons</a></li>
+                    <li>
+                      Plugins
+                      (<a href="http://daneden.me/animate/">Animate.css</a>,
+                      <a href="http://isotope.metafizzy.co/">Isotope</a>,
+                      <a href="http://demo.dev7studios.com/nivo-lightbox/">Nivo Lightbox</a>)
+                    </li>
+                    <li>All proprietary files to make Jednotka layout</li>
+                  </ul>
+                </p>
+                <p class='doc-help'>
+                  <strong>Main JavaScript contains:</strong>
+                  <ul>
+                    <li>All proprietary plugins initializations</li>
+                  </ul>
+                </p>
+              </section>
+              <section id='html-templates'>
+                <h3 class='doc-title'>HTML templates</h3>
+                <section id='html-template'>
+                  <h4 class='doc-title'>Main HTML template</h4>
+                  <script class='brush: html' type='syntaxhighlighter'>
+                    <!DOCTYPE html>
+                    <!--[if lt IE 9]> <html class="lt-ie9" lang="en"> <![endif]-->
+                    <!--[if !IE] -->
+                    <html lang='en'>
+                      <!-- <![endif] -->
+                      <head>
+                        <title><!-- your title --></title>
+                    
+                        <!-- meta tags -->
+                        <meta content='<!-- page keywords -->' name='keywords'>
+                        <meta content='<!-- page description -->' name='description'>
+                        <meta content='<!-- page author -->' name='author'>
+                    
+                        <!-- instructions for robots -->
+                        <meta content='all' name='robots'>
+                    
+                        <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+                    
+                        <!-- this enables responsive features in browser -->
+                        <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+                    
+                        <!-- if you are going to support IE -->
+                        <!--[if IE]> <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'> <![endif]-->
+                    
+                        <!-- / icons -->
+                        <link href='assets/images/meta_icons/favicon.ico' rel='shortcut icon' type='image/x-icon'>
+                        <link href='assets/images/meta_icons/apple-touch-icon.png' rel='apple-touch-icon-precomposed'>
+                    
+                        <!-- / stylesheets -->
+                    
+                        <!-- if you are going to support IE8 -->
+                        <!--[if lt IE 9]>
+                          <script src="/assets/javascripts/ie/html5shiv.js" type="text/javascript"></script>
+                          <script src="/assets/javascripts/ie/respond.min.js" type="text/javascript"></script>
+                        <![endif]-->
+                    
+                      </head>
+                      <body>
+                        <!-- your content goes here -->
+                    
+                        <!-- / javascripts -->
+                      </body>
+                    </html>
+                  </script>
+                </section>
+                <section id='body-structure'>
+                  <h3 class='doc-title'>Body</h3>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <body>
+                      <div id="wrapper">
+                        <header id="header">...</header>
+                        <div id="main">
+                          <!-- / dynamic content goes here -->
+                        </div>
+                        <footer id="footer">...</footer>
+                      </div>
+                      <!-- / javascripts -->
+                    </body>
+                  </script>
+                </section>
+                <section id='header-structure'>
+                  <h3 class='doc-title'>Header</h3>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <header id="header">
+                      <div class="container">
+                        <nav class="navbar navbar-default" id="nav" role="navigation">
+                          <div class="navbar-header">
+                    
+                            <!-- navigation toggler on small screens -->
+                            <button class="navbar-toggle" data-target=".navbar-header-collapse" data-toggle="collapse" type="button">
+                              <span class="sr-only">Toggle navigation</span>
+                              <span class="icon-bar"></span>
+                              <span class="icon-bar"></span>
+                              <span class="icon-bar"></span>
+                            </button>
+                    
+                            <a class="navbar-brand" href="...">
+                    
+                              <!-- place for your logo -->
+                              <img alt="..." width="..." height="..." src="...">
+                    
+                            </a>
+                          </div>
+                    
+                          <!-- navigation -->
+                          <div class="collapse navbar-collapse navbar-header-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                    
+                              <!-- single navigation item (docs below) -->
+                    
+                              <!-- single navigation item with dropdown (docs below) -->
+                    
+                              <!-- single navigation item with multilevel dropdown (docs below) -->
+                    
+                            </ul>
+                    
+                          </div>
+                    
+                        </nav>
+                      </div>
+                    </header>
+                  </script>
+                  <section id='header-single-menu-item'>
+                    <h4 class='doc-title'>Single menu item</h4>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <!-- single navigation item with active state -->
+                      <li class="active">
+                        <a href="...">
+                          <span>
+                            ...
+                          </span>
+                        </a>
+                      </li>
+                      
+                      <!-- single navigation item without active state -->
+                      <li>
+                        <a href="...">
+                          <span>
+                            ...
+                          </span>
+                        </a>
+                      </li>
+                    </script>
+                  </section>
+                  <section id='header-dropdown-menu-item'>
+                    <h4 class='doc-title'>Dropdown menu item</h4>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <!-- single navigation item with dropdown -->
+                      <li class="dropdown">
+                        <a class="dropdown-toggle" data-delay="50" data-hover="dropdown" data-toggle="dropdown" href="#">
+                          <span>
+                            ...
+                            <i class="fa-icon-angle-down"></i>
+                          </span>
+                        </a>
+                      
+                        <!-- dropdown -->
+                        <ul class="dropdown-menu" role="menu">
+                      
+                          <!-- dropdown item -->
+                          <li>
+                            <a href="...">...</a>
+                          </li>
+                        </ul>
+                      
+                      </li>
+                    </script>
+                  </section>
+                  <section id='header-multilevel-dropdown-menu-item'>
+                    <h4 class='doc-title'>Multilevel dropdown menu item</h4>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <!-- single navigation item with dropdown -->
+                      <li class="dropdown">
+                        <a class="dropdown-toggle" data-delay="50" data-hover="dropdown" data-toggle="dropdown" href="#">
+                          <span>
+                            ...
+                            <i class="fa-icon-angle-down"></i>
+                          </span>
+                        </a>
+                      
+                        <!-- dropdown -->
+                        <ul class="dropdown-menu" role="menu">
+                      
+                          <!-- dropdown item -->
+                          <li>
+                            <a href="...">...</a>
+                          </li>
+                      
+                          <!-- dropdown item with submenu -->
+                          <li class="dropdown-submenu">
+                            <a href="...">
+                              Submenu
+                              <i class="fa-icon-angle-right"></i>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                              <li>
+                                <a href="...">Submenu item</a>
+                      
+                                <!-- submenus are unlimited -->
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      
+                      </li>
+                    </script>
+                  </section>
+                </section>
+                <section id='main-content-without-title'>
+                  <h4 class='doc-title'>Without title</h4>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div id="main-content">
+                      <div class="container">
+                        <!-- your content with grid system -->
+                      </div>
+                    </div>
+                  </script>
+                </section>
+                <section id='main-content-with-title'>
+                  <h4 class='doc-title'>With title</h4>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div id="main-content-header">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-sm-12">
+                    
+                            <h1 class="title">
+                              <!-- title-->
+                    
+                              <small><!-- optional subtitle --></small>
+                            </div>
+                    
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div id="main-content">
+                      <div class="container">
+                        <!-- your content with grid system -->
+                      </div>
+                    </div>
+                  </script>
+                </section>
+                <section id='main-content-with-breadcrumb'>
+                  <h4 class='doc-title'>With title and breadcrumb</h4>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div id="main-content-header">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-sm-12">
+                    
+                            <h1 class="title">
+                              <!-- title -->
+                            </div>
+                    
+                            <!-- breadcrumb -->
+                            <ol class="breadcrumb">
+                              <li>
+                                <a href="...">
+                                  <i class="fa-icon-home"></i>
+                                </a>
+                              </li>
+                              <li class="active">...</li>
+                            </ol>
+                    
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div id="main-content">
+                      <div class="container">
+                        <!-- your content with grid system -->
+                      </div>
+                    </div>
+                  </script>
+                </section>
+                <section id='main-content-directional'>
+                  <h4 class='doc-title'>With title and directional arrows</h4>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div id="main-content-header">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-sm-12">
+                    
+                            <h1 class="title">
+                              <!-- title -->
+                            </div>
+                    
+                            <!-- breadcrumb -->
+                            <ol class="breadcrumb">
+                              <li>
+                                <a href="...">
+                                  <i class="fa-icon-home"></i>
+                                </a>
+                              </li>
+                              <li class="active">...</li>
+                            </ol>
+                    
+                            <!-- directional arrows with tooltips -->
+                            <div class="directional">
+                              <a class="has-tooltip left" data-placement="right" data-title="Previous project" href="#" data-original-title="" title="">
+                                <i class="fa-icon-chevron-left"></i>
+                              </a>
+                              <a class="has-tooltip right" data-placement="left" data-title="Next project" href="#">
+                                <i class="fa-icon-chevron-right"></i>
+                              </a>
+                            </div>
+                    
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </script>
+                </section>
+                <section id='main-content-scrolltop'>
+                  <h4 class='doc-title'>Scroll top</h4>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div id="main" role="main">
+                      ...
+                      <div class='fade' id='scroll-to-top'>
+                        <i class='fa-icon-chevron-up'></i>
+                      </div>
+                    </div>
+                  </script>
+                </section>
+                <section id='footer'>
+                  <section id='footer-structure'>
+                    <h3 class='doc-title'>Footer</h3>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <footer id="footer">
+                        <div id="footer-main">
+                          <div class="container">
+                            <div class="row">
+                              <!-- place for info boxes (see below) -->
+                            </div>
+                          </div>
+                        </div>
+                      
+                        <!-- copyright section -->
+                        <div id="footer-copyright">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-lg-12 clearfix">
+                      
+                                <!-- copyright -->
+                                <p class="copyright">...</p>
+                      
+                                <!-- optional place for links -->
+                                <div class="links">
+                                  <a class="btn btn-circle btn-medium-light btn-sm" href="#">
+                                    <i class="fa-icon-twitter text-dark"></i>
+                                  </a>
+                                </div>
+                      
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      
+                      </footer>
+                    </script>
+                  </section>
+                  <section id='footer-info-box'>
+                    <h4 class='doc-title'>Footer info box</h4>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <div class="col-md-3 col-sm-6 info-box">
+                        <div class="logo-container">
+                          <!-- place for your logo -->
+                          <img alt="..." width="117" height="39" src="...">
+                        </div>
+                        <p class="no-mg-b"><!-- project description --></p>
+                      </div>
+                    </script>
+                  </section>
+                  <section id='footer-social-box'>
+                    <h4 class='doc-title'>Footer social box (Latest tweets)</h4>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <div class="col-md-3 col-sm-6 info-box social-box">
+                        <h2 class="title"><!-- info box title --></h2>
+                      
+                        <!-- icon boxes -->
+                        <div class="icon-boxes">
+                      
+                          <!-- single box -->
+                          <div class="icon-box">
+                            <div class="icon icon-wrap">
+                      
+                              <!-- icon -->
+                              <i class="fa-icon-twitter text-contrast"></i>
+                      
+                            </div>
+                            <div class="content">
+                      
+                              <p>
+                                <!-- content -->
+                                <br>
+                                <a class="time" href="#">
+                                  <i><!-- time ago --></i>
+                                </a>
+                              </p>
+                      
+                            </div>
+                          </div>
+                      
+                        </div>
+                      </div>
+                    </script>
+                  </section>
+                  <section id='footer-form'>
+                    <h4 class='doc-title'>Footer form (Newsletter form)</h4>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <div class="col-md-3 col-sm-6 info-box">
+                        <!-- same as above -->
+                      
+                        <!-- form -->
+                        <form action="..." class="form-inline form-validation" method="get" novalidate="novalidate">
+                          <div class="row">
+                            <div class="form-group control-group col-xs-9 col-md-8 col-lg-9">
+                              <input class="form-control" data-rule-email="true" data-rule-required="true" id="newsletter_email" name="newsletter[email]" placeholder="Email address" type="email">
+                            </div>
+                            <div class="col-xs-3 col-md-4 col-lg-3">
+                              <button class="btn btn-medium-light btn-block" type="submit">
+                                <i class="fa-icon-reply text-white"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </script>
+                  </section>
+                  <section id='footer-photostream'>
+                    <h4 class='doc-title'>Footer photostream</h4>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <div class="col-md-3 col-sm-6 info-box">
+                        <!-- same as above -->
+                      
+                        <ul class="list-unstyled list-inline image-list-box">
+                      
+                          <!-- single photostream item -->
+                          <li>
+                            <a href="#">
+                              <img alt="..." width="50" height="50" src="...">
+                            </a>
+                          </li>
+                      
+                        </ul>
+                      </div>
+                    </script>
+                  </section>
+                  <section id='footer-tagcloud'>
+                    <h4 class='doc-title'>Button cloud (Tag cloud)</h4>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <div class="col-md-3 col-sm-6 button-cloud-box">
+                        <!-- same as above -->
+                        <p>
+                      
+                          <!-- single tag -->
+                          <a class="btn btn-light btn-bordered btn-sm text-medium-light" href="#">web</a>
+                      
+                        </p>
+                      </div>
+                    </script>
+                  </section>
+                </section>
+                <section id='sidebar'>
+                  <h3 class='doc-title'>Collapsible sidebar</h3>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <nav class="sidebar">
+                      <button class="btn btn-block btn-contrast sidebar-toggle" data-target=".sidebar-collapse" data-toggle="collapse" type="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                      </button>
+                      <div class="sidebar-collapse collapse">
+                        <!-- Collapsible sidebar content -->
+                    
+                        <!-- wrap content in 'box' div for controlling margins between them -->
+                        <div class="box">
+                          <h3 class="title">Title</h3>
+                          <p>Some content</p>
+                        </div>
+                    
+                      </div>
+                    </nav>
+                  </script>
+                </section>
+              </section>
+            </section>
+            <section id='sass'>
+              <h2 class='doc-title'>Sass & Compass</h2>
+              <p class='doc-help'>
+                If you are not familiar with Compass or SASS, check these sites:
+              </p>
+              <div class='row'>
+                <div class='col-sm-6'>
+                        <a href="http://compass-style.org/"><div class='well well-sm text-center'>
+                    compass-style.org
+                  </div>
+                  </a>
+            
+                </div>
+                <div class='col-sm-6'>
+                        <a href="http://sass-lang.com/"><div class='well well-sm text-center'>
+                    sass-lang.com
+                  </div>
+                  </a>
+            
+                </div>
+              </div>
+              <h3 class='doc-title'>How can I benefit from Compass & SASS?</h3>
+              <p class='doc-help'>
+                Jednotka is built using SASS, which is an CSS extension with variables, mixins, selector inheritance, etc.
+                Most of custom work in template can be overriden by usage of variables. All assets in stylesheets are linked with
+                usage of url/path helpers from Compass, so they can be changed very easily.
+                <div class='alert alert-info'>We recommends compiling stylesheets with Compass - it's easy and awesome!</div>
+              </p>
+              <h3 class='doc-title'>How to install Compass?</h3>
+              <p class='doc-help'>
+                <strong>Open your terminal and type:</strong>
+                <script class='brush: js' type='syntaxhighlighter'>
+                  gem install compass
+                </script>
+                <div class='alert alert-info'>
+                  Compass depends on RubyGems, so you'll need to have Ruby on your machine. If you're on Windows, you can run the
+                  <a class="alert-link" href="http://rubyinstaller.org/">Ruby Installer</a>.
+                  On Linux,
+                  <a class="alert-link" href="https://github.com/joshfng/railsready">Rails Ready</a>,
+                  on OS X you can use
+                  <a class="alert-link" href="https://rvm.io/">RVM</a>.
+                </div>
+              </p>
+              <h3 class='doc-title'>How to create my custom build?</h3>
+              <p class='doc-help'>
+                Create file, for example
+                <code>my_build_name.scss</code>
+                in
+                <code>sass-compass/sass</code>
+                folder.
+                <br>
+                <br>
+                You'll have to decide what parts of Jednotka template are you going to use, for example:
+                <br>
+                <br>
+                <strong>All files</strong>
+                <script class='brush: js' type='syntaxhighlighter'>
+                  @import "jednotka";
+                </script>
+                <br>
+                <br>
+                <strong>All Jednotka files + your stylesheets</strong>
+                <script class='brush: js' type='syntaxhighlighter'>
+                  @import "jednotka";
+                  @import "your_stylesheets";
+                </script>
+              </p>
+              <h3 class='doc-title'>How to compile my custom build?</h3>
+              <p class='doc-help'>
+                It's pretty simple - just open your terminal and go to
+                <code>compass</code>
+                folder and then type this command:
+              </p>
+              <script class='brush: js' type='syntaxhighlighter'>
+                compass compile sass/my_build_name.scss
+              </script>
+              <br>
+              Compass will compile
+              <code>my_build_name.scss</code>
+              into CSS file -
+              <code>sass-compass/stylesheets/my_build_name.css</code>
+              .
+              <h3 class='doc-title'>How to change assets paths?</h3>
+              <p class='doc-help'>
+                There is a configuration file
+                <code>sass-compass/config.rb</code>
+                which contains basic settings. Complete list of Compass settings can be found
+                <a href="http://compass-style.org/help/tutorials/configuration-reference/">here</a>.
+              </p>
+              <p class='doc-help'>
+                This
+                <code>config.rb</code>
+                will compile paths to this:
+                <code>url(../assets/images/example.png)</code>
+              </p>
+              <script class='brush: js' type='syntaxhighlighter'>
+                images_dir = 'assets/images'
+                fonts_dir = 'assets/fonts'
+                relative_assets = true
+              </script>
+              <br>
+              <p class='doc-help'>
+                This
+                <code>config.rb</code>
+                will compile paths to this:
+                <code>url(/assets/images/example.png);</code>
+              </p>
+              <script class='brush: js' type='syntaxhighlighter'>
+                images_dir = 'assets/images'
+                fonts_dir = 'assets/fonts'
+                relative_assets = false
+              </script>
+              <br>
+              <p class='doc-help'>
+                This
+                <code>config.rb</code>
+                will compile paths to this:
+                <code>url(../awesome_compass_setting/assets/images/example.png);</code>
+              </p>
+              <script class='brush: js' type='syntaxhighlighter'>
+                images_dir = 'awesome_compass_setting/assets/images'
+                fonts_dir = 'awesome_compass_setting/assets/fonts'
+                relative_assets = true
+              </script>
+              <h3 class='doc-title'>How to change Jednotka variables?</h3>
+              <p class='doc-help'>
+                All variables can be found in
+                <code>theme/_variables.scss</code>
+                file.
+              </p>
+              <p class='doc-help'>
+                In your custom file
+                <code>my_build_name.scss</code>
+                override some variables.
+              </p>
+              <script class='brush: js' type='syntaxhighlighter'>
+                $contrast: pink;
+                $body-bg: black;
+                @import "jednotka";
+              </script>
+              <br>
+              Contrast color will change to pink and body background will be black.
+            </section>
+            <section class='big-section' id='utilities'>
+              <h2 class='doc-title'>Utilities</h2>
+              <section id='coloring'>
+                <h3 class='doc-title'>Colors</h3>
+                <div class='doc-example'>
+                  <span class='white-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='black-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='contrast-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='dark-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='medium-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='light-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='medium-light-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='very-light-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='primary-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='success-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='warning-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='danger-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                  <span class='info-bg' style='width: 60px;height:20px;display:inline-block;'></span>
+                </div>
+                <h3 class='doc-title'>Coloring classes</h3>
+                <div class='doc-example'>
+                  You can use these useful classes for coloring your content:
+                </div>
+                <h4 class='doc-title'>Text color</h4>
+                <div class='doc-example'>
+                  <code>text-contrast</code>,
+                  <code>text-white</code>,
+                  <code>text-black</code>,
+                  <code>text-contrast</code>,
+                  <code>text-dark</code>,
+                  <code>text-medium</code>,
+                  <code>text-light</code>,
+                  <code>text-medium-light</code>,
+                  <code>text-very-light</code>,
+                  <code>text-primary</code>,
+                  <code>text-success</code>,
+                  <code>text-warning</code>,
+                  <code>text-danger</code>,
+                  <code>text-info</code>.
+                  <h4 class='doc-title'>Background color</h4>
+                  <code>contrast-bg</code>,
+                  <code>white-bg</code>,
+                  <code>black-bg</code>,
+                  <code>contrast-bg</code>,
+                  <code>dark-bg</code>,
+                  <code>medium-bg</code>,
+                  <code>light-bg</code>,
+                  <code>medium-light-bg</code>,
+                  <code>very-light-bg</code>,
+                  <code>primary-bg</code>,
+                  <code>success-bg</code>,
+                  <code>warning-bg</code>,
+                  <code>danger-bg</code>,
+                  <code>info-bg</code>.
+                  <h4 class='doc-title'>Border color</h4>
+                  <code>contrast-border</code>,
+                  <code>white-border</code>,
+                  <code>black-border</code>,
+                  <code>contrast-border</code>,
+                  <code>dark-border</code>,
+                  <code>medium-border</code>,
+                  <code>light-border</code>,
+                  <code>medium-light-border</code>,
+                  <code>very-light-border</code>,
+                  <code>primary-border</code>,
+                  <code>success-border</code>,
+                  <code>warning-border</code>,
+                  <code>danger-border</code>,
+                  <code>info-border</code>.
+                  <h4 class='doc-title'>Label</h4>
+                  <code>label-contrast</code>,
+                  <code>label-white</code>,
+                  <code>label-black</code>,
+                  <code>label-contrast</code>,
+                  <code>label-dark</code>,
+                  <code>label-medium</code>,
+                  <code>label-light</code>,
+                  <code>label-medium-light</code>,
+                  <code>label-very-light</code>,
+                  <code>label-primary</code>,
+                  <code>label-success</code>,
+                  <code>label-warning</code>,
+                  <code>label-danger</code>,
+                  <code>label-info</code>.
+                  <h4 class='doc-title'>Badge color</h4>
+                  <code>badge-contrast</code>,
+                  <code>badge-white</code>,
+                  <code>badge-black</code>,
+                  <code>badge-contrast</code>,
+                  <code>badge-dark</code>,
+                  <code>badge-medium</code>,
+                  <code>badge-light</code>,
+                  <code>badge-medium-light</code>,
+                  <code>badge-very-light</code>,
+                  <code>badge-primary</code>,
+                  <code>badge-success</code>,
+                  <code>badge-warning</code>,
+                  <code>badge-danger</code>,
+                  <code>badge-info</code>.
+                </div>
+              </section>
+              <section id='paddingsandmargins'>
+                <h3 class='doc-title'>Paddings & Margins</h3>
+                <p class='doc example'>
+                  You can combine these multiple classes for controling paddings and margins.
+                </p>
+                <p class='doc example'>
+                  <strong>Example:</strong>
+                </p>
+                <p class='doc example'>
+                  <code>.mg-lg</code>
+                  Will set
+                  <strong>margin: 40px;</strong>
+                </p>
+                <p class='doc example'>
+                  <code>.mg-b</code>
+                  Will set
+                  <strong>margin-bottom: 20px;</strong>
+                </p>
+                <p class='doc example'>
+                  <code>.pd-t-xso-md</code>
+                  Will set
+                  <strong>padding-top: 30px;</strong>
+                  only for small screens.
+                </p>
+                <p class='doc example'>
+                  <code>.no-pd-b</code>
+                  Will set
+                  <strong>padding-bottom: 0 !important;</strong>
+                  only for small screens.
+                </p>
+                <div class='doc-example'>
+                  <h4 class='doc-title'>Sides</h4>
+                  <code>-t (top)</code>,
+                  <code>-r (right)</code>,
+                  <code>-b (bottom)</code>.
+                  <code>-l (left)</code>,
+                  <h4 class='doc-title'>Sizes</h4>
+                  <code>-lg (will set: 40px)</code>,
+                  <code>-md (will set: 30px)</code>,
+                  <code>- (will set: 20px)</code>,
+                  <code>-sm (will set: 10px)</code>,
+                  <code>-xs (will set: 5px)</code>.
+                  <h4 class='doc-title'>Small screens only</h4>
+                  <code>-xso</code>
+                  <h4 class='doc-title'>Canceling</h4>
+                  <code>.no-</code>
+                </div>
+              </section>
+            </section>
+            <section class='big-section' id='layouts'>
+              <h2 class='doc-title'>Layouts</h2>
+              <section id='layout-boxed'>
+                <h3 class='doc-title'>Boxed layout</h3>
+                <div class='doc-help'>
+                  Add
+                  <code>.boxed</code>
+                  class to
+                  <code>&lt;body&gt;</code>
+                  tag.
+                </div>
+              </section>
+            </section>
+            <section class='big-section' id='components'>
+              <h2 class='doc-title'>Components</h2>
+              <section id='panels'>
+                <h3 class='doc-title'>Panels</h3>
+                <section id='panel-bordered'>
+                  <h4 class='doc-title'>Bordered</h4>
+                  <div class='doc-example'>
+                    <div class='row'>
+                      <div class='col-sm-4'>
+                        <div class='panel panel-bordered'>
+                          <div class='panel-body'>
+                            Lorem ipsum
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="panel panel-bordered">
+                          <div class="panel-body">
+                            Lorem ipsum
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </script>
+                </section>
+                <section id='panel-image'>
+                  <h4 class='doc-title'>Image</h4>
+                  <div class='doc-example'>
+                    <div class='row panels'>
+                      <div class='col-sm-4 panel-item'>
+                        <a class='panel panel-image' href='#'>
+                          <div class='panel-icon'>
+                            <i class='fa-icon-time icon'></i>
+                          </div>
+                          <div class='panel-heading'><img class="img-responsive-sm" alt="Project planning" width="768" height="300" src="http://placehold.it/768x300" /></div>
+                          <div class='panel-body'>
+                            <h3 class='panel-title'>Lorem</h3>
+                            <p>Lorem ipsum</p>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="panels-wrapper">
+                      <div class="row panels">
+                        <div class="col-sm-4 panel-item">
+                          <a class="panel panel-image" href="...">
+                            <div class="panel-icon">
+                              <i class="fa-icon-time icon"></i>
+                            </div>
+                            <div class="panel-heading"><img class="img-responsive-sm" alt="..." width="..." height="..." src="..."></div>
+                            <div class="panel-body">
+                              <h3 class="panel-title">Lorem</h3>
+                              <p>Lorem ipsum</p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    
+                      <!-- you can add more panel rows here -->
+                    </div>
+                  </script>
+                </section>
+                <section id='panel-big'>
+                  <h4 class='doc-title'>Big</h4>
+                  <div class='doc-example'>
+                    <div class='row panels'>
+                      <div class='col-sm-4 panel-item'>
+                        <a class='panel panel-big' href='#'>
+                          <div class='panel-icon'>
+                            <i class='fa-icon-time icon'></i>
+                          </div>
+                          <div class='panel-body'>
+                            <h3 class='panel-title'>Lorem</h3>
+                            <p>Lorem ipsum</p>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="panels-wrapper">
+                      <div class="row panels">
+                        <div class="col-sm-4 panel-item">
+                          <a class="panel panel-big" href="...">
+                            <div class="panel-icon">
+                              <i class="fa-icon-time icon"></i>
+                            </div>
+                            <div class="panel-body">
+                              <h3 class="panel-title">Lorem</h3>
+                              <p>Lorem ipsum</p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    
+                      <!-- you can add more panel rows here -->
+                    </div>
+                  </script>
+                </section>
+                <section id='panel-circlebig'>
+                  <h4 class='doc-title'>Big circle</h4>
+                  <div class='doc-example'>
+                    <div class='row panels'>
+                      <div class='col-sm-4 panel-item'>
+                        <a class='panel panel-circle-big-contrast' href='#'>
+                          <div class='panel-icon'>
+                            <i class='fa-icon-time icon'></i>
+                          </div>
+                          <div class='panel-body'>
+                            <h3 class='panel-title'>Lorem</h3>
+                            <p>Lorem ipsum</p>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="panels-wrapper">
+                      <div class="row panels">
+                        <div class="col-sm-4 panel-item">
+                          <a class="panel panel-circle-big-contrast" href="...">
+                            <div class="panel-icon">
+                              <i class="fa-icon-time icon"></i>
+                            </div>
+                            <div class="panel-body">
+                              <h3 class="panel-title">Lorem</h3>
+                              <p>Lorem ipsum</p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    
+                      <!-- you can add more panel rows here -->
+                    </div>
+                  </script>
+                </section>
+                <section id='panel-circle'>
+                  <h4 class='doc-title'>Circle</h4>
+                  <div class='doc-example'>
+                    <div class='row panels'>
+                      <div class='col-sm-4 panel-item'>
+                        <a class='panel panel-circle-contrast' href='#'>
+                          <div class='panel-icon'>
+                            <i class='fa-icon-time icon'></i>
+                          </div>
+                          <div class='panel-body'>
+                            <h3 class='panel-title'>Lorem</h3>
+                            <p>Lorem ipsum</p>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="panels-wrapper">
+                      <div class="row panels">
+                        <div class="col-sm-4 panel-item">
+                          <a class="panel panel-circle-contrast" href="...">
+                            <div class="panel-icon">
+                              <i class="fa-icon-time icon"></i>
+                            </div>
+                            <div class="panel-body">
+                              <h3 class="panel-title">Lorem</h3>
+                              <p>Lorem ipsum</p>
+                            </div>
+                          </a>
+                        </div>
+                    
+                        <!-- you can add more panel rows here -->
+                      </div>
+                    </div>
+                  </script>
+                </section>
+              </section>
+              <section id='pricing-tables'>
+                <h3 class='doc-title'>Pricing tables</h3>
+                <section id='pricing-tables-circle'>
+                  <h4 class='doc-title'>Circle</h4>
+                  <div class='doc-example'>
+                    <div class='row panels'>
+                      <div class='col-sm-4 panel-item'>
+                        <div class='panel panel-circle-contrast panel-light pricing-table'>
+                          <div class='panel-icon'>
+                            <i class='fa-icon-user icon'></i>
+                          </div>
+                          <div class='panel-body'>
+                            <h3 class='panel-title'>Title</h3>
+                            <h4 class='price'>
+                              <span class='currency'>$</span>
+                              Price
+                            </h4>
+                            <p class='period'>period</p>
+                            <ul class='list-unstyled'>
+                              <li>
+                                Item
+                              </li>
+                            </ul>
+                            <a class='btn btn-block btn-light' href='#'>Button</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="row panels">
+                      <div class="col-sm-4 panel-item">
+                        <div class="panel panel-circle-contrast panel-light pricing-table">
+                          <div class="panel-icon">
+                            <i class="fa-icon-user icon"></i>
+                          </div>
+                          <div class="panel-body">
+                            <h3 class="panel-title">Title</h3>
+                            <h4 class="price">
+                              <span class="currency">$</span>
+                              Price
+                            </h4>
+                            <p class="period">period</p>
+                            <ul class="list-unstyled">
+                              <li>
+                                Item
+                              </li>
+                            </ul>
+                            <a class="btn btn-block btn-light" href="#">Button</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </script>
+                </section>
+                <section id='pricing-tables-solid'>
+                  <h4 class='doc-title'>Solid</h4>
+                  <div class='doc-example'>
+                    <div class='row panels'>
+                      <div class='col-sm-4 panel-item'>
+                        <div class='panel-light panel panel-bordered pricing-table-solid pricing-table'>
+                          <div class='panel-heading'>
+                            <h3 class='panel-title'>Title</h3>
+                          </div>
+                          <div class='panel-body'>
+                            <h4 class='price'>
+                              <span class='currency'>$</span>
+                              Price
+                            </h4>
+                            <p class='period'>period</p>
+                            <ul class='list-unstyled'>
+                              <li>
+                                Item
+                              </li>
+                            </ul>
+                            <a class='btn btn-block btn-light btn-bordered' href='#'>Button</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="row panels">
+                      <div class="col-sm-4 panel-item">
+                        <div class="panel-light panel panel-bordered pricing-table-solid pricing-table">
+                          <div class="panel-heading">
+                            <h3 class="panel-title">Title</h3>
+                          </div>
+                          <div class="panel-body">
+                            <h4 class="price">
+                              <span class="currency">$</span>
+                              Price
+                            </h4>
+                            <p class="period">period</p>
+                            <ul class="list-unstyled">
+                              <li>
+                                Item
+                              </li>
+                            </ul>
+                            <a class="btn btn-block btn-light btn-bordered" href="#">Button</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </script>
+                </section>
+              </section>
+              <section id='text-boxes'>
+                <h3 class='doc-title'>Text boxes</h3>
+                <section id='textbox-basic'>
+                  <h4 class='doc-title'>Basic</h4>
+                  <div class='doc-example'>
+                    <div class='row'>
+                      <div class='col-sm-12'>
+                        <div class='text-boxes'>
+                          <div class='row text-box'>
+                            <div class='col-sm-6'><img class="img-responsive center-block img-rounded" alt="Lorem ipsum dolor sit amet" width="340" height="188" src="http://placehold.it/340x188" /></div>
+                            <div class='col-sm-6'>
+                              <h3 class='title'><a href="#">Title</a></h3>
+                              <p>Content</p>
+                              <a class='btn btn-contrast btn-bordered btn-sm' href='#'>Read more</a>
+                            </div>
+                          </div>
+                          <hr>
+                          <div class='row text-box'>
+                            <div class='col-sm-6 col-sm-push-6'><img class="img-responsive center-block img-rounded" alt="Praesent vitae adipiscing nunc" width="330" height="183" src="http://placehold.it/330x183" /></div>
+                            <div class='col-sm-6 col-sm-pull-6'>
+                              <h3 class='title'><a href="#">Title</a></h3>
+                              <p>Content</p>
+                              <a class='btn btn-contrast btn-bordered btn-sm' href='#'>Read more</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="text-boxes">
+                      <div class="row text-box">
+                        <div class="col-sm-6"><img class="img-responsive center-block img-rounded" alt="..." width="..." height="..." src="..."></div>
+                        <div class="col-sm-6">
+                          <h3 class="title"><a href="#">Title</a></h3>
+                          <p>Content</p>
+                          <a class="btn btn-contrast btn-bordered btn-sm" href="#">Read more</a>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="row text-box">
+                        <div class="col-sm-6 col-sm-push-6"><img class="img-responsive center-block img-rounded" alt="..." width="..." height="..." src="..."></div>
+                        <div class="col-sm-6 col-sm-pull-6">
+                          <h3 class="title"><a href="#">Title</a></h3>
+                          <p>Content</p>
+                          <a class="btn btn-contrast btn-bordered btn-sm" href="#">Read more</a>
+                        </div>
+                      </div>
+                    </div>
+                  </script>
+                  <section id='textbox-title-above'>
+                    <h4 class='doc-title'>Title above content</h4>
+                    <div class='doc-example'>
+                      <div class='text-boxes'>
+                        <div class='row text-box text-box-title-above'>
+                          <div class='col-sm-12'>
+                            <h2 class='title'>
+                              <a href='#'>Title</a>
+                            </h2>
+                            <div class='toolbar'>
+                              <a class='btn btn-link' href='#'>
+                                <i class='fa-icon-calendar-empty'></i>
+                                <span>Datetime</span>
+                              </a>
+                              <a class='btn btn-link' href='#'>
+                                <i class='fa-icon-user'></i>
+                                <span>Author</span>
+                              </a>
+                              <a class='btn btn-link' href='#'>
+                                <i class='fa-icon-comments'></i>
+                                <span>Comments count</span>
+                              </a>
+                            </div>
+                            <div class='row'>
+                              <div class='col-sm-3'>
+                                <a href='#'>
+                                  <img class="img-responsive center-block img-rounded-half" alt="Jednotka" width="189" height="129" src="http://placehold.it/189x129" />
+                                </a>
+                              </div>
+                              <div class='col-sm-9'>
+                                <p>Content</p>
+                                <a class='btn btn-contrast btn-bordered btn-xs' href='#'>Read more</a>
+                              </div>
+                            </div>
+                            <hr class='hr-half'>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <div class="text-boxes">
+                        <div class="row text-box text-box-title-above">
+                          <div class="col-sm-12">
+                            <h2 class="title">
+                              <a href="#">Title</a>
+                            </h2>
+                            <div class="toolbar">
+                              <a class="btn btn-link" href="#">
+                                <i class="fa-icon-calendar-empty"></i>
+                                <span>Datetime</span>
+                              </a>
+                              <a class="btn btn-link" href="#">
+                                <i class="fa-icon-user"></i>
+                                <span>Author</span>
+                              </a>
+                              <a class="btn btn-link" href="#">
+                                <i class="fa-icon-comments"></i>
+                                <span>Comments count</span>
+                              </a>
+                            </div>
+                            <div class="row">
+                              <div class="col-sm-3">
+                                <a href="#">
+                                  <img class="img-responsive center-block img-rounded-half" alt="..." width="189" height="129" src="...">
+                                </a>
+                              </div>
+                              <div class="col-sm-9">
+                                <p>Content</p>
+                                <a class="btn btn-contrast btn-bordered btn-xs" href="#">Read more</a>
+                              </div>
+                            </div>
+                            <hr class="hr-half">
+                          </div>
+                        </div>
+                      </div>
+                    </script>
+                  </section>
+                </section>
+              </section>
+              <section id='carousels'>
+                <h3 class='doc-title'>Carousels</h3>
+                <div class='alert alert-info'>
+                  JavaScript plugin
+                  <a class="alert-link" href="http://www.woothemes.com/flexslider/">Flexslider</a>
+                  used.
+                </div>
+                <p class='doc-help'>
+                  It's also good idea to set
+                  <code>height</code>
+                  on carousel items. This height depends on your content, so if default values are not good enough for your content then customize them.
+                </p>
+                <secion id='carousels-blur'>
+                  <h4 class='doc-title'>Blur</h4>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class='carousel-blur flexslider'>
+                      <ul class='slides'>
+                    
+                        <!-- single carousel item -->
+                        <li class='item'>
+                          <div class='container'>
+                            <div class='row'>
+                              <div class='col-lg-12 animate'>
+                                <h2 class='big fadeInUp animated'>Big title</h1>
+                                <p class='normal fadeInUp animated'>Normal title</p>
+                                <a class='btn btn-contrast btn-lg fadeInRight animated' href='#'>
+                                  Button
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                    
+                      </ul>
+                    </div>
+                  </script>
+                </secion>
+                <secion id='carousels-contrast'>
+                  <h4 class='doc-title'>Contrast</h4>
+                  <p class='doc-help'>
+                    In your own CSS file create classes for carousel items and add them to
+                    <code>&lt;li class=&quot;item&quot;&gt;&lt;/li&gt;</code>.
+                  </p>
+                  <p class='doc-help'>
+                    <strong>Example</strong>
+                    <br>
+                    <code>.sea</code>
+                    class will set carousel background to sea image.
+                  </p>
+                  <p class='doc-help'>
+                    <strong>Example CSS:</strong>
+                    <br>
+                    <script class='brush: sass' type='syntaxhighlighter'>
+                      .sea {
+                        background-image: url("../images/carousels/sea.jpg");
+                      }
+                    </script>
+                  </p>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class='carousel-contrast flexslider'>
+                      <ul class='slides'>
+                    
+                        <!-- single carousel item -->
+                        <li class='item forest'>
+                          <div class='container'>
+                            <div class='row'>
+                              <div class='col-lg-12 animate'>
+                                <h2 class='big fadeInUp animated'>
+                                  <span>Big title</span>
+                                </h1>
+                                <p class='normal fadeInUp animated'>
+                                  <span>Normal title</span>
+                                </p>
+                                <p class='fadeInRight animated'>
+                                  <a class='btn btn-squared btn-contrast btn-lg' href='#'>
+                                    Button
+                                  </a>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                    
+                        <!-- carousel background class -->
+                        <li class='item sea'>
+                        </li>
+                    
+                        <!-- carousel background class -->
+                        <li class='item bokeh'>
+                        </li>
+                    
+                      </ul>
+                    </div>
+                  </script>
+                </secion>
+                <secion id='carousels-image'>
+                  <h4 class='doc-title'>Image</h4>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class='carousel-image flexslider'>
+                      <ul class='slides'>
+                    
+                        <!-- single carousel item -->
+                        <li class='item'>
+                          <div class='container'>
+                    
+                            <!-- use pos-rel to set position: relative; for positioning carousel image -->
+                            <div class='row pos-rel'>
+                              <div class='col-sm-8 animate'>
+                                <h1 class='big fadeInDownBig animated'>Big title</h1>
+                                <p class='normal fadeInUpBig animated'>Normal title</p>
+                                <a class='btn btn-bordered btn-white btn-lg fadeInRightBig animated' href='#'>
+                                  Button
+                                </a>
+                              </div>
+                    
+                              <!-- use pos-sta to override position: relative; used on col class -->
+                              <div class='col-sm-4 animate pos-sta'>
+                    
+                                <!-- create your own styles for positioning carousel image -->
+                                <img class="img-responsive fadeInUpBig animated" style="position:absolute;bottom:0;right:15px;" alt="..." width="..." height="..." src="..." />
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                    
+                      </ul>
+                    </div>
+                  </script>
+                </secion>
+                <secion id='disabling-carousel-loading-symbol'>
+                  <h4 class='doc-title'>Disabling loading symbol</h4>
+                  <p class='doc-help'>
+                    Just add
+                    <code>.fade-loading</code>
+                    class to
+                    carousel definition.
+                  </p>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class='carousel-blur flexslider fade-loading'>
+                      ...
+                    </div>
+                  </script>
+                </secion>
+              </section>
+              <section id='portfolio-boxes'>
+                <h3 class='doc-title'>Portfolio boxes</h3>
+                <div class='doc-example'>
+                  <div class='row portfolio-boxes'>
+                    <div class='col-sm-3 portfolio-box portfolio-item'>
+                      <a href='#'>
+                        <div class='image-link'>
+                          <i class='fa-icon-search'></i>
+                          <img class="img-responsive img-rounded center-block" alt="Title" width="263" height="171" src="http://placehold.it/263x171" />
+                        </div>
+                        <h3 class='title'>Title</h3>
+                        <p class='category'>Category</p>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <div class="row portfolio-boxes">
+                    <div class="col-sm-3 portfolio-box portfolio-item">
+                      <a href="#">
+                        <div class="image-link">
+                          <i class="fa-icon-search"></i>
+                          <img class="img-responsive img-rounded center-block" alt="..." width="..." height="..." src="...">
+                        </div>
+                        <h3 class="title">Title</h3>
+                        <p class="category">Category</p>
+                      </a>
+                    </div>
+                  </div>
+                </script>
+              </section>
+              <section id='profiles'>
+                <h3 class='doc-title'>Profiles</h3>
+                <div class='doc-example'>
+                  <div class='profile-boxes'>
+                    <div class='row'>
+                      <div class='col-sm-6 profile-box'>
+                        <div class='row'>
+                          <div class='col-sm-4'>
+                            <a class='image-link' href='#'>
+                              <i class='fa-icon-envelope-alt'></i>
+                              <img alt="David Doe" width="165" height="165" src="http://placehold.it/165x165" />
+                            </a>
+                          </div>
+                          <div class='col-sm-8'>
+                            <h3 class='name'>Name</h3>
+                            <h4 class='position'>Position</h4>
+                            <p>Description</p>
+                            <div class='links'>
+                              <a class='btn btn-medium-light btn-sm btn-circle' href='#'>
+                                <i class='fa-icon-twitter'></i>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <div class="profile-boxes">
+                    <div class="row">
+                      <div class="col-sm-6 profile-box">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <a class="image-link" href="...">
+                  
+                              <!-- icon visible on hover -->
+                              <i class="fa-icon-envelope-alt"></i>
+                  
+                              <img alt="..." width="..." height="..." src="...">
+                            </a>
+                          </div>
+                          <div class="col-sm-8">
+                            <h3 class="name">Name</h3>
+                            <h4 class="position">Position</h4>
+                            <p>Description</p>
+                            <div class="links">
+                              <a class="btn btn-medium-light btn-sm btn-circle" href="#">
+                                <i class="fa-icon-twitter"></i>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </script>
+              </section>
+              <section id='circle-statistics'>
+                <h3 class='doc-title'>Circle statistics</h3>
+                <div class='alert alert-info'>
+                  JavaScript plugin
+                  <a class="alert-link" href="http://anthonyterrien.com/knob/">jQuery Knob</a>
+                  used.
+                </div>
+                <div class='doc-example'>
+                  <ul class='circle-stats'>
+                    <li>
+                      <div class='circle-stat-wrapper'>
+                        <input class='hidden' data-fgColor='#8dc153' data-readOnly='true' data-stat='circle' data-thickness='0.13' type='text' value='85'>
+                        <p class='percent'>85%</p>
+                      </div>
+                      <h3 class='title'>Title</h3>
+                    </li>
+                  </ul>
+                </div>
+                <div class='doc-help'>
+                  Add input to
+                  <code>.circle-stat-wrapper</code>,
+                  configure color with
+                  <code>data-fgColor</code>
+                  attribute and set stat value with
+                  <code>value</code>
+                  attribute.
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <ul class='circle-stats'>
+                    <li>
+                      <div class='circle-stat-wrapper'>
+                        <input class='hidden' data-fgColor='#8dc153' data-readOnly='true' data-stat='circle' data-thickness='0.13' type='text' value='85'>
+                        <p class='percent'>85%</p>
+                      </div>
+                      <h3 class='title'>Title</h3>
+                    </li>
+                  </ul>
+                </script>
+                <h4 class='doc-title'>Small circle statistics with description</h4>
+                <div class='doc-example'>
+                  <ul class='circle-stats'>
+                    <li class='circle-stat-small'>
+                      <div class='circle-stat-wrapper'>
+                        <input class='hidden' data-fgColor='#8dc153' data-readOnly='true' data-stat='circle' data-thickness='0.13' type='text' value='85'>
+                        <p class='percent'>85%</p>
+                      </div>
+                      <h3 class='title'>Title</h3>
+                      <p class='description'>Lorem ipsum</p>
+                    </li>
+                  </ul>
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <ul class='circle-stats'>
+                    <li class='circle-stat-small'>
+                      <div class='circle-stat-wrapper'>
+                        <input class='hidden' data-fgColor='#8dc153' data-readOnly='true' data-stat='circle' data-thickness='0.13' type='text' value='85'>
+                        <p class='percent'>85%</p>
+                      </div>
+                      <h3 class='title'>Title</h3>
+                      <p class='description'>Lorem ipsum</p>
+                    </li>
+                  </ul>
+                </script>
+              </section>
+              <section id='icon-lists'>
+                <h3 class='doc-title'>Icon lists</h3>
+                <div class='alert alert-info'>
+                  Icons can be customized with
+                  <a class="alert-link" href="#coloring">Coloring classes</a>.
+                </div>
+                <div class='doc-example'>
+                  <div class='icon-boxes icon-boxes-lg'>
+                    <div class='row'>
+                      <div class='col-sm-3 icon-box'>
+                        <div class='icon icon-wrap icon-circle icon-lg contrast-bg'>
+                          <i class='fa-icon-desktop text-white'></i>
+                        </div>
+                        <div class='content'>
+                          <h3 class='title'>Title</h3>
+                          <p>Content</p>
+                        </div>
+                      </div>
+                      <div class='col-sm-3 icon-box'>
+                        <div class='icon icon-wrap icon-circle icon-lg danger-bg'>
+                          <i class='fa-icon-user text-white'></i>
+                        </div>
+                        <div class='content'>
+                          <h3 class='title'>Title</h3>
+                          <p>Content</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <div class="icon-boxes icon-boxes-lg">
+                    <div class="row">
+                      <div class="col-sm-6 icon-box">
+                  
+                        <!-- icon -->
+                        <div class="icon icon-wrap icon-circle icon-lg contrast-bg">
+                          <i class="fa-icon-desktop text-white"></i>
+                        </div>
+                  
+                        <div class="content">
+                          <h3 class="title">Title</h3>
+                          <p>Content</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </script>
+              </section>
+              <section id='icons'>
+                <h3 class='doc-title'>Icons</h3>
+                <div class='alert alert-info'>
+                  Icons can be customized with
+                  <a class="alert-link" href="#coloring">Coloring classes</a>.
+                </div>
+                <div class='row'>
+                  <div class='col-sm-4'>
+                    <h4 class='doc-title'>Circle icons</h4>
+                    <div class='doc-example'>
+                      <div class='icon-wrap icon-circle very-light-bg'>
+                        <i class='fa-icon-phone text-dark'></i>
+                      </div>
+                      <div class='icon-wrap icon-circle contrast-bg icon-md'>
+                        <i class='fa-icon-phone text-white'></i>
+                      </div>
+                      <div class='icon-wrap icon-circle danger-bg icon-lg'>
+                        <i class='fa-icon-phone text-contrast'></i>
+                      </div>
+                    </div>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <div class="icon-wrap icon-circle very-light-bg">
+                        <i class="fa-icon-phone text-dark"></i>
+                      </div>
+                      <div class="icon-wrap icon-circle contrast-bg icon-md">
+                        <i class="fa-icon-phone text-white"></i>
+                      </div>
+                      <div class="icon-wrap icon-circle danger-bg icon-lg">
+                        <i class="fa-icon-phone text-contrast"></i>
+                      </div>
+                    </script>
+                  </div>
+                  <div class='col-sm-4'>
+                    <h4 class='doc-title'>Rounded icons</h4>
+                    <div class='doc-example'>
+                      <div class='icon-wrap icon-rounded-square very-light-bg'>
+                        <i class='fa-icon-phone text-dark'></i>
+                      </div>
+                      <div class='icon-wrap icon-rounded-square contrast-bg icon-md'>
+                        <i class='fa-icon-phone text-white'></i>
+                      </div>
+                      <div class='icon-wrap icon-rounded-square danger-bg icon-lg'>
+                        <i class='fa-icon-phone text-contrast'></i>
+                      </div>
+                    </div>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <div class="icon-wrap icon-rounded-square very-light-bg">
+                        <i class="fa-icon-phone text-dark"></i>
+                      </div>
+                      <div class="icon-wrap icon-rounded-square contrast-bg icon-md">
+                        <i class="fa-icon-phone text-white"></i>
+                      </div>
+                      <div class="icon-wrap icon-rounded-square danger-bg icon-lg">
+                        <i class="fa-icon-phone text-contrast"></i>
+                      </div>
+                    </script>
+                  </div>
+                  <div class='col-sm-4'>
+                    <h4 class='doc-title'>Bordered icons</h4>
+                    <div class='doc-example'>
+                      <div class='icon-wrap icon-circle icon-bordered very-light-border'>
+                        <i class='fa-icon-phone text-dark'></i>
+                      </div>
+                      <div class='icon-wrap icon-circle icon-bordered contrast-border icon-md'>
+                        <i class='fa-icon-phone text-contrast'></i>
+                      </div>
+                      <div class='icon-wrap icon-circle icon-bordered danger-border icon-lg'>
+                        <i class='fa-icon-phone text-contrast'></i>
+                      </div>
+                    </div>
+                    <script class='brush: xml' type='syntaxhighlighter'>
+                      <div class="icon-wrap icon-circle icon-bordered very-light-border">
+                        <i class="fa-icon-phone text-dark"></i>
+                      </div>
+                      <div class="icon-wrap icon-circle icon-bordered contrast-border icon-md">
+                        <i class="fa-icon-phone text-contrast"></i>
+                      </div>
+                      <div class="icon-wrap icon-circle icon-bordered danger-border icon-lg">
+                        <i class="fa-icon-phone text-contrast"></i>
+                      </div>
+                    </script>
+                  </div>
+                </div>
+              </section>
+              <section id='timeline'>
+                <h3 class='doc-title'>Timeline</h3>
+                <div class='doc-example'>
+                  <div class='row'>
+                    <div class='col-sm-12'>
+                      <ol class='timeline'>
+                        <li>
+                          <div class='image'><img alt="2013" width="120" height="120" src="http://placehold.it/120x120" /></div>
+                          <p class='time'>Time</p>
+                          <h3 class='title'>Title</h3>
+                          <p>Content</p>
+                        </li>
+                        <li>
+                          <div class='image'><img alt="2012" width="120" height="120" src="http://placehold.it/120x120" /></div>
+                          <p class='time'>Time</p>
+                          <h3 class='title'>Title</h3>
+                          <p>Content</p>
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <ol class="timeline">
+                    <li>
+                      <div class="image"><img alt=".." width="..." height="..." src="..."></div>
+                      <p class="time">Time</p>
+                      <h3 class="title">Title</h3>
+                      <p>Content</p>
+                    </li>
+                  </ol>
+                </script>
+              </section>
+              <section id='comments'>
+                <h3 class='doc-title'>Comments</h3>
+                <div class='doc-example'>
+                  <div class='row'>
+                    <div class='col-sm-12'>
+                      <div class='media'>
+                        <div class='pull-left'>
+                          <div class='media-object without-image'></div>
+                        </div>
+                        <div class='media-body'>
+                          <div class='content'>
+                            <div class='toolbar'>
+                              <h4 class='title'>Title</h4>
+                              <a class='btn btn-link link-contrast btn-sm' href='#'>
+                                <i class='fa-icon-reply'></i>
+                                <span>Reply</span>
+                              </a>
+                            </div>
+                            <p>Content</p>
+                            <p class='time'>
+                              <a href="#">Time + Permalink</a>
+                            </p>
+                          </div>
+                          <div class='media'>
+                            <div class='pull-left'>
+                              <img class="media-object" width="60" height="60" src="http://placehold.it/60x60" />
+                            </div>
+                            <div class='media-body'>
+                              <div class='content staff'>
+                                <div class='toolbar'>
+                                  <h4 class='title'>
+                                    Title
+                                    <span class='label label-contrast'>Staff</span>
+                                  </h4>
+                                  <a class='btn btn-link link-contrast btn-sm' href='#'>
+                                    <i class='fa-icon-reply'></i>
+                                    <span>Reply</span>
+                                  </a>
+                                </div>
+                                <p>Content</p>
+                                <p class='time'>
+                                  <a href="#">Time + Permalink</a>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <div class="media">
+                    <div class="pull-left">
+                  
+                      <!-- user without avatar -->
+                      <div class="media-object without-image"></div>
+                  
+                    </div>
+                    <div class="media-body">
+                      <div class="content">
+                        <div class="toolbar">
+                  
+                          <!-- title -->
+                          <h4 class="title">Title</h4>
+                  
+                          <!-- reply button -->
+                          <a class="btn btn-link link-contrast btn-sm" href="#">
+                            <i class="fa-icon-reply"></i>
+                            <span>Reply</span>
+                          </a>
+                  
+                        </div>
+                  
+                        <!-- content -->
+                        <p>Content</p>
+                  
+                        <!-- time + permalink -->
+                        <p class="time">
+                          <a href="#">Time + Permalink</a>
+                        </p>
+                  
+                      </div>
+                      <div class="media">
+                        <div class="pull-left">
+                  
+                          <!-- avatar -->
+                          <img class="media-object" width="60" height="60" src="..." alt="...">
+                  
+                        </div>
+                        <div class="media-body">
+                          <div class="content staff">
+                            <div class="toolbar">
+                  
+                              <!-- title -->
+                              <h4 class="title">
+                                Title
+                  
+                                <!-- staff label -->
+                                <span class="label label-contrast">Staff</span>
+                  
+                              </h4>
+                  
+                              <!-- reply button-->
+                              <a class="btn btn-link link-contrast btn-sm" href="#">
+                                <i class="fa-icon-reply"></i>
+                                <span>Reply</span>
+                              </a>
+                  
+                            </div>
+                  
+                            <!-- content -->
+                            <p>Content</p>
+                  
+                            <!-- time + permalink -->
+                            <p class="time">
+                              <a href="#">Time + Permalink</a>
+                            </p>
+                  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </script>
+              </section>
+              <section id='buttons'>
+                <h3 class='doc-title'>Buttons</h3>
+                <h4>Classic</h4>
+                <div class='doc-example'>
+                  <button class='btn btn-white' style='margin-bottom:5px;'>.btn-white</button>
+                  <button class='btn btn-black' style='margin-bottom:5px;'>.btn-black</button>
+                  <button class='btn btn-contrast' style='margin-bottom:5px;'>.btn-contrast</button>
+                  <button class='btn btn-dark' style='margin-bottom:5px;'>.btn-dark</button>
+                  <button class='btn btn-medium' style='margin-bottom:5px;'>.btn-medium</button>
+                  <button class='btn btn-light' style='margin-bottom:5px;'>.btn-light</button>
+                  <button class='btn btn-medium-light' style='margin-bottom:5px;'>.btn-medium-light</button>
+                  <button class='btn btn-very-light' style='margin-bottom:5px;'>.btn-very-light</button>
+                  <button class='btn btn-primary' style='margin-bottom:5px;'>.btn-primary</button>
+                  <button class='btn btn-success' style='margin-bottom:5px;'>.btn-success</button>
+                  <button class='btn btn-warning' style='margin-bottom:5px;'>.btn-warning</button>
+                  <button class='btn btn-danger' style='margin-bottom:5px;'>.btn-danger</button>
+                  <button class='btn btn-info' style='margin-bottom:5px;'>.btn-info</button>
+                </div>
+                <h4>Bordered</h4>
+                <p class='doc-help'>
+                  Add
+                  <code>.btn-bordered</code>
+                  to your button.
+                </p>
+                <div class='doc-example'>
+                  <button class='btn btn-bordered btn-white' style='margin-bottom:5px;'>.btn-white.btn-bordered</button>
+                  <button class='btn btn-bordered btn-black' style='margin-bottom:5px;'>.btn-black.btn-bordered</button>
+                  <button class='btn btn-bordered btn-contrast' style='margin-bottom:5px;'>.btn-contrast.btn-bordered</button>
+                  <button class='btn btn-bordered btn-dark' style='margin-bottom:5px;'>.btn-dark.btn-bordered</button>
+                  <button class='btn btn-bordered btn-medium' style='margin-bottom:5px;'>.btn-medium.btn-bordered</button>
+                  <button class='btn btn-bordered btn-light' style='margin-bottom:5px;'>.btn-light.btn-bordered</button>
+                  <button class='btn btn-bordered btn-medium-light' style='margin-bottom:5px;'>.btn-medium-light.btn-bordered</button>
+                  <button class='btn btn-bordered btn-very-light' style='margin-bottom:5px;'>.btn-very-light.btn-bordered</button>
+                  <button class='btn btn-bordered btn-primary' style='margin-bottom:5px;'>.btn-primary.btn-bordered</button>
+                  <button class='btn btn-bordered btn-success' style='margin-bottom:5px;'>.btn-success.btn-bordered</button>
+                  <button class='btn btn-bordered btn-warning' style='margin-bottom:5px;'>.btn-warning.btn-bordered</button>
+                  <button class='btn btn-bordered btn-danger' style='margin-bottom:5px;'>.btn-danger.btn-bordered</button>
+                  <button class='btn btn-bordered btn-info' style='margin-bottom:5px;'>.btn-info.btn-bordered</button>
+                </div>
+                <h4>Circle</h4>
+                <p class='doc-help'>
+                  Add
+                  <code>.btn-circle</code>
+                  to your button.
+                </p>
+                <div class='doc-example'>
+                  <button class='btn btn-circle btn-white' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-black' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-contrast' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-dark' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-medium' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-light' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-medium-light' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-very-light' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-primary' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-success' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-warning' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-danger' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                  <button class='btn btn-circle btn-info' style='margin-bottom:5px;'>
+                    <i class='fa-icon-ok'></i>
+                  </button>
+                </div>
+              </section>
+              <section id='progress-bars'>
+                <h3 class='doc-title'>Progress bars</h3>
+                <h4>Basic</h4>
+                <div class='doc-example'>
+                  <div class='progress'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='80' class='progress-bar progress-bar-contrast' role='progressbar' style='width: 80%'>
+                      <span class='sr-only'>80% Complete</span>
+                    </div>
+                  </div>
+                  <div class='progress'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='60' class='progress-bar progress-bar-dark' role='progressbar' style='width: 60%'>
+                      <span class='sr-only'>60% Complete</span>
+                    </div>
+                  </div>
+                  <div class='progress'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='70' class='progress-bar progress-bar-medium' role='progressbar' style='width: 70%'>
+                      <span class='sr-only'>70% Complete</span>
+                    </div>
+                  </div>
+                  <div class='progress'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='40' class='progress-bar progress-bar-light' role='progressbar' style='width: 40%'>
+                      <span class='sr-only'>40% Complete</span>
+                    </div>
+                  </div>
+                  <div class='progress'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='65' class='progress-bar progress-bar-very-light' role='progressbar' style='width: 65%'>
+                      <span class='sr-only'>65% Complete</span>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="progress">
+                      <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="progress-bar progress-bar-contrast" role="progressbar" style="width: 80%">
+                        <span class="sr-only">80% Complete</span>
+                      </div>
+                    </div>
+                    
+                    <!-- you can add more progress bars here -->
+                  </script>
+                </div>
+                <h4>Striped</h4>
+                <div class='doc-example'>
+                  <div class='progress progress-striped'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='80' class='progress-bar progress-bar-contrast' role='progressbar' style='width: 80%'>
+                      <span class='sr-only'>80% Complete</span>
+                    </div>
+                  </div>
+                  <div class='progress progress-striped'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='60' class='progress-bar progress-bar-dark' role='progressbar' style='width: 60%'>
+                      <span class='sr-only'>60% Complete</span>
+                    </div>
+                  </div>
+                  <div class='progress progress-striped'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='70' class='progress-bar progress-bar-medium' role='progressbar' style='width: 70%'>
+                      <span class='sr-only'>70% Complete</span>
+                    </div>
+                  </div>
+                  <div class='progress progress-striped'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='40' class='progress-bar progress-bar-light' role='progressbar' style='width: 40%'>
+                      <span class='sr-only'>40% Complete</span>
+                    </div>
+                  </div>
+                  <div class='progress progress-striped'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='65' class='progress-bar progress-bar-very-light' role='progressbar' style='width: 65%'>
+                      <span class='sr-only'>65% Complete</span>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="progress progress-striped">
+                      <!-- inside of progress bar -->
+                    </div>
+                    
+                    <!-- you can add more progress bars here -->
+                  </script>
+                </div>
+                <p class='doc-help'>
+                  For striped progress bar just add class
+                  <code>.progress-striped</code>
+                </p>
+                <h4>Animated</h4>
+                <div class='doc-example'>
+                  <div class='progress progress-striped active'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='80' class='progress-bar progress-bar-contrast' role='progressbar' style='width: 80%'>
+                      <span class='sr-only'>80% Complete</span>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="progress progress-striped active">
+                      <!-- inside of progress bar -->
+                    </div>
+                    
+                    <!-- you can add more progress bars here -->
+                  </script>
+                </div>
+                <p class='doc-help'>
+                  For animated progress bar just add class
+                  <code>.active</code>
+                </p>
+                <h4>Stacked</h4>
+                <div class='doc-example'>
+                  <div class='progress'>
+                    <div class='progress-bar progress-bar-contrast' style='width: 40%'>
+                      <span class='sr-only'>40% Complete</span>
+                    </div>
+                    <div class='progress-bar progress-bar-dark' style='width: 30%'>
+                      <span class='sr-only'>30% Complete</span>
+                    </div>
+                    <div class='progress-bar progress-bar-light' style='width: 20%'>
+                      <span class='sr-only'>20% Complete</span>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-contrast" style="width: 40%">
+                        <span class="sr-only">40% Complete</span>
+                      </div>
+                      <div class="progress-bar progress-bar-dark" style="width: 30%">
+                        <span class="sr-only">30% Complete</span>
+                      </div>
+                      <div class="progress-bar progress-bar-light" style="width: 20%">
+                        <span class="sr-only">20% Complete</span>
+                      </div>
+                    </div>
+                    
+                    <!-- you can add more progress bars here -->
+                  </script>
+                </div>
+                <p class='doc-help'>
+                  Colors of progress bars are as follows
+                  <code>.progress-bar-contrast</code>
+                  ,
+                  <code>.progress-bar-dark</code>
+                  ,
+                  <code>.progress-bar-medium</code>
+                  ,
+                  <code>.progress-bar-light</code>
+                  ,
+                  <code>.progress-bar-very-light</code>
+                </p>
+                <h4>Default size</h4>
+                <div class='doc-example'>
+                  <div class='progress'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='80' class='progress-bar progress-bar-contrast' role='progressbar' style='width: 80%'>
+                      <span class='sr-only'>80% Complete</span>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="progress">
+                      <!-- inside of progress bar -->
+                    </div>
+                  </script>
+                </div>
+                <h4>Medium size</h4>
+                <div class='doc-example'>
+                  <div class='progress progress-md'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='80' class='progress-bar progress-bar-dark' role='progressbar' style='width: 80%'>
+                      <span class='sr-only'>80% Complete</span>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="progress progress-md">
+                      <!-- inside of progress bar -->
+                    </div>
+                  </script>
+                </div>
+                <h4>Large size</h4>
+                <div class='doc-example'>
+                  <div class='progress progress-lg'>
+                    <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='80' class='progress-bar progress-bar-medium' role='progressbar' style='width: 80%'>
+                      <span class='sr-only'>80% Complete</span>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="progress progress-lg">
+                      <!-- inside of progress bar -->
+                    </div>
+                  </script>
+                </div>
+              </section>
+              <section id='accordions'>
+                <h3 class='doc-title'>Accordions</h3>
+                <h4>Bordered</h4>
+                <div class='doc-example'>
+                  Add
+                  <code>.accordion-bordered</code>
+                  to
+                  <code>.accordion</code>
+                  class.
+                </div>
+              </section>
+              <section id='lightbox-def'>
+                <h3 class='doc-title'>Lightbox</h3>
+                <div class='alert alert-info'>
+                  JavaScript plugin
+                  <a class="alert-link" href="http://demo.dev7studios.com/nivo-lightbox/">Nivo Lightbox</a>
+                  used.
+                </div>
+                <div class='doc-example'>
+                  <a data-lightbox href='http://placehold.it/800x800&amp;text=Big+image'>
+                    <img alt="1" width="165" height="165" src="http://placehold.it/165x165" />
+                  </a>
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <a data-lightbox href="link to big image">
+                    <img alt="..." width="..." height="..." src="small image">
+                  </a>
+                </script>
+                <section id='lightbox-def-gallery'>
+                  <h4 class='doc-title'>Gallery</h4>
+                  <div class='doc-example'>
+                    <a data-lightbox data-lightbox-gallery='lightbox-test' href='http://placehold.it/800x800&amp;text=Big+image'>
+                      <img alt="1" width="165" height="165" src="http://placehold.it/165x165" />
+                    </a>
+                    <a data-lightbox data-lightbox-gallery='lightbox-test' href='http://placehold.it/800x800&amp;text=Big+image' title='Some example title'>
+                      <img alt="2" width="165" height="165" src="http://placehold.it/165x165" />
+                    </a>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <a data-lightbox data-lightbox-gallery="name of your gallery" href="link to big image">
+                      <img alt="..." width="..." height="..." src="small image">
+                    </a>
+                    
+                    <!-- you can add title attribute on link tag to set title in lightbox -->
+                    <a data-lightbox data-lightbox-gallery="name of your gallery" href="link to big image" title="Some example title">
+                      <img alt="..." width="..." height="..." src="small image">
+                    </a>
+                  </script>
+                </section>
+              </section>
+              <section id='quotes'>
+                <h3 class='doc-title'>Quotes (Testimonials)</h3>
+                <div class='doc-example'>
+                  <div class='row quotes'>
+                    <div class='carousel carousel-default slide carousel-auto' id='carousel-testimonials'>
+                      <div class='carousel-inner'>
+                        <div class='item active quote'>
+                          <div class='col-sm-12 text-center'>
+                            <p class='lead'>Lorem ipsum</p>
+                            <div class='author-wrapper'>
+                              <p class='author'>
+                                <strong>Name</strong>,
+                                Company
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class='item quote'>
+                          <div class='col-sm-12 text-center'>
+                            <p class='lead'>Lorem ipsum</p>
+                            <div class='author-wrapper'>
+                              <p class='author'>
+                                <strong>Name</strong>,
+                                Company
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <ol class='carousel-indicators'>
+                        <li class='active' data-slide-to='0' data-target='#carousel-testimonials'></li>
+                        <li data-slide-to='1' data-target='#carousel-testimonials'></li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <div class="carousel carousel-default slide carousel-auto" id="carousel-testimonials">
+                    <div class="carousel-inner">
+                      <div class="item quote">
+                        <div class="col-sm-12 text-center">
+                          <p class="lead">Lorem ipsum</p>
+                          <div class="author-wrapper">
+                            <p class="author">
+                              <strong>Name</strong>,
+                              Company
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="item quote active">
+                        <div class="col-sm-12 text-center">
+                          <p class="lead">Lorem ipsum</p>
+                          <div class="author-wrapper">
+                            <p class="author">
+                              <strong>Name</strong>,
+                              Company
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <ol class="carousel-indicators">
+                      <li class="" data-slide-to="0" data-target="#carousel-testimonials"></li>
+                      <li data-slide-to="1" data-target="#carousel-testimonials" class="active"></li>
+                    </ol>
+                  </div>
+                </script>
+              </section>
+              <section id='logo-carousel'>
+                <h3 class='doc-title'>Client slideshow (Logo carousel)</h3>
+                <div class='alert alert-info'>
+                  JavaScript plugin
+                  <a class="alert-link" href="http://jquery.malsup.com/cycle2/">Cycle2</a>
+                  used.
+                </div>
+                <div class='doc-example'>
+                  <div class='row'>
+                    <div class='col-sm-12'>
+                      <div class='client-slideshow cycle-slideshow' data-cycle-carousel-fluid='true' data-cycle-fx='carousel' data-cycle-timeout='2000' style='min-height:40px;'>
+                        <img alt="" width="140" height="33" src="http://placehold.it/140x33" />
+                        <img alt="" width="140" height="33" src="http://placehold.it/140x33" />
+                        <img alt="" width="140" height="26" src="http://placehold.it/140x26" />
+                        <img alt="" width="139" height="32" src="http://placehold.it/139x32" />
+                        <img alt="" width="151" height="28" src="http://placehold.it/151x28" />
+                        <img alt="" width="31" height="38" src="http://placehold.it/31x38" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <div class='client-slideshow cycle-slideshow' data-cycle-carousel-fluid='true' data-cycle-fx='carousel' data-cycle-timeout='2000'>
+                    <img alt="..." width="..." height="..." src="..." />
+                  </div>
+                </script>
+              </section>
+              <section id='animations'>
+                <h3 class='doc-title'>Animations</h3>
+                <div class='alert alert-info'>
+                  CSS plugin
+                  <a class="alert-link" href="http://daneden.me/animate/">Animate.CSS</a>
+                  used.
+                </div>
+              </section>
+              <section id='typography'>
+                <h3 class='doc-title'>Typography</h3>
+                <section id='main-title'>
+                  <h4 class='doc-title'>Main title</h4>
+                  <div class='doc-example'>
+                    <div class='row'>
+                      <div class='col-sm-12'>
+                        <div class='page-header page-header-with-icon no-mg-t'>
+                          <i class='fa-icon-suitcase'></i>
+                          <h2>
+                            Title
+                            <small>Subtitle</small>
+                          </h2>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="page-header page-header-with-icon">
+                    
+                      <!-- icon -->
+                      <i class="fa-icon-suitcase"></i>
+                    
+                      <h2>
+                        Title
+                        <small>Subtitle</small>
+                      </h2>
+                    
+                    </div>
+                  </script>
+                </section>
+                <section id='dropcaps'>
+                  <h4 class='doc-title'>Dropcaps</h4>
+                  <div class='doc-example'>
+                    <div class='row'>
+                      <div class='col-sm-6'>
+                        <p class='dropcap-contrast text-justify'>
+                          <span class='first-letter'>M</span>
+                          auris feugiat lacus quis aliquet dapibus. Sed venenatis turpis quis neque egestas porttitor. Fusce quistincidunt turpis. Pellentesque felis justo, ornare a enim ac, ornare tincidunt justo. Proin fermentum eleifend mauris.
+                        </p>
+                        <script class='brush: xml' type='syntaxhighlighter'>
+                          <p class="dropcap-contrast text-justify">
+                            <span class="first-letter">M</span>
+                            auris feugiat lacus quis aliquet dapibus. Sed venenatis turpis quis neque egestas porttitor. Fusce quistincidunt turpis. Pellentesque felis justo, ornare a enim ac, ornare tincidunt justo. Proin fermentum eleifend mauris.
+                          </p>
+                        </script>
+                      </div>
+                      <div class='col-sm-6'>
+                        <p class='dropcap text-justify'>
+                          <span class='first-letter'>M</span>
+                          auris feugiat lacus quis aliquet dapibus. Sed venenatis turpis quis neque egestas porttitor. Fusce quistincidunt turpis. Pellentesque felis justo, ornare a enim ac, ornare tincidunt justo. Proin fermentum eleifend mauris.
+                        </p>
+                        <script class='brush: xml' type='syntaxhighlighter'>
+                          <p class="dropcap text-justify">
+                            <span class="first-letter">M</span>
+                            auris feugiat lacus quis aliquet dapibus. Sed venenatis turpis quis neque egestas porttitor. Fusce quistincidunt turpis. Pellentesque felis justo, ornare a enim ac, ornare tincidunt justo. Proin fermentum eleifend mauris.
+                          </p>
+                        </script>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </section>
+            </section>
+            <section class='big-section' id='pages'>
+              <h2 class='doc-title'>Pages</h2>
+              <section id='page-portfolio'>
+                <h3 class='doc-title'>Portfolio</h3>
+                <secion id='page-portfolio-filter'>
+                  <h4 class='doc-title'>Filter</h4>
+                  <div class='alert alert-info'>
+                    JavaScript plugin
+                    <a class="alert-link" href="http://isotope.metafizzy.co/">Isotope</a>
+                    used for portfolio filtration.
+                  </div>
+                  <div class='doc-help'>
+                    <div class='row' id='portfolio-filter'>
+                      <div class='col-sm-12'>
+                        <ul class='nav nav-pills'>
+                          <li class='active'><a data-filter="*" href="#">All</a></li>
+                          <li><a data-filter=".portfolio-filter-photography" href="#">Photography</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class='row portfolio-boxes' id='portfolio-container'>
+                      <div class='col-sm-3 portfolio-box portfolio-item portfolio-filter-photography'>
+                        <a href='#'>
+                          <div class='image-link'>
+                            <i class='fa-icon-search'></i>
+                            <img class="img-responsive img-rounded center-block" alt="Title" width="263" height="171" src="http://placehold.it/263x171" />
+                          </div>
+                          <h3 class='title'>Title</h3>
+                          <p class='category'>Photography</p>
+                        </a>
+                      </div>
+                      <div class='col-sm-3 portfolio-box portfolio-item'>
+                        <a href='#'>
+                          <div class='image-link'>
+                            <i class='fa-icon-search'></i>
+                            <img class="img-responsive img-rounded center-block" alt="Title" width="263" height="171" src="http://placehold.it/263x171" />
+                          </div>
+                          <h3 class='title'>Title</h3>
+                          <p class='category'>Category</p>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="row" id="portfolio-filter">
+                      <div class="col-sm-12">
+                        <ul class="nav nav-pills">
+                          <li class="active"><a data-filter="*" href="#">All</a></li>
+                          <li class=""><a data-filter=".portfolio-filter-photography" href="#">Photography</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+                    <div class='row portfolio-boxes' id='portfolio-container'>
+                      <div class='col-sm-3 portfolio-box portfolio-item portfolio-filter-photography'>
+                        <a href='#'>
+                          <div class='image-link'>
+                            <i class='fa-icon-search'></i>
+                            <img class="img-responsive img-rounded center-block" alt="Title" width="..." height="..." src="..." />
+                          </div>
+                          <h3 class='title'>Title</h3>
+                          <p class='category'>Photography</p>
+                        </a>
+                      </div>
+                      <div class='col-sm-3 portfolio-box portfolio-item'>
+                        <a href='#'>
+                          <div class='image-link'>
+                            <i class='fa-icon-search'></i>
+                            <img class="img-responsive img-rounded center-block" alt="Title" width="..." height="..." src="..." />
+                          </div>
+                          <h3 class='title'>Title</h3>
+                          <p class='category'>Category</p>
+                        </a>
+                      </div>
+                    </div>
+                  </script>
+                </secion>
+                <secion id='page-portfolio-browser'>
+                  <h4 class='doc-title'>Browser</h4>
+                  <div class='doc-example'>
+                    <div class='row'>
+                      <div class='col-sm-12'>
+                        <div class='browser-window'>
+                          <div class='browser-header'>
+                            <div class='browser-header-controls'>
+                              <span class='red'></span>
+                              <span class='orange'></span>
+                              <span class='green'></span>
+                            </div>
+                            <div class='browser-address-bar'>
+                              <div class='browser-title'>
+                                <a href="www.bublinastudio.com">www.bublinastudio.com</a>
+                              </div>
+                            </div>
+                          </div>
+                          <div class='browser-content'>
+                            <img alt="" width="1531" height="3202" src="http://placehold.it/1531x3202" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <script class='brush: xml' type='syntaxhighlighter'>
+                    <div class="browser-window">
+                      <div class="browser-header">
+                        <div class="browser-header-controls">
+                          <span class="red"></span>
+                          <span class="orange"></span>
+                          <span class="green"></span>
+                        </div>
+                        <div class="browser-address-bar">
+                          <div class="browser-title">
+                            <a href="...">...</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="browser-content">
+                        <img alt="" width="..." height="..." src="...">
+                      </div>
+                    </div>
+                  </script>
+                </secion>
+              </section>
+              <section id='page-error'>
+                <h3 class='doc-title'>Error page</h3>
+                <div class='alert alert-info'>
+                  This page is using fullsize image as background. If you are going to support
+                  <strong>Internet Explorer</strong>
+                  and
+                  your webserver is running
+                  <strong>Apache</strong>,
+                  you must add this line to your
+                  <a class='alert-link' href='https://github.com/louisremi/background-size-polyfill/blob/gh-pages/.htaccess'>.htacces file</a>.
+                </div>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <body class="error-page">
+                    <div id="wrapper">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <h1 class="code fadeInDown animated">
+                  
+                              <!-- error code -->
+                              <span>4</span>
+                              <span class="fa-icon-question-sign"></span>
+                              <span>4</span>
+                  
+                            </h1>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-12">
+                  
+                            <!-- error message -->
+                            <p class="message fadeInLeft animated">
+                              Sorry, the page you are looking for doesn’t exist.
+                              <br>
+                              Take a run around the block or tap the button below.
+                            </p>
+                  
+                            <!-- link back -->
+                            <a class="btn btn-bordered btn-white btn-lg fadeInRight animated" href="/">Go to homepage</a>
+                  
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-12">
+                  
+                            <!-- place for your logo -->
+                            <a href="index.html">
+                              <img class="logo fadeInUp animated" alt="..." width="..." height="..." src="...">
+                            </a>
+                  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </body>
+                </script>
+              </section>
+              <section id='page-countdown'>
+                <h3 class='doc-title'>Countdown page</h3>
+                <div class='alert alert-info'>
+                  This page is using fullsize image as background. If you are going to support
+                  <strong>Internet Explorer</strong>
+                  and
+                  your webserver is running
+                  <strong>Apache</strong>,
+                  you must add this line to your
+                  <a class='alert-link' href='https://github.com/louisremi/background-size-polyfill/blob/gh-pages/.htaccess'>.htacces file</a>.
+                </div>
+                <p class='doc-help'>
+                  Set your own datetime for countdown by simple adding
+                  <code>data-countdown="2015/09/17 19:50:00"</code>
+                  attribute.
+                </p>
+                <script class='brush: xml' type='syntaxhighlighter'>
+                  <body class='countdown-page'>
+                    <div id='wrapper'>
+                      <div class='container'>
+                        <div class='row'>
+                          <div class='col-sm-12'>
+                            <div class='fadeInDown animated'>
+                  
+                              <!-- big icon -->
+                              <div class='icon'>
+                                <i class='fa-icon-rocket'></i>
+                              </div>
+                  
+                            </div>
+                          </div>
+                        </div>
+                        <div class='row'>
+                          <div class='col-sm-12'>
+                  
+                            <!-- message -->
+                            <div class='message fadeInRight animated'>
+                              Don't worry, we're still working on it and we're coming soon!
+                            </div>
+                  
+                          </div>
+                        </div>
+                        <div class='row'>
+                          <div class='col-sm-12'>
+                  
+                            <!-- countdown - set your datetime in data-countdown attribute -->
+                            <div class='countdown fadeInDown animated' data-countdown='2015/09/17 19:50:00'>
+                              <div class='days countdown-item'>
+                                <span class='countdown-time'></span>
+                                <span class='countdown-label'>Days</span>
+                              </div>
+                              <div class='hours countdown-item'>
+                                <span class='countdown-time'></span>
+                                <span class='countdown-label'>Hours</span>
+                              </div>
+                              <div class='minutes countdown-item'>
+                                <span class='countdown-time'></span>
+                                <span class='countdown-label'>Minutes</span>
+                              </div>
+                              <div class='seconds countdown-item'>
+                                <span class='countdown-time'></span>
+                                <span class='countdown-label'>Seconds</span>
+                              </div>
+                            </div>
+                  
+                          </div>
+                        </div>
+                        <div class='row'>
+                          <div class='col-sm-6 col-sm-offset-3 fadeInDown animated'>
+                  
+                            <!-- form -->
+                            <form action='...' method='get'>
+                              <div class='input-group'>
+                                <input class='form-control input-lg' placeholder='Stay in touch with us...' type='text'>
+                                <span class='input-group-btn'>
+                                  <button class='btn btn-lg btn-contrast' type='button'>
+                                    <i class='fa-icon-envelope-alt fa-icon-large'></i>
+                                  </button>
+                                </span>
+                              </div>
+                            </form>
+                  
+                          </div>
+                        </div>
+                        <div class='row'>
+                          <div class='col-sm-12'>
+                  
+                            <!-- place for your logo -->
+                            <a href='index.html'>
+                              <img class="logo fadeInUp animated" alt="..." width="..." height="..." src="..." />
+                            </a>
+                  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </body>
+                </script>
+              </section>
+              <section id='page-contact'>
+                <h3 class='doc-title'>Contact</h3>
+                <div class='doc-help'>
+                  Add
+                  <code>.contact-page</code>
+                  class to
+                  <code>&lt;body&gt;</code>
+                  tag.
+                </div>
+                <h4 class='doc-title'>Map initialization</h4>
+                <div class='doc-help'>
+                  Place
+                  <code>&lt;div id=&quot;map-canvas&quot;&gt;&lt;/div&gt;</code>
+                  to your page. And load this JavaScript with your customizations:
+                </div>
+                <pre class='brush: js'>&lt;script src=&quot;http://maps.googleapis.com/maps/api/js?sensor=false&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+                &lt;script&gt;
+                  var initializeMap;
+                
+                  initializeMap = function() {
+                    var iw1, latlng, map, marker, options;
+                
+                    // customize your latitude and longtitude
+                    latlng = new google.maps.LatLng(37.331686, -122.030656);
+                
+                    options = {
+                      scrollwheel: false,
+                      zoom: 16,
+                      center: latlng,
+                      mapTypeId: google.maps.MapTypeId.ROADMAP,
+                      mapTypeControl: true
+                    };
+                
+                    map = new google.maps.Map(document.getElementById(&quot;map-canvas&quot;), options);
+                
+                    marker = new google.maps.Marker({
+                      position: latlng,
+                      map: map
+                    });
+                
+                    // customize text in infobox window
+                    iw1 = new google.maps.InfoWindow({
+                      content: &quot;Here we are!&quot;
+                    });
+                
+                    return google.maps.event.addListener(marker, &quot;click&quot;, function(e) {
+                      return iw1.open(map, this);
+                    });
+                  };
+                
+                  google.maps.event.addDomListener(window, 'load', initializeMap);
+                &lt;/script&gt;</pre>
+                <h4 class='doc-title'>Wide map</h4>
+                <div class='doc-help'>
+                  Add
+                  <code>.contact-page.contact-page-wide-map</code>
+                  class to
+                  <code>&lt;body&gt;</code>
+                  tag.
+                </div>
+              </section>
+              <section id='page-faq'>
+                <h3 class='doc-title'>FAQ</h3>
+                <div class='doc-help'>
+                  Add
+                  <code>.faq-page</code>
+                  class to
+                  <code>&lt;body&gt;</code>
+                  tag.
+                </div>
+              </section>
+            </section>
+            <section class='big-section' id='changelog'>
+              <h2 class='doc-title'>Changelog</h2>
+              <section id='changelog'>
+                <section id='changelog-v1-2'>
+                  <h3 class='doc-title'>
+                    Version 1.2
+                    <small>18. October, 2013</small>
+                  </h3>
+                  <p class='doc-help'>
+                    <ul class='list-unstyled'>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Added
+                        <a href='#header-multilevel-dropdown-menu-item'>multilevel submenu</a>.
+                      </li>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Added
+                        <a href='#progress-bars'>progress bars.</a>.
+                      </li>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Fixed margin for multiple row panels.
+                        <a href='#panel-image'>
+                          see
+                          <code>.panels-wrapper</code>
+                          structure.
+                        </a>
+                      </li>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Added
+                        <a href='#lightbox-def'>Nivo Lightbox</a>
+                        plugin.
+                      </li>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Various minor fixes and improvements.
+                      </li>
+                      <li>
+                        <i class='fa-icon-minus text-danger fa-icon-fixed-width'></i>
+                        Removed Lightbox2 plugin. See
+                        <a href='#lightbox-def'>Nivo Lightbox</a>
+                        for upgrade guide. Lightbox definition is still the same, but if you're using Lightbox galleries, you must set
+                        <code>data-lightbox-gallery="name of your gallery"</code>.
+                      </li>
+                    </ul>
+                  </p>
+                </section>
+                <section id='changelog-v1-1'>
+                  <h3 class='doc-title'>
+                    Version 1.1
+                    <small>4. October, 2013</small>
+                  </h3>
+                  <p class='doc-help'>
+                    <ul class='list-unstyled'>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Added
+                        <a href='#sass'>Sass & Compass</a>
+                        files.
+                      </li>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Added loading symbol to carousels.
+                        If you don't like it, you can
+                        <a href='#disabling-carousel-loading-symbol'>disable it</a>.
+                      </li>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Added
+                        <a href='#icons'>rounded and bordered icons</a>.
+                      </li>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Various minor fixes.
+                      </li>
+                      <li>
+                        <i class='fa-icon-minus text-danger fa-icon-fixed-width'></i>
+                        Removed
+                        multiple
+                        <code>apple-touch-icon</code>
+                        files. These files are replaced with single
+                        <code>apple-touch-icon (152x152px)</code>
+                        icon.
+                      </li>
+                    </ul>
+                  </p>
+                </section>
+                <section id='changelog-v1'>
+                  <h3 class='doc-title'>
+                    Version 1.0
+                    <small>26. September, 2013</small>
+                  </h3>
+                  <p class='doc-help'>
+                    <ul class='list-unstyled'>
+                      <li>
+                        <i class='fa-icon-plus text-contrast fa-icon-fixed-width'></i>
+                        Initial release
+                      </li>
+                    </ul>
+                  </p>
+                </section>
+              </section>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- / required javascripts -->
+    <script src="assets/javascripts/jquery/jquery.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/jquery/jquery.mobile.custom.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/modernizr/modernizr.custom.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/hover_dropdown/twitter-bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/retina/retina.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/knob/jquery.knob.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/isotope/jquery.isotope.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/isotope/jquery.isotope.sloppy-masonry.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/validate/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/flexslider/jquery.flexslider.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/countdown/countdown.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/nivo_lightbox/nivo-lightbox.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/plugins/cycle/jquery.cycle.all.min.js" type="text/javascript"></script>
+    <script src="assets/javascripts/jednotka.js" type="text/javascript"></script>
+    <!-- / not required javascripts -->
+    <script src="assets/javascripts/docs.js" type="text/javascript"></script>
+  </body>
+</html>

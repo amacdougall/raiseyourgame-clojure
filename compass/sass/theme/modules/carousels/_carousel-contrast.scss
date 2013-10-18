@@ -1,0 +1,189 @@
+body.boxed {
+  .carousel-contrast .flex-direction-nav .flex-prev { left: 0; }
+  .carousel-contrast .flex-direction-nav .flex-next { right: 0; }
+}
+
+.carousel-contrast {
+  position: relative;
+  min-height: $carousel-default-min-height;
+  top: -($nav-height + 1px); // 1px because of border-bottom on nav
+  margin-bottom: -($nav-height + 1px); // 1px because of border-bottom on nav
+
+  .slides {
+    margin: 0;
+    padding: 0;
+    @include clearfix;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .big {
+    color: $carousel-contrast-text-color;
+    font-family: $font-family-headings;
+    font-weight: 500;
+    margin: 0;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    padding: 15px 30px;
+    display: inline-block;
+    @include rgba-fallback(rgba($black, .6), "background-color");
+    @include font(28px); // 0.6
+
+    @include sm-only {
+      margin-top: 68px;
+      @include font(38px); // 0.8
+    }
+
+    @include md-plus {
+      margin-top: 85px;
+      @include font(48px); // 1.0
+    }
+  }
+
+  .normal {
+    color: $carousel-contrast-text-color;
+    font-family: $font-family-headings;
+    font-weight: 300;
+    margin: 0;
+    padding: 15px 30px;
+    display: inline-block;
+    @include font(18px);
+    @include rgba-fallback(rgba($black, .6), "background-color");
+
+    @include sm-only {
+      @include font(24px); // 0.8
+    }
+
+    @include md-plus {
+      @include font(30px); // 1.0
+    }
+  }
+
+  .btn.btn-lg {
+    margin-top: 30px;
+    margin-bottom: 95px;
+    font-size: 14px;
+    padding: 12px 40px;
+    font-weight: 700;
+    text-transform: uppercase;
+    @include text-shadow(1px 1px 1px rgba($black, .4));
+  }
+
+  .item {
+    display: none;
+    padding-top: $nav-height + 1px; // 1px because of border-bottom on nav
+  }
+
+  .flex-control-paging {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    left: 50%;
+    width: 60%;
+    margin-left: -30%;
+    text-align: center;
+    list-style: none;
+    z-index: $zindex-carousel-controls;
+    bottom: floor(-($carousel-contrast-pagination-size/2));
+    height: $carousel-contrast-pagination-size + 2px;
+
+    li {
+      display: inline-block;
+      margin: 2px;
+    }
+
+    a {
+      display: inline-block;
+      cursor: pointer;
+      text-indent: -9999px;
+      background-color: $carousel-contrast-pagination-color;
+      border: 4px solid $main-content-bg;
+      @include square($carousel-contrast-pagination-size);
+      @include border-radius(50%);
+
+      &:hover, &.flex-active {
+        background-color: $carousel-contrast-pagination-active;
+      }
+    }
+  }
+
+  .flex-direction-nav {
+    position: absolute;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: $screen-xs;
+    margin-left: floor(-($screen-xs/2));
+    overflow: visible;
+    display: none;
+
+    @include md-only {
+      display: block;
+      width: $screen-md;
+      margin-left: floor(-($screen-md/2));
+    }
+
+    @include lg-plus {
+      display: block;
+      width: $screen-lg;
+      margin-left: floor(-($screen-lg/2));
+    }
+
+    .flex-next, .flex-prev {
+      top: 50%;
+      position: absolute;
+      text-decoration: none;
+      margin-top: floor(-(($carousel-contrast-controls-size/2)-($nav-height/2)));
+      z-index: $zindex-carousel-controls;
+      color: $carousel-contrast-controls-color;
+      line-height: $carousel-contrast-controls-size;
+      @include square($carousel-contrast-controls-size);
+      @include opacity($carousel-contrast-control-opacity);
+      @include transition(opacity $transition-duration-base);
+
+      &:before {
+        @include icon($chevron-right);
+        font-size: $carousel-contrast-controls-size;
+      }
+    }
+
+    .flex-prev {
+      left: -30px;
+
+      @include md-only {
+        left: 0px;
+      }
+
+      &:before { content: $chevron-left; }
+    }
+
+    .flex-next {
+      right: -30px;
+
+      @include md-only {
+        right: 0px;
+      }
+
+      &:before { content: $chevron-right; }
+    }
+  }
+
+  &:hover {
+    .flex-direction-nav {
+      .flex-next, .flex-prev {
+        @include opacity(1);
+      }
+    }
+  }
+}
+
+.carousel-contrast, .carousel-contrast .item {
+  height: 488px;
+  @include sm-only { height: 491px; }
+  @include md-plus { height: 528px; }
+}

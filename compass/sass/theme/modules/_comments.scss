@@ -1,0 +1,145 @@
+/*------------------------------------*\
+    $COMMENTS
+\*------------------------------------*/
+.media {
+  margin-top: 20px;
+
+  > .pull-left {
+    margin-right: 30px;
+    display: none;
+
+    @include sm-plus {
+      display: block;
+    }
+  }
+
+  .media-body {
+    overflow: visible;
+
+    .media-body {
+      @include sm-minus {
+        padding-left: 20px;
+      }
+    }
+
+    @include sm-plus {
+      padding-left: 90px;
+    }
+  }
+
+  .media-object {
+    @include border-radius($border-radius-base);
+    @include square(60px);
+
+    &.without-image {
+      text-align: center;
+      line-height: 60px;
+      color: $medium;
+      font-size: 22px;
+      background-color: $media-border-color;
+
+      &:before {
+        @include icon($user);
+      }
+    }
+  }
+
+  .content {
+    padding: 20px;
+    border: 2px solid $media-border-color;
+    position: relative;
+    @include border-radius($border-radius-base);
+    @include transition(border-color $transition-duration-base);
+
+    .title {
+      font-size: 16px;
+      line-height: 20px;
+      margin-top: 0;
+
+      .label {
+        padding: .2em .6em;
+        position: relative;
+        top: -2px;
+        text-transform: uppercase;
+      }
+    }
+
+    .time {
+      color: $media-time-color;
+      text-align: right;
+      margin-bottom: 0;
+
+      a {
+        color: $media-time-color;
+
+        &:hover {
+          color: darken($media-time-color, 5%);
+        }
+      }
+    }
+
+    .toolbar {
+      @include clearfix;
+
+      .title {
+        float: left;
+      }
+      
+      .btn-link {
+        float: right;
+        padding-right: 0;
+        margin-top: -5px;
+        font-weight: normal;
+        text-decoration: none;
+
+        &:hover {
+          span {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    &:hover {
+      border-color: darken($media-border-color, 10%);
+
+      &:before {
+        border-right-color: darken($media-border-color, 10%);
+      }
+    }
+
+    @include sm-plus {
+      &:before {
+        content: '';
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        position: absolute;
+        border-right: 11px solid $media-border-color;
+        top: 21px;
+        left: -11px;
+        @include square(0);
+        @include transition(border-color $transition-duration-base);
+      }
+
+      &:after {
+        content: '';
+        border-top: 7px solid transparent;
+        border-bottom: 7px solid transparent;
+        position: absolute;
+        z-index: 1;
+        border-right: 9px solid $main-content-bg;
+        top: 23px;
+        left: -8px;
+        @include square(0);
+      }
+    }
+
+    &.staff {
+      border-color: $media-border-staff-color;
+
+      &:before {
+        border-right-color: $media-border-staff-color;
+      }
+    }
+  }
+}

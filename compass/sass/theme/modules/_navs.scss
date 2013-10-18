@@ -1,0 +1,59 @@
+/*------------------------------------*\
+    $NAVS
+\*------------------------------------*/
+.list-group {
+  .list-group-item {
+    border-color: $very-light;
+
+    [class^="fa-icon-"], [class*=" fa-icon-"] {
+      color: $contrast;
+    }
+
+    &:hover, &:focus {
+      background-color:  mix($very-light, $main-content-bg);
+    }
+
+    &.active, &.active:hover, &.active:focus {
+      color: $white;
+      background-color: $contrast;
+      border-color: $contrast;
+
+      [class^="fa-icon-"], [class*=" fa-icon-"] {
+        color: $white;
+      }
+    }
+
+    &:first-child {
+      @include border-top-radius($border-radius-base);
+    }
+
+    &:last-child {
+      @include border-bottom-radius($border-radius-base);
+    }
+  }
+}
+
+.nav-pills li + li {
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+.nav-pills > li > a {
+  color: $medium;
+  background-color: $very-light;
+
+  &:hover, &:focus {
+    background-color: darken($very-light, 5%);
+  }
+}
+
+.nav-pills > li.active > a {
+  padding: 5px 20px;
+  color: $white;
+
+  background-color: $contrast;
+
+  &:hover, &:focus {
+    background-color: $contrast;
+  }
+}

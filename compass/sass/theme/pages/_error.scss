@@ -1,0 +1,84 @@
+/*------------------------------------*\
+    $ERROR PAGE
+\*------------------------------------*/
+html {
+  &.no-touch {
+    body.error-page {
+      height: 100%;
+
+      #wrapper {
+        display: table;
+        height: 100%;
+        @include center-block;
+
+        .container {
+          vertical-align: middle;
+          display: table-cell;
+        }
+      }
+    }
+  }
+}
+
+body.error-page {
+  background: image-url("bg_fullsize.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  text-align: center;
+  font-family: $font-family-headings;
+
+  // The url is relative to the document, not to the css file!
+  // Prefer absolute urls to avoid confusion.
+  -ms-behavior: url("/assets/images/ie/backgroundsize.min.htc");
+
+  #wrapper {
+    padding: 20px 0;
+    background-image: none !important;
+  }
+
+  .code {
+    margin: 0;
+    padding: 0;
+    color: $white;
+
+    span {
+      font-size: 100px;
+      line-height: 100px;
+
+      @include sm-plus {
+        font-size: 150px;
+        line-height: 150px;
+      }
+    }
+
+    [class^="fa-icon-"], [class*=" fa-icon-"] {
+      color: $contrast;
+    }
+  }
+
+  .message {
+    font-size: 18px;
+    line-height: 24px;
+    margin-top: 50px;
+    margin-bottom: 0;
+    font-weight: 300;
+    color: $white;
+
+    @include sm-plus {
+      font-size: 24px;
+      line-height: 34px;
+    }
+  }
+
+  .btn {
+    margin-top: 50px;
+    font-weight: 300;
+  }
+
+  .logo {
+    margin-top: 50px;
+    display: inline-block;
+  }
+}

@@ -1,0 +1,60 @@
+$padding: 50px;
+$total-size: floor((60px));
+$total-padded-size: $total-size + $padding;
+$half-size: floor($total-size / 2);
+$half-padded-size: floor($total-padded-size / 2);
+
+.panels {
+  .panel-item:first-child {
+    .panel-big {
+      margin-top: $half-size;
+    }
+  }
+}
+
+.panel.panel-big {
+  margin-top: $total-size;
+  @include panel_custom;
+
+  @include sm-plus {
+    margin-top: $half-size;
+  }
+
+  .panel-icon {
+    position: absolute;
+    top: -$half-size;
+    left: 50%;
+    margin-left: -$half-padded-size;
+    text-align: center;
+    background-color: $main-content-bg;
+    line-height: $total-size;
+    @include size($total-padded-size, $total-size);
+
+    .icon {
+      color: $contrast;
+      display: inline-block;
+      font-size: floor($total-size);
+      line-height: floor($total-size);
+      @include border-radius(50%);
+      @include square($total-size);
+    }
+  }
+
+  .panel-body {
+    padding-top: $total-size * 0.8;
+    text-align: center;
+  }
+
+  &:hover {
+    .panel-icon {
+      $total-size: floor(($panel-icon-size + $panel-icon-border) * 0.8 );
+      $half-size: floor($total-size / 2);
+
+      top: -($half-size * 1);
+
+      @include md-plus {
+        top: -($half-size * 1.1);
+      }
+    }
+  }
+}

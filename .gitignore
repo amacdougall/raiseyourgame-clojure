@@ -24,3 +24,6 @@ scratch.*
 
 # Vim swapfiles
 *.sw[a-p]
+
+# Project-specific symlinks
+jednotka_active.scss

@@ -1,0 +1,156 @@
+/*------------------------------------*\
+    $TABS
+\*------------------------------------*/
+.tabbable {
+  .nav-tabs {
+    border-bottom: 2px solid $tabs-border-color;
+
+    > li {
+      margin-bottom: -2px;
+
+      > a {
+        background-color: $tabs-border-color;
+        border: 2px solid transparent;
+        border-bottom: none;
+        border-top: 4px solid transparent;
+        font-family: $font-family-base;
+        font-size: 16px;
+        font-weight: 600;
+        margin-right: 3px;
+        color: $tabs-color;
+        @include border-top-radius($border-radius-base);
+        @include transition(background-color $transition-duration-base, color $transition-duration-base);
+
+        &:hover {
+          border-color: transparent;
+          color: $tabs-active-color;
+          background-color: $tabs-active-bg;
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      &.active > a, &.active > a:hover, &.active > a:focus {
+        background-color: $main-content-bg;
+        border: 2px solid $tabs-border-color;
+        border-bottom: none;
+        border-top: 4px solid $tabs-active-stripe-color;
+      }
+    }
+  }
+
+  .tab-content {
+    padding: 20px;
+    border: 2px solid $tabs-border-color;
+    border-top: none;
+    overflow: auto;
+    @include border-bottom-radius($border-radius-base);
+  }
+
+  &.tabs-below {
+    .nav-tabs {
+      border-bottom: none;
+      border-top: 2px solid $tabs-border-color;
+
+      > li {
+        margin-bottom: 0;
+        margin-top: -2px;
+
+        > a {
+          border: 2px solid transparent;
+          border-top: none;
+          border-bottom: 4px solid transparent;
+          @include border-top-radius(0);
+          @include border-bottom-radius($border-radius-base);
+        }
+
+        &.active > a, &.active > a:hover, &.active > a:focus {
+          border: 2px solid $tabs-border-color;
+          border-top: none;
+          border-bottom: 4px solid $tabs-active-stripe-color;
+        }
+      }
+    }
+
+    .tab-content {
+      border: 2px solid $tabs-border-color;
+      border-bottom: none;
+      @include border-bottom-radius(0);
+      @include border-top-radius($border-radius-base);
+    }
+  }
+
+  &.tabs-left > .nav-tabs > li, &.tabs-right > .nav-tabs > li {
+    float: none;
+  }
+
+  &.tabs-left {
+    .nav-tabs {
+      float: left;
+      border-bottom: none;
+
+      > li {
+        margin-bottom: 0;
+        margin-right: -2px;
+
+        > a {
+          border: 2px solid transparent;
+          border-right: none;
+          border-left: 4px solid transparent;
+          margin-right: 0;
+          margin-bottom: 3px;
+          @include border-top-radius(0);
+          @include border-left-radius($border-radius-base);
+        }
+
+        &.active > a, &.active > a:hover, &.active > a:focus {
+          border: 2px solid $tabs-border-color;
+          border-right: none;
+          border-left: 4px solid $tabs-active-stripe-color;
+        }
+      }
+    }
+
+    .tab-content {
+      border: 2px solid $tabs-border-color;
+      @include border-bottom-radius(0);
+      @include border-right-radius($border-radius-base);
+    }
+  }
+
+  &.tabs-right {
+    .nav-tabs {
+      float: right;
+      border-bottom: none;
+
+      > li {
+        margin-bottom: 0;
+        margin-left: -2px;
+
+        > a {
+          border: 2px solid transparent;
+          border-left: none;
+          border-right: 4px solid transparent;
+          margin-right: 0;
+          margin-bottom: 3px;
+          @include border-top-radius(0);
+          @include border-right-radius($border-radius-base);
+        }
+
+        &.active > a, &.active > a:hover, &.active > a:focus {
+          border: 2px solid $tabs-border-color;
+          border-left: none;
+          border-right: 4px solid $tabs-active-stripe-color;
+        }
+      }
+    }
+
+    .tab-content {
+      border: 2px solid $tabs-border-color;
+      @include border-bottom-radius(0);
+      @include border-right-radius($border-radius-base);
+    }
+  }
+}

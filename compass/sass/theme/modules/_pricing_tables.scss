@@ -1,0 +1,92 @@
+/*------------------------------------*\
+    $PRICING TABLES
+\*------------------------------------*/
+.panel.pricing-table {
+  .panel-body {
+    .panel-title {
+      text-transform: uppercase;
+      font-size: $pricing-table-title-font-size;
+      font-weight: 300;
+    }
+
+    .btn {
+      text-transform: uppercase;
+    }
+
+    .price {
+      font-family: $pricing-table-price-font-family;
+      font-size: $pricing-table-price-font-size;
+      line-height: $pricing-table-price-font-size;
+      color: $pricing-table-price-color;
+      margin: 10px 0 10px -15px;
+      font-weight: 700;
+
+      .currency {
+        color: $pricing-table-currency-color;
+        font-size: $pricing-table-currency-font-size;
+        font-family: $pricing-table-currency-font-family;
+        font-weight: 300;
+        padding-right: 5px;
+        margin-right: floor(-($pricing-table-currency-font-size/3));
+      }
+    }
+
+    p.period {
+      color: $pricing-table-period-color;
+      margin: 0;
+      margin-top: -20px;
+    }
+
+    ul {
+      margin: 30px 0;
+
+      li {
+        margin-bottom: 20px;
+        color: $pricing-table-item-color;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  &.pricing-table-solid {
+    border: none;
+
+    .panel-heading {
+      text-align: center;
+      padding: 15px 0;
+      @include border-top-radius($panel-border-radius);
+
+      .panel-title {
+        font-size: $pricing-table-title-font-size;
+        font-weight: 300;
+        margin: 0;
+      }
+    }
+
+    .panel-body {
+      padding-top: 30px;
+      text-align: center;
+      border: 2px solid $panel-border-color;
+      border-top: none;
+      @include border-bottom-radius($panel-border-radius);
+
+      .price {
+        margin-top: 0;
+      }
+    }
+
+    @for $i from 1 through length($colors) {
+      $name: nth($colors-names, $i);
+      $color: nth($colors, $i);
+
+      &.panel-#{$name} {
+        .panel-heading {
+          background-color: $color;
+        }
+      }
+    }
+  }
+}

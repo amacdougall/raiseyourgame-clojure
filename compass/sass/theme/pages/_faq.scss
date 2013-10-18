@@ -1,0 +1,14 @@
+/*------------------------------------*\
+    $FAQ PAGE
+\*------------------------------------*/
+.faq-page {
+  .accordion.accordion-bordered {
+    .accordion-toggle {
+      background-color: mix($very-light, $main-content-bg);
+
+      &:hover {
+        background-color: mix($very-light, $main-content-bg);
+      }
+    }
+  }
+}

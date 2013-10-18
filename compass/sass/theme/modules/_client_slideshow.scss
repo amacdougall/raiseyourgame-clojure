@@ -1,0 +1,33 @@
+/*------------------------------------*\
+    $CLIENT SLIDESHOW
+\*------------------------------------*/
+.client-slideshow {
+  position: relative;
+
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 5%;
+    top: 0;
+    z-index: $zindex-minimum - 1;
+
+    @include sm-plus {
+      width: 10%;
+    }
+  }
+
+  &:before {
+    right: 0;
+    @include background-image(linear-gradient(left center, rgba($main-content-bg, 0), $main-content-bg));
+  }
+
+  &:after {
+    left: 0;
+    @include background-image(linear-gradient(right center, rgba($main-content-bg, 0), $main-content-bg));
+  }
+
+  img {
+    margin-right: 60px;
+  }
+}

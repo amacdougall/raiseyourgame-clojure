@@ -1,0 +1,132 @@
+/*------------------------------------*\
+    $BUTTONS
+\*------------------------------------*/
+.btn {
+  font-weight: 600;
+  @include border-radius($border-radius-base);
+  @include font(16px);
+  padding: 8px 12px;
+  border-width: 2px;
+
+  &.btn-circle {
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    line-height: 35px;
+    @include square(40px);
+    @include border-radius(100%);
+  }
+
+  &.btn-squared {
+    @include border-radius(0);
+  }
+
+  &.btn-lg {
+    padding: 12px 35px;
+    @include font(18px);
+    border-width: 2px;
+
+    &.btn-circle {
+      padding: 0;
+      line-height: 45px;
+      @include square(50px);
+    }
+  }
+
+  &.btn-sm {
+    padding: 4px 18px;
+    @include font(14px);
+    border-width: 2px;
+
+    &.btn-circle {
+      padding: 0;
+      line-height: 25px;
+      @include square(29px);
+    }
+  }
+
+  &.btn-xs {
+    padding: 2px 13px;
+    @include font(13px);
+    border-width: 2px;
+
+    &.btn-circle {
+      padding: 0;
+      line-height: 19px;
+      @include square(24px);
+    }
+  }
+}
+
+@mixin button($name, $background, $border, $color, $bordered-color) {
+  .btn-#{$name} {
+    background-color: $background;
+    border-color: $border;
+    background-image: none;
+    color: $color;
+
+    &:hover, &:focus {
+      background-color: darken($background, 7%);
+      border-color: darken($border, 7%);
+      color: $color;
+    }
+
+    &:active, &.active {
+      background-color: darken($background, 10%);
+      border-color: darken($border, 10%);
+      color: $color;
+    }
+
+    &.disabled, &[disabled] {
+      $bg: mix($background, $main-content-bg, 80%);
+      background-color: $bg;
+      border-color: mix($border, $main-content-bg, 80%);
+      color: mix($color, $bg, 80%);
+
+      &:hover, &:active, &:focus, &.active {
+        background-color: $bg;
+        border-color: mix($border, $main-content-bg, 80%);
+        color: mix($color, $bg, 80%);
+      }
+    }
+
+    &.btn-bordered {
+      border-color: $border;
+      color: $bordered-color;
+
+      &:hover, &:focus {
+        background-color: rgba($background, .1);
+      }
+
+      &.disabled, &[disabled], fieldset[disabled] & {
+        &, &:hover, &:active, &:focus, &.active {
+          $bg: mix($border, $main-content-bg, 80%);
+          border-color: mix($border, $main-content-bg, 80%);
+          color: mix($bordered-color, $bg, 80%);
+        }
+      }
+    }
+  }
+}
+
+$button-styles: ($black, $medium-light, $contrast, $dark, $medium, $light, $very-light, $primary, $success, $warning, $danger, $information, $default, $white, $information);
+$button-bg-colors: ($black, $medium-light, $contrast, $dark, $medium, $light, $very-light, $primary, $success, $warning, $danger, $information, $white, $white, $information);
+$button-text-colors: ($white, $white, $white, $white, $white, $white, $light, $white, $white, $white, $white, $white, $default, $dark, $white);
+$button-text-bordered-colors: ($black, $medium-light, $contrast, $dark, $medium, $light, $light, $primary, $success, $warning, $danger, $information, $default, $white, $information);
+$button-names: ("black", "medium-light", "contrast", "dark", "medium", "light", "very-light", "primary", "success", "warning", "danger", "info", "default", "white", "info");
+
+@for $i from 1 through length($button-styles) {
+  $name: nth($button-names, $i);
+  $color: nth($button-styles, $i);
+
+  @include button($name, nth($button-bg-colors, $i), $color, nth($button-text-colors, $i), nth($button-text-bordered-colors, $i));
+}
+
+.btn-bordered, .btn-bordered:hover, .btn-bordered:active, .btn-bordered:focus, .btn-bordered.disabled, .btn-bordered[disables] {
+  background-color: transparent;
+
+  &.btn-transparent, &.btn-transparent & {
+    background-color: transparent;
+  }
+}

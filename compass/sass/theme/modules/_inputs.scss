@@ -1,0 +1,66 @@
+/*------------------------------------*\
+    $INPUTS
+\*------------------------------------*/
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+select[multiple] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.form-control {
+  height: 40px;
+  color: $p-color;
+  border: 2px solid $input-border-color;
+  @include box-shadow(none);
+  @include placeholder(lighten($p-color, 35%));
+
+  &:focus {
+    border-color: $input-active-border-color;
+    @include box-shadow(none);
+  }
+
+  &[disabled] {
+    background: $input-border-color;
+  }
+}
+
+select.form-control {
+  border-width: 1px;
+
+  &:focus {
+    border-color: $input-active-border-color;
+    @include box-shadow(none);
+  }
+}
+
+select[multiple].form-control {
+  height: auto;
+  border-width: 2px;
+}
+
+.input-group-addon {
+  background-color: $input-border-color;
+  border: 2px solid $input-border-color;
+}
+
+.input-lg {
+  height: 50px;
+}
+
+.input-sm {
+  height: 29px;
+}

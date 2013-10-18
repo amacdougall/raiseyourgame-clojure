@@ -1,0 +1,42 @@
+/*------------------------------------*\
+    $COMMON
+\*------------------------------------*/
+::selection { background-color: $selection-bg; }
+::-moz-selection { background-color: $selection-bg; }
+
+.well {
+  background-color: $well-bg;
+  border-color: darken($well-bg, 10%);
+}
+
+.jumbotron {
+  background-color: $jumbotron-bg;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  padding: 0;
+
+  h1 {
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  p {
+    line-height: inherit;
+  }
+}
+
+.container {
+  .jumbotron {
+    padding: 30px;
+
+    &.jumbotron-lg {
+      padding: 60px;
+    }
+  }
+}
+
+.glyphicon {
+  font-family: inherit;
+}
