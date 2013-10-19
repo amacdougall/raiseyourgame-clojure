@@ -39,7 +39,7 @@
   ;; TODO: combine those in one function?
 
   ;; set up link navigations
-  (let [event->pathname #(-> % .-target .-href url->pathname)
+  (let [event->pathname #(-> % .-currentTarget .-href url->pathname)
         clicks (ui/listen-live "a.internal" :click :prevent-default)
         internal-links (async/map event->pathname clicks)]
     (go (loop []
