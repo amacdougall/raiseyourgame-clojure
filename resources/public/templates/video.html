@@ -1,42 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang='en'>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title></title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width">
+  <title>Raise Your Game</title>
+  <meta content='all' name='robots'>
+  <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+  <meta content='width=device-width, initial-scale=1.0' name='viewport'>
 
-  <link rel="stylesheet" href="/static/css/normalize.min.css">
-  <link rel="stylesheet" href="/static/css/h5bp.css">
-  <link rel="stylesheet" href="/static/css/main.css">
+  <link href='/static/images/meta_icons/favicon.ico' rel='shortcut icon' type='image/x-icon'>
+  <link href='/static/images/meta_icons/apple-touch-icon.png' rel='apple-touch-icon-precomposed'>
+
+  <!-- / required stylesheets -->
+  <link href="/static/css/bootstrap/bootstrap.min.css" media="all" rel="stylesheet" type="text/css" />
+  <link href="/static/css/jednotka_green.css" media="all" id="colors" rel="stylesheet" type="text/css" />
 
   <script src="/static/js/vendor/modernizr-2.6.2.min.js"></script>
   <script src="/static/js/history/scripts/bundled/html4+html5/native.history.js"></script>
+  <script src="/static/js/main.js"></script>
 </head>
-<body>
-  <!--
-    Templating code plucks .video and its children for its own use; but this
-    entire page can be previewed and edited directly for convenience.
-  -->
-  <div class="video">
-    <div class="thumbnail">
-      <a class="internal" href="#">
-        <img src="http://i1.ytimg.com/vi/7M2_4sI6I8Y/mqdefault.jpg">
-      </a>
-    </div>
-    <div>
-      <h2 class="title"><a class="internal" href="#">Daigo vs. Gamerbee at Evo 2012</a></h2>
-      <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum luctus sollicitudin lacinia. Nulla vel convallis lacus. Donec ornare scelerisque justo id aliquet. Integer egestas ante massa, id facilisis lacus porttitor non. Integer tristique turpis eget purus ultrices, at luctus libero bibendum. Proin nibh neque, porttitor at massa congue, rhoncus pretium est. Etiam sollicitudin vel nisl dictum viverra.</div>
+<body class=''>
+  <div id='wrapper'>
+    <div id='main' role='main'>
+      <div id='main-content'>
+        <div class='container'>
+          <div class='video row'>
+            <div class='col-sm-8 col-md-9'>
+              <div class='text-boxes'>
+                <div class='detail row text-box text-box-title-above text-box-big-image'>
+                  <div class='col-sm-12'>
+                    <h2 class='title'>cras tempus ligula a tempor adipiscing</h2>
+                    <div class='toolbar'>
+                      <a class='btn btn-link' href='#'>
+                        <i class='fa-icon-calendar-empty'></i>
+                        <span>april 14, 2013</span>
+                      </a>
+                      <a class='btn btn-link' href='#'>
+                        <i class='fa-icon-user'></i>
+                        <span>john doe</span>
+                      </a>
+                      <a class='btn btn-link' href='#'>
+                        <i class='fa-icon-comments'></i>
+                        <span>13 comments</span>
+                      </a>
+                    </div>
+                    <div class='row'>
+                      <div class='col-sm-12'>
+                        <a href='blog_single_post.html'>
+                          <!-- youtube will be embedded here -->
+                          <img class="img-responsive center-block img-rounded-half" alt="cras tempus ligula a tempor adipiscing" width="848" height="364" src="http://placehold.it/848x364" />
+                        </a>
+                      </div>
+                      <div class='description col-sm-12'>
+                        <p>aliquam erat volutpat. duis viverra at erat ut semper. in purus nisl, luctus sed eleifend at, pellentesque ut dolor. nunc sodales nisi sed ullamcorper pellentesque. etiam posuere nulla eu lectus porta ullamcorper. aenean sit amet lectus eget augue euismod ultricies eu nec risus. vivamus hendrerit nisi commodo.</p>
+                      </div>
+                    </div>
+                    <hr class='hr-half'>
+                  </div>
+                </div>
+                <div class='author row'>
+                  <div class='col-sm-12'>
+                    <div class='author-box'>
+                      <div class='row'>
+                        <div class='col-sm-3 col-lg-2'>
+                          <img alt="Author" width="165" height="165" class="img-circle img-responsive center-block" src="http://placehold.it/165x165" />
+                        </div>
+                        <div class='col-sm-9 col-lg-10'>
+                          <h3 class='title'>About author</h3>
+                          <p>Etiam ac consectetur dui, id mollis neque. Phasellus rutrum augue nec convallis bibendum. Etiam vitae aliquam leo, laoreet venenatis massa. Aliquam erat volutpat. Fusce rutrum augue sit amet lobortis tempor.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-<script>
-  /* TODO: uncomment
-    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-    g.src='//www.google-analytics.com/ga.js';
-    s.parentNode.insertBefore(g,s)}(document,'script'));
-  */
-</script>
 </body>
 </html>
