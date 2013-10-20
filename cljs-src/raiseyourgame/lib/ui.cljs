@@ -3,7 +3,6 @@
 ;; Heavily based on David Nolen's blog.util.reactive;
 ;; https://github.com/swannodette/swannodette.github.com/blob/master/code/blog/src/blog/utils/reactive.cljs
 (ns raiseyourgame.lib.ui
-  (:refer-clojure :exclude [map filter remove distinct concat take-while])
   (:require [cljs.core.async :refer [>! <! chan put! close! timeout]]
             [enfocus.core :as ef :refer [at]]
             [enfocus.events :as events]
