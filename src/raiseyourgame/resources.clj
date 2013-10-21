@@ -40,12 +40,12 @@
       (let [path (get-in context [:request :route-params :*])]
         (if-let [mime-type (ext-mime-type path)]
           [mime-type]
-          [])))
+          ["text/plain"]))) ; fall back to plaintext if all else fails
     :exists?
     (fn [context]
-      (let [path (get-in context [:request :route-params :*])]
-        (let [f (io/file static-dir path)]
-          [(.exists f) {::file f}])))
+      (let [path (get-in context [:request :route-params :*])
+            f (io/file static-dir path)]
+        [(.exists f) {::file f}]))
     :handle-ok (fn [{f ::file}] f)
     :last-modified (fn [{f ::file}] (.lastModified f)))
 
