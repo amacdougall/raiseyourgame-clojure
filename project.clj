@@ -2,11 +2,8 @@
   :description "raiseyourga.me site code"
   :url "http://raiseyourga.me"
 
-  ;; core.async repo
-  :repositories {"sonatype-staging"
-                 "https://oss.sonatype.org/content/groups/staging/"}
-
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [org.clojure/clojurescript "0.0-1909"]
                  [liberator "0.9.0"] ;; Webmachine-style REST
                  [compojure "1.1.3"]
                  [ring/ring-jetty-adapter "1.1.0"]
@@ -14,7 +11,7 @@
                  [postgresql/postgresql "8.4-702.jdbc4"]
                  [cheshire "5.2.0"] ;; json
                  [enlive "1.1.4"] ;; templating
-                 [org.clojure/core.async "0.1.222.0-83d0c2-alpha"]
+                 [org.clojure/core.async "0.1.242.0-44b1e3-alpha"]
                  ;; clojurescript-specific
                  [enfocus "2.0.0-beta3"] ;; DOM interaction, templating
                  [secretary "0.2.0-SNAPSHOT"]] ;; client-side routing
