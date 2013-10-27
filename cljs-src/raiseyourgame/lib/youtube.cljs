@@ -1,4 +1,5 @@
 (ns raiseyourgame.lib.youtube
+  (:refer-clojure :exclude [load])
   (:require [clojure.string :refer [split]]
             [cljs.core.async :refer [>! <! chan put! close! timeout]]
             [enfocus.core :as ef :refer [at]])
@@ -55,18 +56,22 @@
           (swap! api-ready (constantly true))
           (put! api-status :ready))))
 
-(defn load-video [video]
+;; Given a JS video object with a url property, loads it into the player
+;; instance. The loaded video will play automatically.
+(defn load [video]
   (if @player-ready
     (.loadVideoById @player (video->id video))
     (go (loop []
           (if (= (<! player-status) :ready)
-            (load-video video)
+            (load video)
             (recur))))))
 
-(defn pause-video []
-  (when (and @player @player-ready)
+;; Pause the currently loaded video, if any.
+(defn pause []
+  (when @player-ready
     (.pauseVideo @player)))
 
-(defn play-video []
-  (when (and @player @player-ready)
+;; Play the currently loaded video, if any.
+(defn play []
+  (when @player-ready
     (.playVideo @player)))

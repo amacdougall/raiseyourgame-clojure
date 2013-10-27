@@ -35,4 +35,4 @@
   (at ["#main-content .container"]
     (ef/content (video-view (:video context))))
   (youtube/create-player "player")
-  (youtube/load-video (:video context)))
+  (youtube/load (:video context)))
