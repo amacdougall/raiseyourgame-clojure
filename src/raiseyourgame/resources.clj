@@ -28,7 +28,7 @@
 (defn represent [context]
   (condp = (get-in context [:representation :media-type])
     "application/json" (cheshire/generate-string (:data context))
-    "application/edn" (:data context)))
+    "application/edn" (pr-str (:data context))))
 
 (let [static-dir (io/file "resources/public")]
   ;; Since this is NOT a parameterized resource, we assign it to a route by
