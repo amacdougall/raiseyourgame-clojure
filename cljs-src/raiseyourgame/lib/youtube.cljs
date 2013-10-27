@@ -75,3 +75,15 @@
 (defn play []
   (when @player-ready
     (.playVideo @player)))
+
+;; Seek to the supplied timecode, in seconds, if video is loaded. If the
+;; optional allow-seek-ahead argument is false, a seek location beyond the
+;; furthest loaded time will not cause a new video stream request. When
+;; performing a single seek operation to start playback at a known location, it
+;; is safe to omit this argument, leaving it to default to true.
+(defn seek
+  ([timecode]
+   (seek timecode true))
+  ([timecode allow-seek-ahead]
+    (when @player-ready
+      (.seekTo @player timecode allow-seek-ahead))))
