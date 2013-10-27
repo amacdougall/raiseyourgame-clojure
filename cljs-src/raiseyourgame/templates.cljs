@@ -1,7 +1,8 @@
 (ns raiseyourgame.templates
   (:require [enfocus.core :as ef :refer [at]]
             [enfocus.events :as events]
-            [enfocus.effects :as effects])
+            [enfocus.effects :as effects]
+            [raiseyourgame.lib.youtube :as youtube])
   (:require-macros [enfocus.macros :as em]))
 
 (defn- template [filename]
@@ -32,4 +33,6 @@
 
 (defn video [context]
   (at ["#main-content .container"]
-    (ef/content (video-view (:video context)))))
+    (ef/content (video-view (:video context))))
+  (youtube/create-player "player")
+  (youtube/load-video (:video context)))
