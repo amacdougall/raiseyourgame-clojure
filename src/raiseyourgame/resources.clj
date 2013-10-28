@@ -7,6 +7,8 @@
             [net.cgrand.enlive-html :as enlive]
             [ring.util.mime-type :refer [ext-mime-type]]))
 
+;; Giving application/edn a slightly lower q value prompts the content
+;; negotiation algorithm to default to application/json.
 (def default-media-types ["application/json" "application/edn;q=0.9"])
 
 (defn inject-repl-js [f]
