@@ -3,7 +3,8 @@
   (:require [clojure.string :refer [split]]
             [cljs.core.async :refer [>! <! chan put! close! timeout]]
             [enfocus.core :as ef :refer [at]])
-  (:require-macros [cljs.core.async.macros :refer [go alt!]]))
+  (:require-macros [cljs.core.async.macros :refer [go alt!]]
+                   [raiseyourgame.lib.macros :refer [dochan]]))
 
 ;; Possible Youtube player states. When the onStateChange event occurs, the
 ;; data property of the event object will be one of these integers. This map
@@ -26,6 +27,11 @@
              101 :embed-not-permitted
              150 :embed-not-permitted})
 
+;; Poll for the current timecode every 250ms during playback. Actual
+;; timecode granularity depends on the video; in practice, not all videos
+;; will have keyframes every quarter-second.
+(def timecode-frequency 250)
+
 ;; True if the Youtube API is ready for action.
 (def api-ready (atom false))
 
@@ -42,29 +48,42 @@
 
 (def player-defaults {:width "640" :height "480"})
 
+;; Channel which will receive timecode values during playback.
+(def timecodes (chan))
+
+;; Called on an interval when player state is :playing.
+(defn- poll-timecode []
+  (put! timecodes (.getCurrentTime @player)))
+
+;; Extracts a video id from a video URL of the expected type. This will
+;; probably have to be improved if we get heterogeneous URLs, which we probably
+;; will. Maybe it would be better to extract the video ids at the video posting
+;; stage instead of CLJS, though.
 (defn- video->id [video]
   (-> video .-url (split #"/") last))
 
 (defn- handle-ready []
   (.log js/console "player ready")
-  (swap! player-ready (constantly true))
+  (reset! player-ready true)
   (put! player-status :ready))
 
-(defn- handle-state-change [event]
-  (.log js/console "state change: %s" (name (states (.-data event))))
-  (condp = (states (.-data event))
-    :playing #()
-    :paused #()
-    ))
+(let [interval (atom nil)]
+  (defn- handle-state-change [event]
+    (.log js/console "state change: %s" (name (states (.-data event))))
+    (if (= (states (.-data event)) :playing)
+      (reset! interval (js/setInterval poll-timecode timecode-frequency))
+      (js/clearInterval @interval))))
 
 ;; Handles an error simply by throwing it with its keyword as the only message.
 ;; We may improve this later.
 (defn- handle-error [event]
-  (throw (js/Error. "ERROR: %s" (name errors (.-data event)))))
+  (throw (js/Error. "ERROR: %s" (name (errors (.-data event))))))
 
 (defn create-player [id]
   (if @api-ready
     ; TODO: if there is an old player, detach and destroy it
+    ; TODO: detach and destroy the player when navigating away from the video
+    ; detail view?
 
     ; This syntax is slightly tortured, but "(.-Player js/YT). foo bar" is
     ; equivalent to "new YT/Player(foo, bar)". After some experimentation, I
@@ -72,7 +91,7 @@
     ; intermediate binding to make the runtime happy.
     (let [prototype (.-Player js/YT)
           new-player #(prototype. id (clj->js player-defaults))]
-      (swap! player new-player)
+      (swap! player new-player) ; TODO: use reset! instead?
       (.addEventListener @player "onReady" handle-ready)
       (.addEventListener @player "onStateChange" handle-state-change)
       (.addEventListener @player "onError" handle-error))
@@ -82,15 +101,23 @@
           (recur)))))
 
 (defn init []
+  ; Append Youtube iframe API script to <head>, so it will be loaded.
   (let [script (.createElement js/document "script")]
     (at script (ef/set-attr :src "http://www.youtube.com/iframe_api"))
     (at "head" (ef/append script)))
 
+  ; When iframe API is ready, send it down the channel.
   (set! (.-onYouTubeIframeAPIReady js/window)
         (fn []
           (.log js/console "api ready")
           (swap! api-ready (constantly true))
-          (put! api-status :ready))))
+          (put! api-status :ready)))
+
+  ; Process timecode events; we can start waiting on this channel
+  ; before the player even exists, because channels are great.
+  (dochan [timecode timecodes]
+    ; TODO: handle timecodes by displaying annotations
+    (.log js/console "timecode: %s" timecode)))
 
 ;; Given a JS video object with a url property, loads it into the player
 ;; instance. The loaded video will play automatically.
