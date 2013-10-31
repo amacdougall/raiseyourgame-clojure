@@ -5,6 +5,27 @@
             [enfocus.core :as ef :refer [at]])
   (:require-macros [cljs.core.async.macros :refer [go alt!]]))
 
+;; Possible Youtube player states. When the onStateChange event occurs, the
+;; data property of the event object will be one of these integers. This map
+;; just duplicates YT.PlayerState for convenience. Note that since the keys are
+;; the integers, you must address the map by the event constants, but since we
+;; only expect to use it in a (condp = (states (.-data event))) form, this is
+;; actually convenient.
+(def states {-1 :unstarted
+              0 :ended
+              1 :playing
+              2 :paused
+              3 :buffering
+              5 :cued})
+
+;; Possible Youtube error values. As above.
+;; See https://developers.google.com/youtube/iframe_api_reference#Events.
+(def errors {  2 :invalid-parameter ; such as a bad video id
+               5 :cannot-use-html5  ; HTML5-related errors
+             100 :not-found         ; also occurs if video has been marked private
+             101 :embed-not-permitted
+             150 :embed-not-permitted})
+
 ;; True if the Youtube API is ready for action.
 (def api-ready (atom false))
 
@@ -24,6 +45,23 @@
 (defn- video->id [video]
   (-> video .-url (split #"/") last))
 
+(defn- handle-ready []
+  (.log js/console "player ready")
+  (swap! player-ready (constantly true))
+  (put! player-status :ready))
+
+(defn- handle-state-change [event]
+  (.log js/console "state change: %s" (name (states (.-data event))))
+  (condp = (states (.-data event))
+    :playing #()
+    :paused #()
+    ))
+
+;; Handles an error simply by throwing it with its keyword as the only message.
+;; We may improve this later.
+(defn- handle-error [event]
+  (throw (js/Error. "ERROR: %s" (name errors (.-data event)))))
+
 (defn create-player [id]
   (if @api-ready
     ; TODO: if there is an old player, detach and destroy it
@@ -35,11 +73,9 @@
     (let [prototype (.-Player js/YT)
           new-player #(prototype. id (clj->js player-defaults))]
       (swap! player new-player)
-      (.addEventListener @player "onReady"
-                         (fn []
-                           (.log js/console "player ready")
-                           (swap! player-ready (constantly true))
-                           (put! player-status :ready))))
+      (.addEventListener @player "onReady" handle-ready)
+      (.addEventListener @player "onStateChange" handle-state-change)
+      (.addEventListener @player "onError" handle-error))
     (go (loop []
           (when (= (<! api-status) :ready)
             (create-player id))
