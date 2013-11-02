@@ -57,3 +57,24 @@
               (recur (vec (disj (set ins) in))))))
         (close! out))
     out))
+
+;; TODO: This has all channels and subscribers in the whole app, so it might
+;; need some extra bookkeeping functionality (or the ability to push
+;; channel/subscriber storage off onto clients).
+(let [channels (atom {})
+      subscribers (atom {})]
+  (defn publish [k v]
+    (when-not (@channels k)
+      (swap! channels assoc k (chan)))
+    (when-not (@subscribers k)
+      (swap! subscribers assoc k (atom [])))
+    (doseq [c @(@subscribers k)]
+      (put! c v)))
+
+  (defn subscribe [k]
+    (when-not (k @subscribers)
+      (swap! subscribers assoc k (atom [])))
+    (let [k-subscribers (@subscribers k)
+          out (chan)]
+      (swap! k-subscribers conj out)
+      out)))

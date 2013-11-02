@@ -4,6 +4,7 @@
             [raiseyourgame.lib.async :as async]
             [raiseyourgame.lib.ui :as ui]
             [raiseyourgame.lib.history :as history]
+            [raiseyourgame.lib.youtube :as youtube]
             [raiseyourgame.controllers :as controllers]
             [clojure.browser.repl])
   (:require-macros [cljs.core.async.macros :refer [go]]
@@ -44,7 +45,9 @@
         internal-links (async/map event->pathname clicks)]
     (go (loop []
           (history/push-state (<! internal-links))
-          (recur)))))
+          (recur))))
+
+  (youtube/init))
 
 ;; Secretary routes
 (let [home (chan)   ; input channel
