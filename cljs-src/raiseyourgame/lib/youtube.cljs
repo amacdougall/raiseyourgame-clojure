@@ -1,6 +1,7 @@
 (ns raiseyourgame.lib.youtube
   (:refer-clojure :exclude [load])
-  (:require [clojure.string :refer [split]]
+  (:require [raiseyourgame.lib.async :as async]
+            [clojure.string :refer [split]]
             [cljs.core.async :refer [>! <! chan put! close! timeout]]
             [enfocus.core :as ef :refer [at]])
   (:require-macros [cljs.core.async.macros :refer [go alt!]]
@@ -48,12 +49,16 @@
 
 (def player-defaults {:width "640" :height "480"})
 
-;; Channel which will receive timecode values during playback.
-(def timecodes (chan))
-
 ;; Called on an interval when player state is :playing.
-(defn- poll-timecode []
-  (put! timecodes (.getCurrentTime @player)))
+(defn- handle-timecode []
+  (async/publish :timecodes (.getCurrentTime @player)))
+
+;; TODO: this makes a channel for every handler function; but AFAIK that's
+;; totally fine. Channels are fast and cheap. Right?
+(defn on-timecode [f]
+  (let [timecodes (async/subscribe :timecodes)]
+    (dochan [timecode timecodes]
+      (f timecode))))
 
 ;; Extracts a video id from a video URL of the expected type. This will
 ;; probably have to be improved if we get heterogeneous URLs, which we probably
@@ -71,7 +76,7 @@
   (defn- handle-state-change [event]
     (.log js/console "state change: %s" (name (states (.-data event))))
     (if (= (states (.-data event)) :playing)
-      (reset! interval (js/setInterval poll-timecode timecode-frequency))
+      (reset! interval (js/setInterval handle-timecode timecode-frequency))
       (js/clearInterval @interval))))
 
 ;; Handles an error simply by throwing it with its keyword as the only message.
@@ -115,9 +120,9 @@
 
   ; Process timecode events; we can start waiting on this channel
   ; before the player even exists, because channels are great.
-  (dochan [timecode timecodes]
+  (on-timecode
     ; TODO: handle timecodes by displaying annotations
-    (.log js/console "timecode: %s" timecode)))
+    #(.log js/console "timecode: %s" %)))
 
 ;; Given a JS video object with a url property, loads it into the player
 ;; instance. The loaded video will play automatically.
