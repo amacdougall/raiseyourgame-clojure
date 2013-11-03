@@ -65,7 +65,7 @@
 ;; will. Maybe it would be better to extract the video ids at the video posting
 ;; stage instead of CLJS, though.
 (defn- video->id [video]
-  (-> video .-url (split #"/") last))
+  (-> video :url (split #"/") last))
 
 (defn- handle-ready []
   (.log js/console "player ready")
