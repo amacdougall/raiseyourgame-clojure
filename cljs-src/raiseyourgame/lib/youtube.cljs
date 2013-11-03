@@ -82,7 +82,7 @@
 ;; Handles an error simply by throwing it with its keyword as the only message.
 ;; We may improve this later.
 (defn- handle-error [event]
-  (throw (js/Error. "ERROR: %s" (name (errors (.-data event))))))
+  (throw (js/Error. (str "ERROR: " (name (errors (.-data event)))))))
 
 (defn create-player [id]
   (if @api-ready
