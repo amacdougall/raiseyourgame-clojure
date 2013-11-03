@@ -13,7 +13,7 @@
                  [enlive "1.1.4"] ;; templating
                  [org.clojure/core.async "0.1.242.0-44b1e3-alpha"]
                  ;; clojurescript-specific
-                 [enfocus "2.0.0-beta3"] ;; DOM interaction, templating
+                 [enfocus "2.0.1"] ;; DOM interaction, templating
                  [secretary "0.2.0-SNAPSHOT"]] ;; client-side routing
 
   :plugins [[lein-cljsbuild "0.3.2"]]
