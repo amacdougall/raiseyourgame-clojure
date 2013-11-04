@@ -56,12 +56,9 @@
 (defn- handle-timecode []
   (async/publish :timecodes (.getCurrentTime @player)))
 
-;; TODO: this makes a channel for every handler function; but AFAIK that's
-;; totally fine. Channels are fast and cheap. Right?
-(defn on-timecode [f]
-  (let [timecodes (async/subscribe :timecodes)]
-    (dochan [timecode timecodes]
-      (f timecode))))
+;; Returns a channel which will receive timecodes as the player reaches them.
+(defn timecodes-channel []
+  (async/subscribe :timecodes))
 
 ;; Extracts a video id from a video URL of the expected type. This will
 ;; probably have to be improved if we get heterogeneous URLs, which we probably
@@ -129,13 +126,7 @@
         (fn []
           (.log js/console "api ready")
           (swap! api-ready (constantly true))
-          (put! api-status :ready)))
-
-  ; Process timecode events; we can start waiting on this channel
-  ; before the player even exists, because channels are great.
-  (on-timecode
-    ; TODO: handle timecodes by displaying annotations
-    #(.log js/console "timecode: %s" %)))
+          (put! api-status :ready))))
 
 ;; Given a JS video object with a url property, loads it into the player
 ;; instance. The loaded video will play automatically.

@@ -1,5 +1,6 @@
 (ns raiseyourgame.templates
-  (:require [enfocus.core :as ef :refer [at]]
+  (:require [raiseyourgame.timeline :as timeline]
+            [enfocus.core :as ef :refer [at]]
             [enfocus.events :as events]
             [enfocus.effects :as effects]
             [raiseyourgame.lib.youtube :as youtube])
@@ -31,8 +32,14 @@
   ".detail .title" (ef/content (:title video))
   ".detail .description p" (ef/content (:description video)))
 
+(em/defsnippet annotation-view (template "video.html") ".annotation" [annotation]
+  (ef/content (:text annotation)))
+
 (defn video [context]
-  (at ["#main-content .container"]
-    (ef/content (video-view (:video context))))
+  (let [view (video-view (:video context))]
+    (at ["#main-content .container"] (ef/content view))
+    (timeline/equip :set-annotation
+                    #(at ["#main-content .container .annotation"]
+                       (ef/content (annotation-view %)))))
   (youtube/create-player "player")
   (youtube/load (:video context)))
