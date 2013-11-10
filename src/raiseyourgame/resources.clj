@@ -32,7 +32,7 @@
     "application/json" (cheshire/generate-string (:data context))
     "application/edn" (pr-str (:data context))))
 
-(let [static-dir (io/file "resources/public")]
+(let [static-dir (io/file "static")]
   ;; Since this is NOT a parameterized resource, we assign it to a route by
   ;; providing it directly instead of invoking it. This may be a weakness in
   ;; the API, really.

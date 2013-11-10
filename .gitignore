@@ -12,11 +12,11 @@ pom.xml.asc
 .lein-plugins
 .lein-repl-history
 .repl
-/out
+/static/js/out
 
 # Build locations
-/resources/public/js/main.js
-/resources/public/css/*.css
+/static/js/main.js*
+/static/css
 
 # Random artifacts
 scratch.*
