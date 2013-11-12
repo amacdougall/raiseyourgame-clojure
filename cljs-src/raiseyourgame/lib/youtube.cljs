@@ -11,7 +11,7 @@
 ;; data property of the event object will be one of these integers. This map
 ;; just duplicates YT.PlayerState for convenience. Note that since the keys are
 ;; the integers, you must address the map by the event constants, but since we
-;; only expect to use it in a (condp = (states (.-data event))) form, this is
+;; only expect to use it in a (= (states (.-data event)) ...) form, this is
 ;; actually convenient.
 (def states {-1 :unstarted
               0 :ended
@@ -74,10 +74,13 @@
 
 (let [interval (atom nil)]
   (defn- handle-state-change [event]
-    (.log js/console "state change: %s" (name (states (.-data event))))
+    (.log js/console "state change: %s; interval handle %d; video url %s"
+          (name (states (.-data event))) (or @interval "nil") (.getVideoUrl @player))
+    (when (not (nil? @interval))
+      (js/clearInterval @interval))
     (if (= (states (.-data event)) :playing)
       (reset! interval (js/setInterval handle-timecode timecode-frequency))
-      (js/clearInterval @interval))))
+      (reset! interval nil))))
 
 ;; Handles an error simply by throwing it with its keyword as the only message.
 ;; We may improve this later.
