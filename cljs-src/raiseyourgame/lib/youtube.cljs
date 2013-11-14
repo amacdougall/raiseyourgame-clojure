@@ -49,6 +49,9 @@
 
 (def player-defaults {:width "640" :height "480"})
 
+;; The currently loaded video. There can only be one at a time.
+(def loaded-video (atom {}))
+
 ;; Called on an interval when player state is :playing.
 (defn- handle-timecode []
   (async/publish :timecodes (.getCurrentTime @player)))
@@ -64,8 +67,10 @@
 ;; probably have to be improved if we get heterogeneous URLs, which we probably
 ;; will. Maybe it would be better to extract the video ids at the video posting
 ;; stage instead of CLJS, though.
-(defn- video->id [video]
-  (-> video :url (split #"/") last))
+(defn- url->id [url]
+  (let [by-regex #(second (re-find % url))]
+    (or (by-regex #"youtu\.be/(\w+)")
+        (by-regex #"youtube\.com/watch\?.*v=(\w+)\b"))))
 
 (defn- handle-ready []
   (.log js/console "player ready")
@@ -78,7 +83,12 @@
           (name (states (.-data event))) (or @interval "nil") (.getVideoUrl @player))
     (when (not (nil? @interval))
       (js/clearInterval @interval))
-    (if (= (states (.-data event)) :playing)
+    ; start polling for timecodes if playback has begun, and the current video
+    ; has the same id as the loaded video
+    (if (and (= (states (.-data event))
+                :playing)
+             (= (-> @player .getVideoUrl url->id)
+                (-> @loaded-video :url url->id)))
       (reset! interval (js/setInterval handle-timecode timecode-frequency))
       (reset! interval nil))))
 
@@ -130,8 +140,14 @@
 ;; Given a JS video object with a url property, loads it into the player
 ;; instance. The loaded video will play automatically.
 (defn load [video]
+  (.log js/console "youtube/load: @player-ready %s" @player-ready)
   (if @player-ready
-    (.loadVideoById @player (video->id video))
+    (do
+      (reset! loaded-video video)
+      (.loadVideoById @player (-> video :url url->id)))
+    ; TODO: come up with a strategy to handle repeated load calls
+    ; for different videos. Right now all the go loops will remain
+    ; in effect!
     (go (loop []
           (if (= (<! player-status) :ready)
             (load video)
