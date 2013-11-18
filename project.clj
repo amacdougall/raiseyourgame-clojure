@@ -18,12 +18,14 @@
 
   :plugins [[lein-cljsbuild "0.3.2"]]
 
-  :cljsbuild {:builds
-              {:dev
-               {:source-paths ["cljs-src"]
+  :source-paths ["src/clj"] ; ./src is a default, ./src/clj is not
 
+  :cljsbuild {:builds
+              {:dev ; build the ClojureScript webapp
+               {:source-paths ["src/cljs"]
                 ; the following works, but yields a less useful source map, at least
-                ; in ClojureScript 0.0-2030.
+                ; in ClojureScript 0.0-2030. The map links to where an anonymous
+                ; function was called, not where it was defined.
                 ; :compiler {:output-to "static/js/main.js"
                 ;            :output-dir "out" ; relative to location of main.js
                 ;            :source-map "static/js/main.js.map"
@@ -36,7 +38,15 @@
                 :compiler {:output-to "static/js/main.js"
                            :output-dir "static/js/out"
                            :optimizations :none
-                           :source-map true}}}}
+                           :source-map true}}
+
+               :test ; build unit tests
+               {:source-paths ["src/cljs" "test/src/cljs"]
+                :compiler {:output-to "static/js/test/unit.js"
+                           :pretty-print true
+                           :optimizations whitespace}}}}
   :profiles {:dev
-             {:plugins [[com.cemerick/austin "0.1.1"]]}}
+             {:plugins [[com.cemerick/austin "0.1.1"]]
+              :dependencies [[mocha-latte "0.1.2"]
+                             [chai-latte "0.2.0"]]}}
   :main raiseyourgame.core)
