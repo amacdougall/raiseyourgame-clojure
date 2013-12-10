@@ -13,6 +13,8 @@
 
 (set! enfocus.core/debug false)
 
+(def ready (atom false))
+
 ;; Begin listening on the selected element or elements for events of the
 ;; specified type or types, putting each one in an output channel. Returns the
 ;; output channel. The optional function can be used for event preprocessing
@@ -52,5 +54,9 @@
          (put! out e))))
    out))
 
-(defn onload [f]
-  (set! (.-onload js/window) f))
+(defn when-ready [f]
+  (if @ready
+    (f)
+    (set! (.-onload js/window) (fn []
+                                 (reset! ready true)
+                                 (f)))))

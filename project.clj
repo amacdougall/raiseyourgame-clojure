@@ -9,6 +9,7 @@
                  [compojure "1.1.3"] ; routing
                  [ring/ring-jetty-adapter "1.1.0"] ; server
                  [org.clojure/java.jdbc "0.3.0-alpha4"]
+                 ; TODO: switch to 9.1-901.jdbc4
                  [postgresql/postgresql "8.4-702.jdbc4"]
                  [cheshire "5.2.0"] ; json
                  [enlive "1.1.4"] ; templating
@@ -40,6 +41,8 @@
                            :optimizations :none
                            :source-map true}}
 
+               ; NOTE: this build fails, since we don't have any unit
+               ; tests yet. If we ever do, this is how we'll do them.
                :test ; build unit tests
                {:source-paths ["src/cljs" "test/src/cljs"]
                 :compiler {:output-to "static/js/test/unit.js"
