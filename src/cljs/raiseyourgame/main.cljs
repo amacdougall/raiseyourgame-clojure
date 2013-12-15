@@ -69,5 +69,5 @@
           (template context)
           (recur)))))
 
-(defn start []
+(defn ^:export start []
   (ui/when-ready setup))
