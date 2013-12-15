@@ -13,6 +13,8 @@
                  [postgresql/postgresql "8.4-702.jdbc4"]
                  [cheshire "5.2.0"] ; json
                  [enlive "1.1.4"] ; templating
+                 [environ "0.4.0"] ; access environment vars
+
                  ; clojurescript-specific
                  [enfocus "2.0.1"] ; DOM interaction, templating
                  [secretary "0.2.0-SNAPSHOT"]] ; client-side routing
