@@ -9,21 +9,26 @@
                  [compojure "1.1.3"] ; routing
                  [ring/ring-jetty-adapter "1.1.0"] ; server
                  [org.clojure/java.jdbc "0.3.0-alpha4"]
+                 ; TODO: switch to 9.1-901.jdbc4
                  [postgresql/postgresql "8.4-702.jdbc4"]
                  [cheshire "5.2.0"] ; json
                  [enlive "1.1.4"] ; templating
+                 [environ "0.4.0"] ; access environment vars
+
                  ; clojurescript-specific
                  [enfocus "2.0.1"] ; DOM interaction, templating
                  [secretary "0.2.0-SNAPSHOT"]] ; client-side routing
 
   :plugins [[lein-cljsbuild "0.3.2"]]
 
-  :cljsbuild {:builds
-              {:dev
-               {:source-paths ["cljs-src"]
+  :source-paths ["src/clj"] ; ./src is a default, ./src/clj is not
 
+  :cljsbuild {:builds
+              {:dev ; build the ClojureScript webapp
+               {:source-paths ["src/cljs"]
                 ; the following works, but yields a less useful source map, at least
-                ; in ClojureScript 0.0-2030.
+                ; in ClojureScript 0.0-2030. The map links to where an anonymous
+                ; function was called, not where it was defined.
                 ; :compiler {:output-to "static/js/main.js"
                 ;            :output-dir "out" ; relative to location of main.js
                 ;            :source-map "static/js/main.js.map"
@@ -36,7 +41,17 @@
                 :compiler {:output-to "static/js/main.js"
                            :output-dir "static/js/out"
                            :optimizations :none
-                           :source-map true}}}}
+                           :source-map true}}
+
+               ; NOTE: this build fails, since we don't have any unit
+               ; tests yet. If we ever do, this is how we'll do them.
+               :test ; build unit tests
+               {:source-paths ["src/cljs" "test/src/cljs"]
+                :compiler {:output-to "static/js/test/unit.js"
+                           :pretty-print true
+                           :optimizations whitespace}}}}
   :profiles {:dev
-             {:plugins [[com.cemerick/austin "0.1.1"]]}}
+             {:plugins [[com.cemerick/austin "0.1.1"]]
+              :dependencies [[mocha-latte "0.1.2"]
+                             [chai-latte "0.2.0"]]}}
   :main raiseyourgame.core)

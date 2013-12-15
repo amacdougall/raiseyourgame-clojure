@@ -69,4 +69,5 @@
           (template context)
           (recur)))))
 
-(ui/onload setup)
+(defn ^:export start []
+  (ui/when-ready setup))

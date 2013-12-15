@@ -1,0 +1,4 @@
+{:dev
+   {:spec "postgres://postgres:postgres@localhost:5432/raiseyourgame-dev"}
+ :test
+   {:spec "postgres://postgres:postgres@localhost:5432/raiseyourgame-test"}}
