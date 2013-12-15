@@ -45,7 +45,7 @@
 ;; True if the Youtube player is ready for action.
 (def player-ready (atom false))
 
-(def player-status (chan))
+(def ready-states (chan))
 
 (def player-defaults {:width "640" :height "480"})
 
@@ -75,22 +75,18 @@
 (defn- handle-ready []
   (.log js/console "player ready")
   (reset! player-ready true)
-  (put! player-status :ready))
+  (put! ready-states :ready))
 
-(let [interval (atom nil)]
-  (defn- handle-state-change [event]
-    (.log js/console "state change: %s; interval handle %d; video url %s"
-          (name (states (.-data event))) (or @interval "nil") (.getVideoUrl @player))
-    (when (not (nil? @interval))
-      (js/clearInterval @interval))
-    ; start polling for timecodes if playback has begun, and the current video
-    ; has the same id as the loaded video
-    (if (and (= (states (.-data event))
-                :playing)
-             (= (-> @player .getVideoUrl url->id)
-                (-> @loaded-video :url url->id)))
-      (reset! interval (js/setInterval handle-timecode timecode-frequency))
-      (reset! interval nil))))
+;; Handle player state change by publishing the matching state keyword to the
+;; :player-states channels. Note that this is a state keyword from the states
+;; hash, not the integer given by the Youtube API.
+(defn- handle-state-change [event]
+  (async/publish :player-states (states (.-data event))))
+
+(defn on-state-change [f]
+  (let [player-states (async/subscribe :player-states)]
+    (dochan [state player-states]
+      (f state))))
 
 ;; Handles an error simply by throwing it with its keyword as the only message.
 ;; We may improve this later.
@@ -135,11 +131,26 @@
   ; before the player even exists, because channels are great.
   (on-timecode
     ; TODO: handle timecodes by displaying annotations
-    #(.log js/console "timecode: %s" %)))
+    #(.log js/console "timecode: %s" %))
+
+  (let [interval (atom nil)]
+    (on-state-change
+      (fn [state]
+        (.log js/console "state change: %s; interval handle %d; video url %s"
+              (name state) (or @interval "nil") (.getVideoUrl @player))
+        (when (not (nil? @interval))
+          (js/clearInterval @interval))
+        ; start polling for timecodes if playback has begun, and the current video
+        ; has the same id as the loaded video
+        (if (and (= state :playing)
+                 (= (-> @player .getVideoUrl url->id)
+                    (-> @loaded-video :url url->id)))
+          (reset! interval (js/setInterval handle-timecode timecode-frequency))
+          (reset! interval nil))))))
 
 ;; Given a JS video object with a url property, loads it into the player
 ;; instance. The loaded video will play automatically.
-(defn load [video]
+(defn ^:export load [video]
   (.log js/console "youtube/load: @player-ready %s" @player-ready)
   (if @player-ready
     (do
@@ -149,17 +160,37 @@
     ; for different videos. Right now all the go loops will remain
     ; in effect!
     (go (loop []
-          (if (= (<! player-status) :ready)
+          (if (= (<! ready-states) :ready)
             (load video)
             (recur))))))
 
 ;; Pause the currently loaded video, if any.
-(defn pause []
+(defn ^:export pause []
   (when @player-ready
     (.pauseVideo @player)))
 
+;; Pause the currently loaded video. If the video is not currently playing, and
+;; not currently paused -- that is, if it is loading or seeking -- pause it as
+;; soon as possible. This may have the result of countermanding user input, so
+;; use it sparingly if at all. Originally written as a test cleanup function.
+(defn ^:export force-pause []
+  (let [deferred-pause
+        (fn []
+          (let [player-states (async/subscribe :player-states)]
+            (go (loop []
+                  (condp = (<! player-states)
+                    :playing (pause)
+                    :paused nil ; exit silently
+                    (recur))))))]
+    (if @player-ready
+      (condp = (states (.getPlayerState @player))
+        :playing (pause)
+        :paused nil ; exit silently)
+        (deferred-pause))
+      (deferred-pause)))) ; kind of gross, but it works for now
+
 ;; Play the currently loaded video, if any.
-(defn play []
+(defn ^:export play []
   (when @player-ready
     (.playVideo @player)))
 
@@ -168,7 +199,7 @@
 ;; furthest loaded time will not cause a new video stream request. When
 ;; performing a single seek operation to start playback at a known location, it
 ;; is safe to omit this argument, leaving it to default to true.
-(defn seek
+(defn ^:export seek
   ([timecode]
    (seek timecode true))
   ([timecode allow-seek-ahead]
