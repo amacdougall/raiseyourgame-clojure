@@ -15,22 +15,22 @@
     (f arg)
     (throw (js/Error. (str "Attempted to run function for unknown key " k)))))
 
-(defn- distance [t annotation]
-  (Math/abs (- t (:time annotation))))
+;; True if the timecode is later than the annotation time; i.e. the
+;; annotation has been reached.
+(defn- reached [t annotation]
+  (if (nil? annotation)
+    false
+    (> (- t (:time annotation)) 0)))
 
 (defn- locate
   ([t script] (locate t nil script))
-  ([t nearest script]
+  ([t current script]
+    ; If current annotation was reached, return it; if none are left to
+    ; check, return nil; otherwise, try next annotation in script.
     (cond
-      (empty? script)
-      nearest
-
-      (or (nil? nearest)
-          (< (distance t (first script)) (distance t nearest)))
-      (recur t (first script) (rest script))
-
-      :else
-      (recur t nearest (rest script)))))
+      (reached t current) current
+      (empty? script) nil
+      :else (recur t (first script) (rest script)))))
 
 (defn run [script]
   (youtube/on-timecode
