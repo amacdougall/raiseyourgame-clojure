@@ -33,7 +33,8 @@
       (recur t nearest (rest script)))))
 
 (defn run [script]
-  (dochan [t (youtube/timecodes-channel)]
-    (let [annotation (locate t script)]
-      (.log js/console "Annotation at %s: %s" t (:text annotation))
-      (ui-run :set-annotation (locate t script)))))
+  (youtube/on-timecode
+    (fn [t]
+      (let [annotation (locate t script)]
+        (.log js/console "Annotation at %s: %s" t (:text annotation))
+        (ui-run :set-annotation (locate t script))))))
