@@ -21,13 +21,14 @@
 (em/defsnippet home-view (template "video_list.html") ".video-list" [videos]
   ".video-list" (ef/content (map #(video-item %) videos)))
 
+; SECTION TEMPLATES
+; home
 (defn home [context]
+  (at ["#main-content"] (ef/remove-class "video"))
   (at ["#main-content .container"]
-    ; video list is a JS array of JS objects; see issue #1
     (ef/content (home-view (:videos context)))))
 
-; TODO: this will have to be considerably more complex to include
-; annotations, if nothing else
+; video
 (em/defsnippet video-view (template "video.html") ".video" [video]
   ".detail .title" (ef/content (:title video))
   ".detail .description p" (ef/content (:description video)))
@@ -37,6 +38,7 @@
 
 (defn video [context]
   (let [view (video-view (:video context))]
+    (at ["#main-content"] (ef/add-class "video"))
     (at ["#main-content .container"] (ef/content view))
     (timeline/equip :set-annotation
                     #(at ["#main-content .container .annotation"]
