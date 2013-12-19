@@ -10,9 +10,9 @@
   ([m] (swap! ui merge m))
   ([k v] (swap! ui assoc k v)))
 
-(defn- ui-run [k arg]
+(defn- ui-run [k & args]
   (if-let [f (@ui k)]
-    (f arg)
+    (if (nil? args) (f) (apply f args))
     (throw (js/Error. (str "Attempted to run function for unknown key " k)))))
 
 ;; True if the timecode is later than the annotation time; i.e. the
@@ -25,16 +25,16 @@
 (defn- locate
   ([t script] (locate t nil script))
   ([t current script]
-    ; If current annotation was reached, return it; if none are left to
-    ; check, return nil; otherwise, try next annotation in script.
+    ; If current annotation was reached, but next one was not, return it; if
+    ; none are left to check, return nil; otherwise, try next annotation.
     (cond
-      (reached t current) current
+      (and (reached t current) (not (reached t (first script)))) current
       (empty? script) nil
       :else (recur t (first script) (rest script)))))
 
 (defn run [script]
-  (youtube/on-timecode
-    (fn [t]
-      (let [annotation (locate t script)]
-        (.log js/console "Annotation at %s: %s" t (:text annotation))
-        (ui-run :set-annotation (locate t script))))))
+  (let [optimized false
+        optimize #(ui-run :optimize-for-annotations)
+        annotate #(ui-run :set-annotation (locate % script))]
+    (youtube/on-timecode optimize :once)
+    (youtube/on-timecode annotate)))

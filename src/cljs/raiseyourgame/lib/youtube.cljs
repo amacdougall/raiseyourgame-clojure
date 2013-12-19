@@ -56,10 +56,16 @@
 (defn- handle-timecode []
   (async/publish :timecodes (.getCurrentTime @player)))
 
-(defn on-timecode [f]
-  (let [timecodes (async/subscribe :timecodes)]
-    (dochan [timecode timecodes]
-      (f timecode))))
+; TODO: include this pattern in raiseyourgame.lib.async
+(defn on-timecode
+  ([f]
+   (on-timecode f nil))
+  ([f once]
+   (let [timecodes (async/subscribe :timecodes)]
+     (if (nil? once)
+       (dochan [timecode timecodes]
+         (f timecode))
+       (go (f (<! timecodes)))))))
 
 ;; Extracts a video id from a video URL of the expected type. This will
 ;; probably have to be improved if we get heterogeneous URLs, which we probably

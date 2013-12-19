@@ -40,8 +40,11 @@
   (let [view (video-view (:video context))]
     (at ["#main-content"] (ef/add-class "video"))
     (at ["#main-content .container"] (ef/content view))
-    (timeline/equip :set-annotation
-                    #(at ["#main-content .container .annotation"]
-                       (ef/content (annotation-view %)))))
+    (timeline/equip {:optimize-for-annotations
+                     #(at ["#main-content .container .description"]
+                        (ef/set-style :display "none"))
+                     :set-annotation
+                     #(at ["#main-content .container .annotation"]
+                        (ef/content (annotation-view %)))}))
   (youtube/create-player "player")
   (youtube/load (:video context)))
