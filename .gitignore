@@ -17,6 +17,7 @@ pom.xml.asc
 # Build locations
 /static/js/main.js*
 /static/css
+/out
 
 # Random artifacts
 scratch.*
