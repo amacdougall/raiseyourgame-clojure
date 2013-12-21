@@ -33,6 +33,7 @@
   ".detail .title" (ef/content (:title video))
   ".detail .description p" (ef/content (:description video)))
 
+; annotation; note that we can only operate upon children of .annotation
 (em/defsnippet annotation-view (template "video.html") ".annotation" [annotation]
   (ef/content (:text annotation)))
 
@@ -40,9 +41,11 @@
   (let [view (video-view (:video context))]
     (at ["#main-content"] (ef/add-class "video"))
     (at ["#main-content .container"] (ef/content view))
+    (at ["#main-content .annotation"] (ef/add-class "hidden"))
     (timeline/equip {:optimize-for-annotations
-                     #(at ["#main-content .container .description"]
-                        (ef/set-style :display "none"))
+                     #(at ["#main-content .container"]
+                        (at ".description" (ef/add-class "hidden"))
+                        (at ".annotation" (ef/remove-class "hidden")))
                      :set-annotation
                      #(at ["#main-content .container .annotation"]
                         (ef/content (annotation-view %)))}))
