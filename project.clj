@@ -3,7 +3,7 @@
   :url "http://raiseyourga.me"
 
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-2030"]
+                 [org.clojure/clojurescript "0.0-2127"]
                  [org.clojure/core.async "0.1.256.0-1bf8cf-alpha"]
                  [liberator "0.9.0"] ; Webmachine-style REST
                  [compojure "1.1.3"] ; routing
@@ -16,7 +16,7 @@
                  [environ "0.4.0"] ; access environment vars
 
                  ; clojurescript-specific
-                 [enfocus "2.0.1"] ; DOM interaction, templating
+                 [enfocus "2.0.2"] ; DOM interaction, templating
                  [secretary "0.2.0-SNAPSHOT"]] ; client-side routing
 
   :plugins [[lein-cljsbuild "0.3.2"]]
