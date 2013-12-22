@@ -6,14 +6,14 @@
   (:require-macros [cljs.core.async.macros :refer [go alt!]]
                    [raiseyourgame.lib.macros :refer [dochan]]))
 
-(def dummy-script [{:time 1 :text "One second. Are you excited yet?"}
-                   {:time 3 :text "Three seconds. Nothing much is happening actually."}
-                   {:time 5 :text "Five seconds. But now it's AWESOME!"}
-                   {:time 7 :text "Seven seconds. ...not really."}
-                   {:time 10 :text "Ten seconds."}
-                   {:time 15 :text "Fifteen seconds."}
-                   {:time 20 :text "Twenty seconds. Yay!"}
-                   {:time 30 :text "Thirty seconds."}])
+(def dummy-script [{:time 1 :content "One second. Are you excited yet?"}
+                   {:time 3 :content "Three seconds. Nothing much is happening actually."}
+                   {:time 5 :content "Five seconds. But now it's AWESOME!"}
+                   {:time 7 :content "Seven seconds. ...not really."}
+                   {:time 10 :content "Ten seconds."}
+                   {:time 15 :content "Fifteen seconds."}
+                   {:time 20 :content "Twenty seconds. Yay!"}
+                   {:time 30 :content "Thirty seconds."}])
 
 ;; Given an input channel of params maps, returns an output channel containing
 ;; template-context pairs.

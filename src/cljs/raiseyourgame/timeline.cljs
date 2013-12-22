@@ -38,3 +38,10 @@
         annotate #(ui-run :set-annotation (locate % script))]
     (youtube/on-timecode optimize :once)
     (youtube/on-timecode annotate)))
+
+;; Given a time in seconds, returns a formatted string in "m:ss" format.
+(defn to-timestamp [t]
+  (let [m (int (/ t 60))
+        s (int (mod t 60))
+        pad (when (< s 10) "0")]
+    (str m ":" pad s))) ; str ignores nil

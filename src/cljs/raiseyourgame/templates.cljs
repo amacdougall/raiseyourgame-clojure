@@ -35,7 +35,8 @@
 
 ; annotation; note that we can only operate upon children of .annotation
 (em/defsnippet annotation-view (template "video.html") ".annotation" [annotation]
-  (ef/content (:text annotation)))
+  ".timestamp" (ef/content (timeline/to-timestamp (:time annotation)))
+  ".content" (ef/content (:content annotation)))
 
 (defn video [context]
   (let [view (video-view (:video context))]
@@ -48,6 +49,6 @@
                         (at ".annotation" (ef/remove-class "hidden")))
                      :set-annotation
                      #(at ["#main-content .container .annotation"]
-                        (ef/content (annotation-view %)))}))
+                        (ef/substitute (annotation-view %)))}))
   (youtube/create-player "player")
   (youtube/load (:video context)))
