@@ -1,7 +1,6 @@
 (defproject raiseyourgame "0.1.0-SNAPSHOT"
-
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Raise Your Game"
+  :url "https://raiseyourgame.com"
 
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [selmer "0.9.0"]
