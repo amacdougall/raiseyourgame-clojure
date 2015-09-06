@@ -93,7 +93,8 @@
                                  [org.clojure/tools.nrepl "0.2.10"]
                                  [lein-figwheel "0.3.7"]
                                  [mvxcvi/puget "0.8.1"]]
-                  :plugins [[lein-figwheel "0.3.7"]]
+                  :plugins [[lein-figwheel "0.3.7"]
+                            [quickie "0.4.0"]]
                    :cljsbuild
                    {:builds
                     {:app

@@ -1,4 +1,4 @@
-(ns raiseyourgame.test.db.core
+(ns raiseyourgame.test.db.users-test
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
             [clojure.test :refer :all]
@@ -27,31 +27,30 @@
   "True if the two times are within a second of one another. Expects two clj-time instances."
   [exemplar candidate]
   (let [timespan (t/interval
-                   (t/minus exemplar (seconds 1))
-                   (t/plus exemplar (seconds 1)))]
+                   (t/minus exemplar (t/seconds 1))
+                   (t/plus exemplar (t/seconds 1)))]
     (t/within? timespan candidate)))
 
 (deftest test-user-creation
   (with-transaction [t-conn db/conn]
-    (let [timestamp (now)]
-      ; always rolls back the transaction
-      (jdbc/db-set-rollback-only! t-conn)
-      (is (= 1 (db/create-user!
-                 {:username "skurosawa"
-                  :password "willbehashed"
-                  :name "Sho Kurosawa"
-                  :profile "Endless Rain"
-                  :email "sho@monsterockband.com"
-                  :user_level 0})))
-      (let [user (first (db/get-user-by-email {:email "sho@monsterockband.com"}))]
-        (is (has-values
-              {:username "skurosawa"
-               :password "willbehashed"
-               :name "Sho Kurosawa"
-               :profile "Endless Rain"
-               :email "sho@monsterockband.com"
-               :user_level 0
-               :last_login nil}
-              user))
-        (is (has-approximate-time (now) (from-date (:created_at user))))
-        (is (has-approximate-time (now) (from-date (:updated_at user))))))))
+    ; always rolls back the transaction
+    (jdbc/db-set-rollback-only! t-conn)
+    (is (= 1 (db/create-user!
+               {:username "skurosawa"
+                :password "willbehashed"
+                :name "Sho Kurosawa"
+                :profile "Endless Rain"
+                :email "sho@monsterockband.com"
+                :user_level 0})))
+    (let [user (first (db/get-user-by-email {:email "sho@monsterockband.com"}))]
+      (is (has-values
+            {:username "skurosawa"
+             :password "willbehashed"
+             :name "Sho Kurosawa"
+             :profile "Endless Rain"
+             :email "sho@monsterockband.com"
+             :user_level 0
+             :last_login nil}
+            user))
+      (is (has-approximate-time (t/now) (from-date (:created_at user))))
+      (is (has-approximate-time (t/now) (from-date (:updated_at user)))))))
