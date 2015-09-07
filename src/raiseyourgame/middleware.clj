@@ -81,39 +81,12 @@
       wrap-identity
       (wrap-authentication (session-backend))))
 
-;; A vector of [route loader] pairs, where each loader expects a map of route
-;; params, and returns a map of loaded model objects used in processing the
-;; route.
-(def route-loaders
-  [["/api/videos"
-    (constantly "videos")]
-   ["/api/videos/:video-id"
-    (fn [{:keys [video-id]}]
-      {:video (format "video %s" video-id)})]
-   ["/api/videos/:video-id/annotations/:annotation-id"
-    (fn [{:keys [video-id annotation-id]}]
-      {:video (format "video %s" video-id)
-       :anntoation (format "annotation %s" annotation-id)})]])
-
-;; Given a request and a list of route loaders, returns a map of loaded model
-;; object for the first matching route.
-(defn load-models [req route-loaders]
-  (when-let [[route loader] (peek route-loaders)]
-    (if-let [params (clout/route-matches route req)]
-      (loader params)
-      (recur req (pop route-loaders)))))
-
-(defn wrap-loader [handler]
-  (fn [req]
-    (handler (update-in req [:params] #(merge % (load-models req route-loaders))))))
-
 (defn wrap-base [handler]
   (-> handler
     wrap-dev
     wrap-auth
     wrap-formats
     wrap-webjars
-    wrap-loader
     (wrap-defaults
       (-> site-defaults
         (assoc-in [:security :anti-forgery] false)
