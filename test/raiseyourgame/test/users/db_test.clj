@@ -1,4 +1,4 @@
-(ns raiseyourgame.test.db.users-test
+(ns raiseyourgame.test.users.db-test
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
             [raiseyourgame.test.helpers :refer [has-values has-approximate-time]]
@@ -31,15 +31,11 @@
    :email "kkaphwan@taekwondo.kr"
    :user_level 1})
 
-(defn- create-user! []
-  (db/create-user! user-values))
-
 (deftest test-user-creation
   (with-transaction [t-conn db/conn]
-    ; always rolls back the transaction
     (jdbc/db-set-rollback-only! t-conn)
     (testing "can create and retrieve user"
-      (is (= 1 (create-user!)))
+      (is (= 1 (db/create-user! user-values)))
       (let [user (first (db/get-user-by-email {:email "tbogard@hakkyokuseiken.org"}))]
         (is (has-values (merge user-values {:last_login nil}) user))
         (is (has-approximate-time (t/now) (from-date (:created_at user))))

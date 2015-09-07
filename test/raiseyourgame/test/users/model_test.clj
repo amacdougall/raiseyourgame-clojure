@@ -1,11 +1,10 @@
-(ns raiseyourgame.test.api.users-test
-  (:require [raiseyourgame.db.core :as db]
+(ns raiseyourgame.test.users.model-test
+  (:require [raiseyourgame.models.user :as user]
+            [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
             [raiseyourgame.test.helpers :refer [has-values]]
-            [raiseyourgame.handler :refer [app]]
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
-            [ring.mock.request :refer :all]
             [conman.core :refer [with-transaction]]))
 
 (use-fixtures
@@ -17,7 +16,7 @@
 
 (def user-values
   {:username "tbogard"
-   :password "willbehashed"
+   :password "buster wolf"
    :name "Terry Bogard"
    :profile "Are you okay?"
    :email "tbogard@hakkyokuseiken.org"
@@ -25,22 +24,15 @@
 
 (def moderator-values
   {:username "skusanagi"
-   :password "willbehashed"
+   :password "eye of the metropolis"
    :name "Saishu Kusanagi"
    :profile "Yoasobi wa kiken ja zo."
    :email "skusanagi@magatama.org"
    :user_level 1})
 
-(defn- create-user! []
-  (db/create-user! user-values))
-
-(deftest test-username-available
+(deftest user-password-test
   (with-transaction [t-conn db/conn]
     (jdbc/db-set-rollback-only! t-conn)
-    (create-user!)
-    (let [response (app (request :get "/api/username-available/tbogard"))]
-      (is (= 200 (:status response)))
-      (is "false" (slurp (:body response))))
-    (let [response (app (request :get "/api/username-available/iyagami"))]
-      (is (= 200 (:status response)))
-      (is "true" (slurp (:body response))))))
+    (let [user (user/create-user! user-values)]
+      (is (has-values (dissoc user-values :password) user))
+      (is (user/valid-password? user (:password user-values))))))
