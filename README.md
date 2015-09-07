@@ -1,6 +1,8 @@
-# raiseyourgame
+# Raise Your Game
 
-FIXME
+Source code for raiseyourga.me, which will eventually be a community annotation
+site for Youtube videos. Whether the world needs this project is immaterial; I'm
+doing it to practice Clojure and ClojureScript.
 
 ## Prerequisites
 
@@ -10,10 +12,16 @@ You will need [Leiningen][1] 2.0 or above installed.
 
 ## Running
 
-To start a web server for the application, run:
+This application is based on the [Luminus](http://www.luminusweb.net)
+scaffolding generator, with the `+postgres`, `+auth`, `+swagger`, and `+cljs`
+profiles.
 
-    lein run
+I suggest starting the REPL with `lein repl`, and then starting and stopping the
+webserver with `(start-http-server <port>)` and `(stop-http-server)`.
+
+`lein test` will run the tests, but you can also use `lein quickie` to autorun
+tests on file changes.
 
 ## License
 
-Copyright © 2015 FIXME
+Copyright © 2015 Alan MacDougall
