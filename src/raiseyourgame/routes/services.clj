@@ -1,5 +1,6 @@
 (ns raiseyourgame.routes.services
-  (:require [ring.util.http-response :refer :all]
+  (:require [raiseyourgame.db.core :as db]
+            [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]))
 
@@ -17,13 +18,13 @@
     {:info {:title "Raise Your API"}})
 
   (context* "/api" []
-            :tags ["models"]
+            :tags ["users" "login"]
 
-            (GET* "/videos/:video-id" []
-                  "video"
-                  )
-            
-            )
+            (GET* "/username-available/:username" []
+                  :return Boolean
+                  :path-params [username :- String]
+                  :summary "true if supplied username is available."
+                  (ok (empty? (db/get-user-by-username {:username username})))))
 
   (context* "/api" []
             :tags ["thingie"]
