@@ -16,26 +16,35 @@
     (migrations/migrate ["migrate"])
     (f)))
 
+(def user-values
+  {:username "tbogard"
+   :password "willbehashed"
+   :name "Terry Bogard"
+   :profile "Are you okay?"
+   :email "tbogard@hakkyokuseiken.org"
+   :user_level 0})
+
+(def moderator-values
+  {:username "kkaphwan"
+   :password "willbehashed"
+   :name "Kim Kaphwan"
+   :profile "YATATATATATATATATA"
+   :email "kkaphwan@taekwondo.kr"
+   :user_level 1})
+
+(defn- create-user! []
+  (db/create-user! user-values))
+
 (deftest test-user-creation
   (with-transaction [t-conn db/conn]
     ; always rolls back the transaction
     (jdbc/db-set-rollback-only! t-conn)
-    (is (= 1 (db/create-user!
-               {:username "skurosawa"
-                :password "willbehashed"
-                :name "Sho Kurosawa"
-                :profile "Endless Rain"
-                :email "sho@monsterockband.com"
-                :user_level 0})))
-    (let [user (first (db/get-user-by-email {:email "sho@monsterockband.com"}))]
-      (is (has-values
-            {:username "skurosawa"
-             :password "willbehashed"
-             :name "Sho Kurosawa"
-             :profile "Endless Rain"
-             :email "sho@monsterockband.com"
-             :user_level 0
-             :last_login nil}
-            user))
-      (is (has-approximate-time (t/now) (from-date (:created_at user))))
-      (is (has-approximate-time (t/now) (from-date (:updated_at user)))))))
+    (testing "can create and retrieve user"
+      (is (= 1 (create-user!)))
+      (let [user (first (db/get-user-by-email {:email "tbogard@hakkyokuseiken.org"}))]
+        (is (has-values (merge user-values {:last_login nil}) user))
+        (is (has-approximate-time (t/now) (from-date (:created_at user))))
+        (is (has-approximate-time (t/now) (from-date (:updated_at user))))))
+    (testing "can retrieve user by username"
+      (let [user (first (db/get-user-by-username {:username "tbogard"}))]
+        (is (= "tbogard" (:username user)))))))

@@ -35,6 +35,11 @@ SELECT * FROM users
 SELECT * FROM users
   WHERE email = :email;
 
+-- name: get-user-by-username
+-- retrieve a user given the username.
+SELECT * FROM users
+  WHERE username = :username;
+
 -- name: update-user!
 -- update an existing user record
 UPDATE users
