@@ -6,8 +6,7 @@
             [clojure.java.jdbc :as jdbc]
             [clj-time.core :as t]
             [clj-time.coerce :refer [from-date]]
-            [conman.core :refer [with-transaction]]
-            [environ.core :refer [env]]))
+            [conman.core :refer [with-transaction]]))
 
 (use-fixtures
   :once
