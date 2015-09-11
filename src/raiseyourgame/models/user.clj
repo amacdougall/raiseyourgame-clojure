@@ -21,7 +21,16 @@
         (first (db/get-user-by-username {:username username})))
       (catch SQLException e nil))))
 
+(defn lookup
+  "Given a map containing at least one of :id, :email, or :username, returns
+  the matching user, or nil. Keys are preferred in that order."
+  [{:keys [id email username]}]
+  (let [exists? (complement empty?)]
+  (first (cond (exists? id) (db/get-user-by-id {:id id})
+               (exists? email) (db/get-user-by-email {:email email})
+               (exists? username) (db/get-user-by-username {:username username})))))
+
 (defn valid-password?
   "True if the supplied password is correct."
   [user password]
-  (hashers/check password (:password user)))
+  (and user password (hashers/check password (:password user))))
