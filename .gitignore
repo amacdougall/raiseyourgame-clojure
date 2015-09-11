@@ -11,5 +11,4 @@ profiles.clj
 *.log
 resources/public/js
 .nrepl-port
-scratch.clj
-scratch.cljs
+scratch.*
