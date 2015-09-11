@@ -6,6 +6,7 @@
             [selmer.middleware :refer [wrap-error-page]]
             [prone.middleware :refer [wrap-exceptions]]
             [ring-ttl-session.core :refer [ttl-memory-store]]
+            [ring.logger.timbre :as logger.timbre]
             [ring.middleware.reload :as reload]
             [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
@@ -81,9 +82,13 @@
       wrap-identity
       (wrap-authentication (session-backend))))
 
+(defn wrap-ring-logger [handler]
+  (logger.timbre/wrap-with-logger handler))
+
 (defn wrap-base [handler]
   (-> handler
     wrap-dev
+    ; wrap-ring-logger
     wrap-auth
     wrap-formats
     wrap-webjars
