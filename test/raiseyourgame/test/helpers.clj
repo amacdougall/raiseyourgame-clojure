@@ -17,4 +17,8 @@
                    (t/plus exemplar (t/seconds 1)))]
     (t/within? timespan candidate)))
 
-
+(defmacro with-rollback-transaction [args & body]
+  `(clojure.java.jdbc/with-db-transaction [~(first args) (deref ~(second args))]
+     (jdbc/db-set-rollback-only! ~(first args)) ; force rollback at end of transaction
+     (binding [~(second args) (atom ~(first args))]
+       ~@body)))
