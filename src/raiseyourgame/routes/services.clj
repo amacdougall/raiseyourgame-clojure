@@ -32,7 +32,7 @@
                   :summary "true if supplied username is available."
                   (ok (empty? (db/get-user-by-username {:username username}))))
 
-            (POST* "/login" []
+            (POST* "/login" req
                    :return User
                    :body-params [{email :- String ""}
                                  {username :- String ""}
@@ -40,5 +40,6 @@
                    :summary "Username or email, and unhashed password."
                    (let [user (user/lookup {:email email, :username username})]
                      (if (user/valid-password? user password)
-                       (ok (dissoc user :password))
+                       (-> (ok (dissoc user :password))
+                         (assoc :session (assoc (:session req) :identity user)))
                        (unauthorized))))))

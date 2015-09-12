@@ -19,6 +19,9 @@
             [buddy.auth :refer [authenticated?]]
             [raiseyourgame.layout :refer [*identity*]]))
 
+; TODO: tweak this, or use a different mechanism to keep logins alive longer
+(def session-timeout (* 60 30))
+
 (defn wrap-context [handler]
   (fn [request]
     (binding [*app-context*
@@ -95,6 +98,6 @@
     (wrap-defaults
       (-> site-defaults
         (assoc-in [:security :anti-forgery] false)
-        (assoc-in  [:session :store] (ttl-memory-store (* 60 30)))))
+        (assoc-in  [:session :store] (ttl-memory-store session-timeout))))
     wrap-context
     wrap-internal-error))
