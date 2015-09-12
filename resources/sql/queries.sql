@@ -1,5 +1,8 @@
--- name: create-user!
--- creates a new user record
+-- name: create-user<!
+-- creates a new user record, returning the entire inserted record.
+-- postgres lets you specify a specific resultset to return, using the
+-- RETURNING keyword, but YeSQL doesn't support this, and I don't care enough
+-- to try to work around it.
 INSERT INTO users (
   username,
   password,

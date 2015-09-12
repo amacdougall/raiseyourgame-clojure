@@ -17,8 +17,7 @@
   (let [hashed-password (hashers/encrypt password)
         details (assoc params :password hashed-password :user_level 0)]
     (try
-      (when (= 1 (db/create-user! details @db/conn))
-        (first (db/get-user-by-username {:username username})))
+      (db/create-user<! details @db/conn)
       (catch SQLException e nil))))
 
 (defn lookup

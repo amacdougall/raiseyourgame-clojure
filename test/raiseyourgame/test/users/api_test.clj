@@ -36,7 +36,7 @@
 (deftest test-username-available
   (with-transaction [t-conn db/conn]
     (jdbc/db-set-rollback-only! t-conn)
-    (db/create-user! user-values)
+    (user/create-user! user-values)
     (let [response (app (request :get "/api/username-available/tbogard"))]
       (is (= 200 (:status response)))
       (is "false" (slurp (:body response))))
