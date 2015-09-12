@@ -2,7 +2,7 @@
   (:require [raiseyourgame.models.user :as user]
             [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
-            [raiseyourgame.test.helpers :refer [has-values]]
+            [raiseyourgame.test.helpers :refer [has-values with-rollback-transaction]]
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
             [conman.core :refer [with-transaction]]))
@@ -31,25 +31,32 @@
    :user_level 1})
 
 (deftest user-create-test
-  (with-transaction [t-conn db/conn]
-    (jdbc/db-set-rollback-only! t-conn)
+  (with-rollback-transaction [t-conn db/conn]
     (let [user (user/create-user! user-values)]
       (is (has-values (dissoc user-values :password) user))
       (is (has-values (dissoc user :password)
                       (first (db/get-user-by-email {:email (:email user-values)})))))))
 
 (deftest user-password-test
-  (with-transaction [t-conn db/conn]
-    (jdbc/db-set-rollback-only! t-conn)
-    (let [user (user/create-user! user-values)]
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (user/create-user! user-values)
+          password (:password user-values)
+          hashed (:password user)]
       (is (has-values (dissoc user-values :password) user))
-      (is (user/valid-password? user (:password user-values))))))
+      (is (not= password hashed))
+      (is (user/valid-password? user password)))))
+
+(deftest user-password-invalid-test
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (user/create-user! user-values)]
+      (is (not (user/valid-password? user "invalid"))))))
 
 (deftest user-lookup-test
-  (with-transaction [t-conn db/conn]
-    (jdbc/db-set-rollback-only! t-conn)
-    (let [username (:username user-values)
-          email (:email user-values)
-          user (user/create-user! user-values)]
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (user/create-user! user-values)
+          id (:id user)
+          {:keys [username email]} user-values]
+      (is (has-values user (user/lookup {:id id})))
       (is (has-values user (user/lookup {:username username})))
-      (is (has-values user (user/lookup {:email email}))))))
+      (is (has-values user (user/lookup {:email email})))
+      (is (nil? (user/lookup {:username "invalid"}))))))

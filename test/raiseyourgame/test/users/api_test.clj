@@ -1,7 +1,7 @@
 (ns raiseyourgame.test.users.api-test
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
-            [raiseyourgame.test.helpers :refer [has-values]]
+            [raiseyourgame.test.helpers :refer [has-values with-rollback-transaction]]
             [raiseyourgame.models.user :as user]
             [raiseyourgame.handler :refer [app]]
             [clojure.test :refer :all]
@@ -45,12 +45,27 @@
       (is "true" (slurp (:body response))))))
 
 (deftest test-login
-  (with-transaction [t-conn db/conn]
+  (with-rollback-transaction [t-conn db/conn]
     (jdbc/db-set-rollback-only! t-conn)
     (user/create-user! user-values)
-    (let [credentials (select-keys user-values #{:username :password})
-          request (-> (request :post "/api/login")
-                    (content-type "application/json")
-                    (body (cheshire/generate-string credentials)))
-          response (app request)]
-      (is (= 200 (:status response))))))
+
+    (testing "with valid credentials"
+      (let [credentials (select-keys user-values #{:username :password})
+            req (-> (request :post "/api/login")
+                  (content-type "application/json")
+                  (body (cheshire/generate-string credentials)))
+            res (app req)]
+        (is (= 200 (:status res))
+            "returned 200 response")
+        (let [user (cheshire/parse-string (slurp (:body res)))
+              session (:session res)]
+          (is (= (credentials "username") (:username user))
+              "returned the authenticated user"))))
+
+    (testing "with invalid credentials"
+      (let [credentials {:username (:username user-values) :password "invalid"}
+            req (-> (request :post "/api/login")
+                  (content-type "application/json")
+                  (body (cheshire/generate-string credentials)))
+            res (app req)]
+        (is (= 401 (:status res)))))))
