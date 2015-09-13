@@ -46,7 +46,6 @@
 
 (deftest test-login
   (with-rollback-transaction [t-conn db/conn]
-    (jdbc/db-set-rollback-only! t-conn)
     (user/create-user! user-values)
 
     (testing "with valid credentials"

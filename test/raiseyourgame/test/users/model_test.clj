@@ -57,6 +57,6 @@
           id (:id user)
           {:keys [username email]} user-values]
       (is (has-values user (user/lookup {:id id})))
-      (is (has-values user (user/lookup {:username username})))
-      (is (has-values user (user/lookup {:email email})))
+      (is (has-values user (user/lookup {:id nil :username username})))
+      (is (has-values user (user/lookup {:id nil :username nil :email email})))
       (is (nil? (user/lookup {:username "invalid"}))))))
