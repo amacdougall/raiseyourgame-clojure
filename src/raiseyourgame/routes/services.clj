@@ -24,22 +24,23 @@
     {:info {:title "Raise Your API"}})
 
   (context* "/api" []
-            :tags ["users"]
+    (context* "/users" []
+      :tags ["users"]
 
-            (GET* "/username-available/:username" []
-                  :return Boolean
-                  :path-params [username :- String]
-                  :summary "true if supplied username is available."
-                  (ok (empty? (db/get-user-by-username {:username username}))))
+      (GET* "/available/:username" []
+            :return Boolean
+            :path-params [username :- String]
+            :summary "true if supplied username is available."
+            (ok (empty? (db/get-user-by-username {:username username}))))
 
-            (POST* "/login" req
-                   :return User
-                   :body-params [{email :- String ""}
-                                 {username :- String ""}
-                                 password :- String]
-                   :summary "Username or email, and unhashed password."
-                   (let [user (user/lookup {:email email, :username username})]
-                     (if (user/valid-password? user password)
-                       (-> (ok (dissoc user :password))
-                         (assoc :session (assoc (:session req) :identity user)))
-                       (unauthorized))))))
+      (POST* "/login" req
+             :return User
+             :body-params [{email :- String ""}
+                           {username :- String ""}
+                           password :- String]
+             :summary "Username or email, and unhashed password."
+             (let [user (user/lookup {:email email, :username username})]
+               (if (user/valid-password? user password)
+                 (-> (ok (dissoc user :password))
+                   (assoc :session (assoc (:session req) :identity user)))
+                 (unauthorized)))))))

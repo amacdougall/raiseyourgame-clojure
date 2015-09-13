@@ -37,10 +37,10 @@
   (with-transaction [t-conn db/conn]
     (jdbc/db-set-rollback-only! t-conn)
     (user/create-user! user-values)
-    (let [response (app (request :get "/api/username-available/tbogard"))]
+    (let [response (app (request :get "/api/users/available/tbogard"))]
       (is (= 200 (:status response)))
       (is "false" (slurp (:body response))))
-    (let [response (app (request :get "/api/username-available/iyagami"))]
+    (let [response (app (request :get "/api/users/available/iyagami"))]
       (is (= 200 (:status response)))
       (is "true" (slurp (:body response))))))
 
@@ -50,7 +50,7 @@
 
     (testing "with valid credentials"
       (let [credentials (select-keys user-values #{:username :password})
-            req (-> (request :post "/api/login")
+            req (-> (request :post "/api/users/login")
                   (content-type "application/json")
                   (body (cheshire/generate-string credentials)))
             res (app req)]
@@ -63,7 +63,7 @@
 
     (testing "with invalid credentials"
       (let [credentials {:username (:username user-values) :password "invalid"}
-            req (-> (request :post "/api/login")
+            req (-> (request :post "/api/users/login")
                   (content-type "application/json")
                   (body (cheshire/generate-string credentials)))
             res (app req)]
