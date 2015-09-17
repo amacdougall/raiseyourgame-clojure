@@ -11,6 +11,7 @@
                  [environ "1.0.0"]
                  [compojure "1.4.0"]
                  [clj-time "0.11.0"]
+                 [camel-snake-kebab "0.3.2"]
                  [ring-webjars "0.1.1"]
                  [ring/ring-defaults "0.1.5"]
                  [ring-ttl-session "0.1.1"]

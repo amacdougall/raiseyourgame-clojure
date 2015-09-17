@@ -44,6 +44,36 @@
       (is (= 200 (:status response)))
       (is "true" (slurp (:body response))))))
 
+(deftest test-user-lookup
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (user/create-user! user-values)
+          test-success
+          (fn [criteria]
+            (let [response (app (request :get "/api/users/lookup" criteria))]
+              (is (= 200 (:status response)))
+              (let [result (user/json->user (slurp (:body response)))]
+                (is (has-values (dissoc user-values :password :email) result)
+                    "resulting user has expected values")
+                (is (every? nil? (map result [:email :password]))
+                    "resulting user does not have password or email values"))))
+          test-not-found
+          (fn [criteria]
+            (let [response (app (request :get "/api/users/lookup" criteria))]
+              (is (= 404 (:status response))
+                  "looking up nonexistent user returns 404")))]
+      (testing "looking up user by id"
+        (test-success {:id (:id user)})
+        (test-not-found {:id 0}))
+      (testing "looking up user by username"
+        (test-success {:username "tbogard"})
+        (test-not-found {:username "iyagami"}))
+      (testing "looking up user by email"
+        (test-success {:email "tbogard@hakkyokuseiken.org"})
+        (test-not-found {:email "iyagami@magatama.org"}))
+      (testing "looking up user with invalid parameters"
+        (let [response (app (request :get "/api/users/lookup" {:something "wrong"}))]
+          (is (= 400 (:status response))))))))
+
 (deftest test-login
   (with-rollback-transaction [t-conn db/conn]
     (user/create-user! user-values)

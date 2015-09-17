@@ -8,13 +8,18 @@
 
 (s/defschema User {:id Long
                    :username String
-                   :email String
+                   :email (s/maybe String)
                    :name String
                    :profile String
                    :user_level Long
                    :created_at java.util.Date
                    :updated_at java.util.Date
                    :last_login (s/maybe java.util.Date)})
+
+(defn- safe-user [user]
+  (-> user
+    (dissoc :password)
+    (assoc :email nil)))
 
 (defapi service-routes
   (ring.swagger.ui/swagger-ui
@@ -26,6 +31,23 @@
   (context* "/api" []
     (context* "/users" []
       :tags ["users"]
+
+      (GET* "/lookup" []
+            :return User
+            :query-params [{id :- Long nil}
+                           {username :- String nil}
+                           {email :- String nil}]
+            :summary ""
+            (let [criterion (cond
+                              (not (nil? id)) {:id id}
+                              (not (nil? username)) {:username username}
+                              (not (nil? email)) {:email email})]
+              (if criterion
+                (if-let [user (user/lookup criterion)]
+                  (ok (safe-user user))
+                  (not-found "No user matched your request."))
+                (bad-request "Invalid request. Must supply one of the following
+                             querystring parameters: id, username, email."))))
 
       (GET* "/available/:username" []
             :return Boolean

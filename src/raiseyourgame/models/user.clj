@@ -1,5 +1,7 @@
 (ns raiseyourgame.models.user
   (:require [raiseyourgame.db.core :as db]
+            [camel-snake-kebab.core :refer [->snake_case_keyword ->snake_case]]
+            [cheshire.core :as cheshire]
             [buddy.hashers :as hashers])
   (:import java.sql.SQLException))
 
@@ -33,3 +35,8 @@
   "True if the supplied password is correct."
   [user password]
   (and user password (hashers/check password (:password user))))
+
+(defn json->user
+  "Given a JSON string, return a user with keyword keys."
+  [raw-json]
+  (cheshire/parse-string raw-json ->snake_case_keyword))
