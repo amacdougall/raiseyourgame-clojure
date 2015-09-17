@@ -49,12 +49,6 @@
                 (bad-request "Invalid request. Must supply one of the following
                              querystring parameters: id, username, email."))))
 
-      (GET* "/available/:username" []
-            :return Boolean
-            :path-params [username :- String]
-            :summary "true if supplied username is available."
-            (ok (empty? (db/get-user-by-username {:username username}))))
-
       (POST* "/login" req
              :return User
              :body-params [{email :- String ""}

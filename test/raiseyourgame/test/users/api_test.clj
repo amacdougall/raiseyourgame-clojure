@@ -33,17 +33,6 @@
    :email "skusanagi@magatama.org"
    :user_level 1})
 
-(deftest test-username-available
-  (with-transaction [t-conn db/conn]
-    (jdbc/db-set-rollback-only! t-conn)
-    (user/create-user! user-values)
-    (let [response (app (request :get "/api/users/available/tbogard"))]
-      (is (= 200 (:status response)))
-      (is "false" (slurp (:body response))))
-    (let [response (app (request :get "/api/users/available/iyagami"))]
-      (is (= 200 (:status response)))
-      (is "true" (slurp (:body response))))))
-
 (deftest test-user-lookup
   (with-rollback-transaction [t-conn db/conn]
     (let [user (user/create-user! user-values)
