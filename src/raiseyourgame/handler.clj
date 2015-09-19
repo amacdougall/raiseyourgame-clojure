@@ -2,7 +2,7 @@
   (:require [compojure.core :refer [defroutes routes wrap-routes]]
             [raiseyourgame.layout :refer [error-page]]
             [raiseyourgame.routes.home :refer [home-routes]]
-            [raiseyourgame.routes.services :refer [service-routes]]
+            [raiseyourgame.routes.api :refer [api-routes]]
             [raiseyourgame.middleware :as middleware]
             [raiseyourgame.db.core :as db]
             [compojure.route :as route]
@@ -42,7 +42,7 @@
 
 (def app-routes
   (routes
-    (var service-routes)
+    (var api-routes)
     (wrap-routes #'home-routes middleware/wrap-csrf)
     (route/not-found
       (:body

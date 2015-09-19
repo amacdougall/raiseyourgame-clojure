@@ -1,4 +1,4 @@
-(ns raiseyourgame.routes.services
+(ns raiseyourgame.routes.api
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.models.user :as user]
             [ring.util.http-response :refer :all]
@@ -19,7 +19,7 @@
 (defn- safe-user [user]
   (dissoc user :password :email))
 
-(defapi service-routes
+(defapi api-routes
   (ring.swagger.ui/swagger-ui
     "/swagger-ui")
   ;JSON docs available at the /swagger.json route
