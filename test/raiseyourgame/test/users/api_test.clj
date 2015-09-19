@@ -6,7 +6,7 @@
             [raiseyourgame.handler :refer [app]]
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
-            [ring.mock.request :refer :all]
+            [peridot.core :refer [session request]]
             [cheshire.core :as cheshire]
             [conman.core :refer [with-transaction]]))
 
@@ -39,7 +39,10 @@
     (let [user (user/create-user! user-values)
           test-success
           (fn [criteria]
-            (let [response (app (request :get "/api/users/lookup" criteria))]
+            (let [response (-> (session app)
+                             (request "/api/users/lookup"
+                                              :params criteria)
+                             :response)]
               (is (= 200 (:status response)))
               (let [result (user/json->user (slurp (:body response)))]
                 (is (has-values (dissoc user-values :password :email) result)
@@ -48,7 +51,10 @@
                     "resulting user does not have password or email values"))))
           test-not-found
           (fn [criteria]
-            (let [response (app (request :get "/api/users/lookup" criteria))]
+            (let [response (-> (session app)
+                             (request "/api/users/lookup"
+                                              :params criteria)
+                             :response)]
               (is (= 404 (:status response))
                   "looking up nonexistent user returns 404")))]
 
@@ -57,15 +63,18 @@
         (test-not-found {:id 0}))
 
       (testing "looking up user by username"
-        (test-success {:username "tbogard"})
+        (test-success {:username (:username user)})
         (test-not-found {:username "iyagami"}))
 
       (testing "looking up user by email"
-        (test-success {:email "tbogard@hakkyokuseiken.org"})
+        (test-success {:email (:email user)})
         (test-not-found {:email "iyagami@magatama.org"}))
 
       (testing "looking up user with invalid parameters"
-        (let [response (app (request :get "/api/users/lookup" {:something "wrong"}))]
+        (let [response (-> (session app)
+                         (request "/api/users/lookup"
+                                          :params {:something "wrong"})
+                         :response)]
           (is (= 400 (:status response))))))))
 
 (deftest test-login
@@ -74,21 +83,25 @@
 
     (testing "with valid credentials"
       (let [credentials (select-keys user-values #{:username :password})
-            req (-> (request :post "/api/users/login")
-                  (content-type "application/json")
-                  (body (cheshire/generate-string credentials)))
-            res (app req)]
-        (is (= 200 (:status res))
-            "returned 200 response")
-        (let [user (cheshire/parse-string (slurp (:body res)))
-              session (:session res)]
-          (is (= (credentials "username") (:username user))
+            response
+            (-> (session app)
+              (request "/api/users/login"
+                               :request-method :post
+                               :content-type "application/json"
+                               :body (cheshire/generate-string credentials))
+              :response)]
+        (is (= 200 (:status response)) "returned 200 response")
+        (let [user (user/json->user (slurp (:body response)))]
+          (is (= (:username credentials) (:username user))
               "returned the authenticated user"))))
 
     (testing "with invalid credentials"
       (let [credentials {:username (:username user-values) :password "invalid"}
-            req (-> (request :post "/api/users/login")
-                  (content-type "application/json")
-                  (body (cheshire/generate-string credentials)))
-            res (app req)]
-        (is (= 401 (:status res)))))))
+            response
+            (-> (session app)
+              (request "/api/users/login"
+                               :request-method :post
+                               :content-type "application/json"
+                               :body (cheshire/generate-string credentials))
+              :response)]
+        (is (= 401 (:status response)))))))

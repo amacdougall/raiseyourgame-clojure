@@ -88,8 +88,8 @@
              :aot :all}
    :dev           [:project/dev :profiles/dev]
    :test          [:project/test :profiles/test]
-   :project/dev  {:dependencies [[ring/ring-mock "0.2.0"]
-                                 [ring/ring-devel "1.4.0"]
+   :project/dev  {:dependencies [[ring/ring-devel "1.4.0"]
+                                 [peridot "0.4.1"]
                                  [pjstadig/humane-test-output "0.7.0"]
                                  [org.clojure/tools.nrepl "0.2.10"]
                                  [lein-figwheel "0.3.7"]
