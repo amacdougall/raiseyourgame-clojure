@@ -41,7 +41,7 @@
           (fn [criteria]
             (let [response (-> (session app)
                              (request "/api/users/lookup"
-                                              :params criteria)
+                                      :params criteria)
                              :response)]
               (is (= 200 (:status response)))
               (let [result (user/json->user (slurp (:body response)))]
@@ -53,7 +53,7 @@
           (fn [criteria]
             (let [response (-> (session app)
                              (request "/api/users/lookup"
-                                              :params criteria)
+                                      :params criteria)
                              :response)]
               (is (= 404 (:status response))
                   "looking up nonexistent user returns 404")))]
@@ -73,7 +73,7 @@
       (testing "looking up user with invalid parameters"
         (let [response (-> (session app)
                          (request "/api/users/lookup"
-                                          :params {:something "wrong"})
+                                  :params {:something "wrong"})
                          :response)]
           (is (= 400 (:status response))))))))
 
@@ -90,10 +90,25 @@
                                :content-type "application/json"
                                :body (cheshire/generate-string credentials))
               :response)]
-        (is (= 200 (:status response)) "returned 200 response")
+        (is (= 200 (:status response)) "login returned 200 response")
         (let [user (user/json->user (slurp (:body response)))]
           (is (= (:username credentials) (:username user))
-              "returned the authenticated user"))))
+              "login returned the authenticated user"))
+
+        ; log in, then hit the /api/users/current route to test logged-in-ness
+        (let [response
+              (-> (session app)
+                (request "/api/users/login"
+                         :request-method :post
+                         :content-type "application/json"
+                         :body (cheshire/generate-string credentials))
+                (request "/api/users/current")
+                :response)]
+          (is (= 200 (:status response))
+              "after login, current returned 200 response")
+          (let [user (user/json->user (slurp (:body response)))]
+            (is (= (:username credentials) (:username user))
+                "after login, current returned logged-in user")))))
 
     (testing "with invalid credentials"
       (let [credentials {:username (:username user-values) :password "invalid"}

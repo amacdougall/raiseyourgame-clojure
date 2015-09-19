@@ -1,6 +1,7 @@
 (ns raiseyourgame.routes.api
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.models.user :as user]
+            [raiseyourgame.layout :refer [*identity*]]
             [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]
@@ -47,7 +48,7 @@
                 (bad-request "Invalid request. Must supply one of the following
                              querystring parameters: id, username, email."))))
 
-      (POST* "/login" req
+      (POST* "/login" request
              :return User
              :body-params [{email :- String ""}
                            {username :- String ""}
@@ -56,5 +57,11 @@
              (let [user (user/lookup {:email email, :username username})]
                (if (user/valid-password? user password)
                  (-> (ok (dissoc user :password))
-                   (assoc :session (assoc (:session req) :identity user)))
-                 (unauthorized)))))))
+                   (assoc :session (assoc (:session request) :identity user)))
+                 (unauthorized))))
+
+      (GET* "/current" request
+            :return User
+            (if *identity*
+              (ok (dissoc *identity* :password))
+              (not-found))))))
