@@ -8,7 +8,7 @@
 
 (s/defschema User {:id Long
                    :username String
-                   :email (s/maybe String)
+                   (s/optional-key :email) String
                    :name String
                    :profile String
                    :user_level Long
@@ -17,9 +17,7 @@
                    :last_login (s/maybe java.util.Date)})
 
 (defn- safe-user [user]
-  (-> user
-    (dissoc :password)
-    (assoc :email nil)))
+  (dissoc user :password :email))
 
 (defapi service-routes
   (ring.swagger.ui/swagger-ui
