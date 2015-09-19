@@ -11,10 +11,10 @@
                    (s/optional-key :email) String
                    :name String
                    :profile String
-                   :user_level Long
-                   :created_at java.util.Date
-                   :updated_at java.util.Date
-                   :last_login (s/maybe java.util.Date)})
+                   :user-level Long
+                   :created-at java.util.Date
+                   :updated-at java.util.Date
+                   :last-login (s/maybe java.util.Date)})
 
 (defn- safe-user [user]
   (dissoc user :password :email))

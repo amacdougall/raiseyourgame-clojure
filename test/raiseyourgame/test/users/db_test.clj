@@ -11,6 +11,9 @@
 ; A word of warning: try to use one transaction per test. An SQLException, even
 ; an intentional one, will abort the transaction, trashing any remaining tests.
 
+; Since these tests operate at the database level, they use YeSQL-style
+; snake_case keywords. Code at all higher levels will use kebab-case keywords.
+
 (use-fixtures
   :once
   (fn [f]

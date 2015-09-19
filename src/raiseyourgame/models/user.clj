@@ -1,6 +1,7 @@
 (ns raiseyourgame.models.user
   (:require [raiseyourgame.db.core :as db]
-            [camel-snake-kebab.core :refer [->snake_case_keyword ->snake_case]]
+            [camel-snake-kebab.core :refer [->kebab-case-keyword]]
+            [bugsbio.squirrel :refer [to-sql to-clj]]
             [cheshire.core :as cheshire]
             [buddy.hashers :as hashers])
   (:import java.sql.SQLException))
@@ -19,17 +20,24 @@
   (let [hashed-password (hashers/encrypt password)
         details (assoc params :password hashed-password :user_level 0)]
     (try
-      (db/create-user<! details @db/conn)
+      (-> details
+        (to-sql)
+        (db/create-user<! @db/conn)
+        (to-clj))
       (catch SQLException e nil))))
 
 (defn lookup
-  "Given a map containing at least one of int :id, string :email, or string
-  :username, returns the matching user, or nil. Keys are checked and used in
-  that order."
-  [{:keys [id email username]}]
-  (first (cond (not (nil? id)) (db/get-user-by-id {:id id})
-               (seq email) (db/get-user-by-email {:email email})
-               (seq username) (db/get-user-by-username {:username username}))))
+  "Given a map containing at least one of int :id, string :username, or string
+  :email, returns the matching user, or nil. Keys are checked and used in that
+  order."
+  [{:keys [id username email]}]
+  (let [result-set
+        (cond (not (nil? id)) (db/get-user-by-id {:id id})
+              (not (nil? username)) (db/get-user-by-username {:username username})
+              (not (nil? email)) (db/get-user-by-email {:email email})
+              :default '())]
+    (when-not (empty? result-set)
+      (to-clj (first result-set)))))
 
 (defn valid-password?
   "True if the supplied password is correct."
@@ -37,6 +45,6 @@
   (and user password (hashers/check password (:password user))))
 
 (defn json->user
-  "Given a JSON string, return a user with keyword keys."
+  "Given a JSON string, return a user."
   [raw-json]
-  (cheshire/parse-string raw-json ->snake_case_keyword))
+  (cheshire/parse-string raw-json ->kebab-case-keyword))

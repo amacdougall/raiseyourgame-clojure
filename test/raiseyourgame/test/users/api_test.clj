@@ -23,7 +23,7 @@
    :name "Terry Bogard"
    :profile "Are you okay?"
    :email "tbogard@hakkyokuseiken.org"
-   :user_level 0})
+   :user-level 0})
 
 (def moderator-values
   {:username "skusanagi"
@@ -31,7 +31,7 @@
    :name "Saishu Kusanagi"
    :profile "Yoasobi wa kiken ja zo."
    :email "skusanagi@magatama.org"
-   :user_level 1})
+   :user-level 1})
 
 (deftest test-user-lookup
   (with-rollback-transaction [t-conn db/conn]

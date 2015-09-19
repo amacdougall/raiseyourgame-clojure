@@ -28,6 +28,7 @@
                  [buddy "0.6.1"]
                  [migratus "0.8.4"]
                  [conman "0.1.7"]
+                 [squirrel "0.1.1"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [org.clojure/clojurescript "1.7.107" :scope "provided"]
                  [org.clojure/tools.reader "0.9.2"]
