@@ -1,7 +1,6 @@
 (ns raiseyourgame.routes.api
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.models.user :as user]
-            [raiseyourgame.layout :refer [*identity*]]
             [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]
@@ -62,6 +61,6 @@
 
       (GET* "/current" request
             :return User
-            (if *identity*
-              (ok (dissoc *identity* :password))
+            (if-let [user (get-in request [:session :identity])]
+              (ok (dissoc user :password))
               (not-found))))))

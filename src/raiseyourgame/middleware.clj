@@ -16,8 +16,7 @@
             [buddy.auth.middleware :refer [wrap-authentication]]
             [buddy.auth.backends.session :refer [session-backend]]
             [buddy.auth.accessrules :refer [restrict]]
-            [buddy.auth :refer [authenticated?]]
-            [raiseyourgame.layout :refer [*identity*]]))
+            [buddy.auth :refer [authenticated?]]))
 
 ; TODO: tweak this, or use a different mechanism to keep logins alive longer
 (def session-timeout (* 60 30))
@@ -75,14 +74,8 @@
   (restrict handler {:handler authenticated?
                      :on-error on-error}))
 
-(defn wrap-identity [handler]
-  (fn [request]
-    (binding [*identity* (get-in request [:session :identity])]
-      (handler request))))
-
 (defn wrap-auth [handler]
   (-> handler
-      wrap-identity
       (wrap-authentication (session-backend))))
 
 (defn wrap-ring-logger [handler]
