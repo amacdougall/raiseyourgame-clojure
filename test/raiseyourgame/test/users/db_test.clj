@@ -31,12 +31,12 @@
     ; Records created within this form will remain in the test database until the
     ; end of the transaction.
     (with-rollback-transaction [t-conn db/conn]
-      (let [{:keys [id]} (db/create-user<! user-values)] ; returns inserted record
-        (is (not (nil? id))
-            "user creation should return non-nil id")
-        (let [user (first (db/get-user-by-id {:id id}))]
-          (is (= id (:id user))
-              "user looked up by id should have that id")
+      (let [{:keys [user_id]} (db/create-user<! user-values)] ; returns inserted record
+        (is (not (nil? user_id))
+            "user creation should return non-nil user_id")
+        (let [user (first (db/get-user-by-user-id {:user_id user_id}))]
+          (is (= user_id (:user_id user))
+              "user looked up by user_id should have that user_id")
           (is (has-values (merge user-values {:last_login nil}) user)
               "user created from params should have those values")
           (is (has-approximate-time (t/now) (from-date (:created_at user)))

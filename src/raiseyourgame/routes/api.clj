@@ -6,7 +6,8 @@
             [schema.core :as s]
             [taoensso.timbre :refer [debug]]))
 
-(s/defschema User {:id Long
+(s/defschema User {:user-id Long
+                   :active Boolean
                    :username String
                    (s/optional-key :email) String
                    :name String
@@ -32,12 +33,12 @@
 
       (GET* "/lookup" []
             :return User
-            :query-params [{id :- Long nil}
+            :query-params [{user-id :- Long nil}
                            {username :- String nil}
                            {email :- String nil}]
             :summary ""
             (let [criterion (cond
-                              (not (nil? id)) {:id id}
+                              (not (nil? user-id)) {:user-id user-id}
                               (not (nil? username)) {:username username}
                               (not (nil? email)) {:email email})]
               (if criterion

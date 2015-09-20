@@ -4,6 +4,7 @@
             [raiseyourgame.test.helpers :refer [has-values with-rollback-transaction]]
             [raiseyourgame.models.user :as user]
             [raiseyourgame.handler :refer [app]]
+            [raiseyourgame.test.fixtures :refer [user-values]]
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
             [peridot.core :refer [session request]]
@@ -16,25 +17,9 @@
     (when (nil? @db/conn) (db/connect!))
     (f)))
 
-(def user-values
-  {:username "tbogard"
-   :password "buster wolf"
-   :name "Terry Bogard"
-   :profile "Are you okay?"
-   :email "tbogard@hakkyokuseiken.org"
-   :user-level 0})
-
-(def moderator-values
-  {:username "skusanagi"
-   :password "eye of the metropolis"
-   :name "Saishu Kusanagi"
-   :profile "Yoasobi wa kiken ja zo."
-   :email "skusanagi@magatama.org"
-   :user-level 1})
-
 (deftest test-user-lookup
   (with-rollback-transaction [t-conn db/conn]
-    ; we're doing this in a let because we'll need the user id later
+    ; we're doing this in a let because we'll need the user-id later
     (let [user (user/create-user! user-values)
           test-success
           (fn [criteria]
@@ -57,9 +42,9 @@
               (is (= 404 (:status response))
                   "looking up nonexistent user returns 404")))]
 
-      (testing "looking up user by id"
-        (test-success {:id (:id user)})
-        (test-not-found {:id 0}))
+      (testing "looking up user by user-id"
+        (test-success {:user-id (:user-id user)})
+        (test-not-found {:user-id 0}))
 
       (testing "looking up user by username"
         (test-success {:username (:username user)})

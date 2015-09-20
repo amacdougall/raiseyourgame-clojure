@@ -38,9 +38,9 @@
 (deftest user-lookup-test
   (with-rollback-transaction [t-conn db/conn]
     (let [user (user/create-user! user-values)
-          id (:id user)
+          user-id (:user-id user)
           {:keys [username email]} user-values]
-      (is (has-values user (user/lookup {:id id})))
-      (is (has-values user (user/lookup {:id nil :username username})))
-      (is (has-values user (user/lookup {:id nil :username nil :email email})))
+      (is (has-values user (user/lookup {:user-id user-id})))
+      (is (has-values user (user/lookup {:user-id nil :username username})))
+      (is (has-values user (user/lookup {:user-id nil :username nil :email email})))
       (is (nil? (user/lookup {:username "invalid"}))))))

@@ -18,3 +18,12 @@
    :profile "Yoasobi wa kiken ja zo."
    :email "skusanagi@magatama.org"
    :user-level 1})
+
+;; User id must be merged in by test code.
+(def video-values
+  {:title "Benimaru Nikkaido vs Goro Daimon"
+   :blurb "Speed versus power in an epic clash!"
+   :description "In round one, Benimaru keeps Daimon at range with normals,
+                capitalizing on moments of inattention to deal damage with
+                combos. Later, Daimon changes strategy to lure him out with
+                great patience, and evens things up with deadly mixups."})

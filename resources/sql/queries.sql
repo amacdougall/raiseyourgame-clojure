@@ -28,10 +28,10 @@ VALUES (
 -- selects all users, regardless of level
 SELECT * FROM users;
 
--- name: get-user-by-id
--- retrieve a user given the id.
+-- name: get-user-by-user-id
+-- retrieve a user given the user_id.
 SELECT * FROM users
-  WHERE id = :id;
+  WHERE user_id = :user_id;
 
 -- name: get-user-by-email
 -- retrieve a user given the email.
@@ -46,8 +46,7 @@ SELECT * FROM users
 -- name: update-user!
 -- update an existing user record
 UPDATE users
-  SET id = :id,
-      username = :username,
+  SET username = :username,
       password = :password,
       name = :name,
       profile = :profile,
@@ -55,9 +54,9 @@ UPDATE users
       user_level = :user_level,
       last_login = :last_login,
       updated_at = NOW()
-WHERE id = :id;
+WHERE user_id = :user_id;
 
 -- name: delete-user!
--- delete a user given the id
+-- delete a user given the user_id
 DELETE FROM users
-WHERE id = :id
+WHERE user_id = :user_id

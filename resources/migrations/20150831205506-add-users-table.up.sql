@@ -1,5 +1,6 @@
 CREATE TABLE users (
   user_id serial PRIMARY KEY,
+  active boolean DEFAULT true,
   username text UNIQUE NOT NULL,
   password text NOT NULL,
   name text,
