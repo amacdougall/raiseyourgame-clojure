@@ -49,20 +49,16 @@
   (deftest test-user-retrieval
     (with-rollback-transaction [t-conn db/conn]
       ; created user remains in test db until transaction ends
-      (let [{user_id :user_id} (db/create-user<! user-values)]
-        (testing "can retrieve user by user_id"
+      (let [{:keys [username email]} user-values
+            {user_id :user_id} (db/create-user<! user-values)]
+        (testing "lookup with valid values"
           (let [user (first (db/get-user-by-user-id {:user_id user_id}))]
-            (is (= user_id (:user_id user))
-                "user looked up by user_id should have that user_id")))
-        (testing "can retrieve user by username"
-          (let [username (:username user-values)
-                user (first (db/get-user-by-username {:username username}))]
-            (is (= (:username user) username))))
-        (testing "no results for unknown username"
-          (is (empty? (db/get-user-by-username {:username "invalid"}))))
-        (testing "can retrieve user by email"
-          (let [email (:email user-values)
-                user (first (db/get-user-by-email {:email email}))]
-            (is (= email (:email user))))))
+            (is (= user_id (:user_id user)) "lookup by id succeeds"))
+          (let [user (first (db/get-user-by-username {:username username}))]
+            (is (= username (:username user)) "lookup by username succeeds"))
+          (let [user (first (db/get-user-by-email {:email email}))]
+            (is (= email (:email user))) "lookup by email succeeds")))
       (testing "no results for unknown email"
-        (is (empty? (db/get-user-by-email {:email "invalid"})))))))
+        (is (empty? (db/get-user-by-user-id {:user_id -1})))
+        (is (empty? (db/get-user-by-username {:username "invalid"})))
+        (is (empty? (db/get-user-by-email {:email "invalid"}))))))
