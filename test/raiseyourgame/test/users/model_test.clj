@@ -2,6 +2,7 @@
   (:require [raiseyourgame.models.user :as user]
             [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
+            [raiseyourgame.test.fixtures :refer [user-values]]
             [raiseyourgame.test.helpers :refer [has-values with-rollback-transaction]]
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
@@ -12,25 +13,6 @@
   (fn [f]
     (when (nil? @db/conn) (db/connect!))
     (f)))
-
-; Model functions should handle conversion to and from the snake_case keywords
-; expected by YeSQL.
-
-(def user-values
-  {:username "tbogard"
-   :password "buster wolf"
-   :name "Terry Bogard"
-   :profile "Are you okay?"
-   :email "tbogard@hakkyokuseiken.org"
-   :user-level 0})
-
-(def moderator-values
-  {:username "skusanagi"
-   :password "eye of the metropolis"
-   :name "Saishu Kusanagi"
-   :profile "Yoasobi wa kiken ja zo."
-   :email "skusanagi@magatama.org"
-   :user-level 1})
 
 (deftest user-create-test
   (with-rollback-transaction [t-conn db/conn]
