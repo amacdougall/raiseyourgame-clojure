@@ -17,8 +17,7 @@
 
 (defonce ^:dynamic conn (atom nil))
 
-; All queries named in queries.sql become db/* functions.
-(conman/bind-connection conn "sql/queries.sql")
+(conman/bind-connection conn "sql/users.sql")
 
 (def pool-spec
   {:adapter    :postgresql

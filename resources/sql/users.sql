@@ -59,4 +59,4 @@ WHERE user_id = :user_id;
 -- name: delete-user!
 -- delete a user given the user_id
 DELETE FROM users
-WHERE user_id = :user_id
+  WHERE user_id = :user_id;
