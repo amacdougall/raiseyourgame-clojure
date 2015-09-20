@@ -62,3 +62,22 @@
         (is (empty? (db/get-user-by-user-id {:user_id -1})))
         (is (empty? (db/get-user-by-username {:username "invalid"})))
         (is (empty? (db/get-user-by-email {:email "invalid"}))))))
+
+  (deftest test-user-update
+    (with-rollback-transaction [t-conn db/conn]
+      (let [old-username (:username user-values)
+            new-username "jbogard"
+            user (db/create-user<! user-values)]
+        (is (= 1 (db/update-user! (assoc user :username new-username)))
+            "updating user affects exactly one row")
+        (let [updated-user (first (db/get-user-by-user-id user))]
+          (is (not (nil? updated-user)))
+          (is (= new-username (:username updated-user)))
+          (is (has-approximate-time (t/now) (from-date (:updated_at user)))))
+        (testing "can look up by new username"
+          (let [updated-user (first (db/get-user-by-username {:username new-username}))]
+            (is (not (nil? updated-user)))
+            (is (= new-username (:username updated-user)))))
+        (testing "cannot look up by old username"
+          (let [updated-user (first (db/get-user-by-username {:username old-username}))]
+            (is (nil? updated-user))))))))
