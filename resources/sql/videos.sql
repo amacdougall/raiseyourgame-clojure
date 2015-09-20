@@ -40,8 +40,7 @@ UPDATE videos
       times_started = :times_started,
       times_completed = :times_completed,
       times_upvoted = :times_upvoted,
-      created_at = :created_at,
-      updated_at = :updated_at
+      updated_at = NOW()
   WHERE video_id = :video_id;
 
 -- name: delete-video!
