@@ -21,7 +21,8 @@
 
 ;; User id must be merged in by test code.
 (def video-values
-  {:title "Benimaru Nikkaido vs Goro Daimon"
+  {:url "http://www.example.com/v/100"
+   :title "Benimaru Nikkaido vs Goro Daimon"
    :blurb "Speed versus power in an epic clash!"
    :description "In round one, Benimaru keeps Daimon at range with normals,
                 capitalizing on moments of inattention to deal damage with

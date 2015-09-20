@@ -31,18 +31,15 @@
     ; Records created within this form will remain in the test database until the
     ; end of the transaction.
     (with-rollback-transaction [t-conn db/conn]
-      (let [{:keys [user_id]} (db/create-user<! user-values)] ; returns inserted record
-        (is (not (nil? user_id))
-            "user creation should return non-nil user_id")
-        (let [user (first (db/get-user-by-user-id {:user_id user_id}))]
-          (is (= user_id (:user_id user))
-              "user looked up by user_id should have that user_id")
-          (is (has-values (merge user-values {:last_login nil}) user)
-              "user created from params should have those values")
-          (is (has-approximate-time (t/now) (from-date (:created_at user)))
-              "user created_at should be set to current time")
-          (is (has-approximate-time (t/now) (from-date (:updated_at user)))
-              "user updated_at should be set to current time")))))
+      (let [user (db/create-user<! user-values)]
+        (is (not (nil? user))
+            "user creation should return the created user")
+        (is (has-values (merge user-values {:last_login nil}) user)
+            "user created from params should have those values")
+        (is (has-approximate-time (t/now) (from-date (:created_at user)))
+            "user created_at should be set to current time")
+        (is (has-approximate-time (t/now) (from-date (:updated_at user)))
+            "user updated_at should be set to current time"))))
 
   (deftest test-unique-user-constraint
     (with-rollback-transaction [t-conn db/conn]
@@ -51,16 +48,21 @@
 
   (deftest test-user-retrieval
     (with-rollback-transaction [t-conn db/conn]
-      (db/create-user<! user-values)
-      (testing "can retrieve user by username"
-        (let [username (:username user-values)
-              user (first (db/get-user-by-username {:username username}))]
-          (is (= (:username user) username))))
-      (testing "no results for unknown username"
-        (is (empty? (db/get-user-by-username {:username "invalid"}))))
-      (testing "can retrieve user by email"
-        (let [email (:email user-values)
-              user (first (db/get-user-by-email {:email email}))]
-          (is (= email (:email user)))))
+      ; created user remains in test db until transaction ends
+      (let [{user_id :user_id} (db/create-user<! user-values)]
+        (testing "can retrieve user by user_id"
+          (let [user (first (db/get-user-by-user-id {:user_id user_id}))]
+            (is (= user_id (:user_id user))
+                "user looked up by user_id should have that user_id")))
+        (testing "can retrieve user by username"
+          (let [username (:username user-values)
+                user (first (db/get-user-by-username {:username username}))]
+            (is (= (:username user) username))))
+        (testing "no results for unknown username"
+          (is (empty? (db/get-user-by-username {:username "invalid"}))))
+        (testing "can retrieve user by email"
+          (let [email (:email user-values)
+                user (first (db/get-user-by-email {:email email}))]
+            (is (= email (:email user))))))
       (testing "no results for unknown email"
         (is (empty? (db/get-user-by-email {:email "invalid"})))))))

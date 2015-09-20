@@ -17,7 +17,10 @@
 
 (defonce ^:dynamic conn (atom nil))
 
-(conman/bind-connection conn "sql/users.sql")
+(conman/bind-connection
+  conn
+  "sql/users.sql"
+  "sql/videos.sql")
 
 (def pool-spec
   {:adapter    :postgresql
