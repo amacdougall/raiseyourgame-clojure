@@ -10,8 +10,7 @@
 (use-fixtures
   :once
   (fn [f]
-    (db/connect!)
-    (migrations/migrate ["migrate"])
+    (when (nil? @db/conn) (db/connect!))
     (f)))
 
 ; Model functions should handle conversion to and from the snake_case keywords

@@ -58,9 +58,9 @@
             [lein-cljsbuild "1.0.6"]
             [lein-sassc "0.10.4"]]
   :sassc [{:src "resources/scss/screen.scss"
-  :output-to "resources/public/css/screen.css"
-  :style "nested"
-  :import-path "resources/scss"}]
+           :output-to "resources/public/css/screen.css"
+           :style "nested"
+           :import-path "resources/scss"}]
 
   :hooks [leiningen.sassc]
   :clean-targets ^{:protect false} [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
@@ -74,18 +74,18 @@
       :externs ["react/externs/react.js"]
       :optimizations :none
       :pretty-print true}}}}
-  
+
   :profiles
   {:uberjar {:omit-source true
              :env {:production true}
-              :hooks [leiningen.cljsbuild]
-              :cljsbuild
-              {:jar true
-               :builds
-               {:app
-                {:source-paths ["env/prod/cljs"]
-                 :compiler {:optimizations :advanced :pretty-print false}}}} 
-             
+             :hooks [leiningen.cljsbuild]
+             :cljsbuild
+             {:jar true
+              :builds
+              {:app
+               {:source-paths ["env/prod/cljs"]
+                :compiler {:optimizations :advanced :pretty-print false}}}} 
+
              :aot :all}
    :dev           [:project/dev :profiles/dev]
    :test          [:project/test :profiles/test]
@@ -96,19 +96,22 @@
                                  [lein-figwheel "0.3.7"]
                                  [mvxcvi/puget "0.8.1"]]
                   :plugins [[lein-figwheel "0.3.7"]
-                            [quickie "0.4.0"]]
-                   :cljsbuild
-                   {:builds
-                    {:app
-                     {:compiler {:source-map true} :source-paths ["env/dev/cljs"]}}} 
-                  
+                            [com.jakemccrary/lein-test-refresh "0.10.0"]]
+                  :test-refresh {:notify-command ["notify-send" "-i" "stop"]
+                                 :notify-on-success false
+                                 :quiet true}
+                  :cljsbuild
+                  {:builds
+                   {:app
+                    {:compiler {:source-map true} :source-paths ["env/dev/cljs"]}}} 
+
                   :figwheel
                   {:http-server-root "public"
                    :server-port 3449
                    :nrepl-port 7002
                    :css-dirs ["resources/public/css"]
                    :ring-handler raiseyourgame.handler/app}
-                  
+
                   :repl-options {:init-ns raiseyourgame.core}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]

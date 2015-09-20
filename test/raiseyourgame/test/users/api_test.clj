@@ -13,8 +13,7 @@
 (use-fixtures
   :once
   (fn [f]
-    (db/connect!)
-    (migrations/migrate ["migrate"])
+    (when (nil? @db/conn) (db/connect!))
     (f)))
 
 (def user-values
