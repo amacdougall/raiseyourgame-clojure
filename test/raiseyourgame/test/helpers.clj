@@ -1,5 +1,6 @@
 (ns raiseyourgame.test.helpers
-  (:require [clj-time.core :as t]))
+  (:require [clj-time.core :as t]
+            [clojure.java.jdbc :as jdbc]))
 
 (defn has-values
   "True if the target map has every key-value pair defined in the exemplar map."

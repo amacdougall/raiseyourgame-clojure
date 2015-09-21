@@ -1,15 +1,17 @@
 -- name: create-annotation<!
 -- creates a new annotation record, returning the entire inserted record.
-INSERT INTO annotation (
+INSERT INTO annotations (
   video_id,
   user_id,
   text,
+  timecode,
   created_at,
   updated_at
 ) VALUES (
   :video_id,
   :user_id,
   :text,
+  :timecode,
   NOW(),
   NOW()
 );
@@ -35,6 +37,7 @@ UPDATE annotations
       user_id = :user_id,
       active = :active,
       text = :text,
+      timecode = :timecode,
       updated_at = NOW()
   WHERE annotation_id = :annotation_id;
 

@@ -20,7 +20,8 @@
 (conman/bind-connection
   conn
   "sql/users.sql"
-  "sql/videos.sql")
+  "sql/videos.sql"
+  "sql/annotations.sql")
 
 (def pool-spec
   {:adapter    :postgresql

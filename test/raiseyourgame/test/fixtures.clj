@@ -28,3 +28,12 @@
                 capitalizing on moments of inattention to deal damage with
                 combos. Later, Daimon changes strategy to lure him out with
                 great patience, and evens things up with deadly mixups."})
+
+;; User ids and video ids must be merged in by test code.
+(def annotation-values
+  [{:timecode 1000
+    :text "This annotation was made at 1000ms elapsed."}
+   {:timecode 2000
+    :text "This annotation was made at 2000ms elapsed."}
+   {:timecode 3000
+    :text "This annotation was made at 3000ms elapsed."}])
