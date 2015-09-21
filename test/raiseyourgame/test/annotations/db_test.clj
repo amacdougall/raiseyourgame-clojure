@@ -27,8 +27,7 @@
             ; Build annotations from fixture values, merging user/video ids
             annotations (->> annotation-values
                           (map #(assoc % :user_id user_id :video_id video_id))
-                          (map db/create-annotation<!))
-            expectations (map vector annotation-values annotations)]
+                          (map db/create-annotation<!))]
         (is (not (empty? annotations))
             "should build multiple annotations")
         (is (every? (fn [[expected actual]] (has-values expected actual))
@@ -41,4 +40,33 @@
         (is (every? #(has-approximate-time (t/now) (from-date (:created_at %))) annotations)
             "all annotations should be created_at current time")
         (is (every? #(has-approximate-time (t/now) (from-date (:updated_at %))) annotations)
-            "all annotations should be updated_at current time")))))
+            "all annotations should be updated_at current time"))))
+
+  (deftest test-annotation-retrieval
+    (with-rollback-transaction [t-conn db/conn]
+      (let [{user_id :user_id} (db/create-user<! user-values)
+            {video_id :video_id} (db/create-video<! (assoc video-values :user_id user_id))
+            ; Build annotations from fixture values, merging user/video ids
+            annotations (->> annotation-values
+                          (map #(assoc % :user_id user_id :video_id video_id))
+                          (map db/create-annotation<!))]
+
+        (testing "looking up annotation by annotation_id"
+          (let [id (:annotation_id (first annotations))
+                annotation (first (db/get-annotation-by-annotation-id {:annotation_id id}))]
+            (is (not (nil? annotation))
+                "can retrieve annotation by annotation_id")
+            (is (has-values (first annotation-values) annotation)
+                "annotation looked up by annotation_id has correct values")
+            (is (= user_id (:user_id annotation))
+                "annotation looked up by annotation_id has correct user_id")
+            (is (= video_id (:video_id annotation))
+                "annotation looked up by annotation_id has correct video_id")))
+
+        (testing "looking up annotations by video_id"
+          (let [annotations (db/get-annotations-by-video-id {:video_id video_id})]
+            (is (every? (fn [[expected actual]] (has-values expected actual))
+                        (map vector annotation-values annotations))
+                "all annotations should have fixture values")
+            (is (every? #(= video_id (:video_id %)) annotations)
+                "all annotations should have the correct video id")))))))
