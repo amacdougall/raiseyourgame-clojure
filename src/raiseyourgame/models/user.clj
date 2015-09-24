@@ -4,13 +4,14 @@
             [camel-snake-kebab.core :refer [->kebab-case-keyword]]
             [bugsbio.squirrel :refer [to-sql to-clj]]
             [cheshire.core :as cheshire]
-            [buddy.hashers :as hashers])
+            [buddy.hashers :as hashers]
+            [taoensso.timbre :refer [debug]])
   (:import java.sql.SQLException))
 
 ;; Note that the raiseyourgame.db.core namespace deals in YeSQL queries, which
 ;; require SQL-style snake_case params. Use to-sql for those.
 
-(defn create-user!
+(defn create!
   "Creates a user based on a params object containing the following keys:
   :username, :email, :password, :name (optional), :profile (optional). The
   password will be stored hashed in the database; the original is discarded.
@@ -42,6 +43,29 @@
               :default '())]
     (when-not (empty? result-set)
       (to-clj (first result-set)))))
+
+(defn update!
+  "Given a user model map, updates the database row with that id using those
+  values.
+
+  (let [updated-user (assoc user :username 'Ann')]
+    update! updated-user)
+
+  Given a user model map and a transition function, applies the function to the
+  map and updates the user in the database.
+
+  (update! user #(assoc :username 'Ann'))
+
+  In both cases, returns the updated user if successful, nil otherwise.
+  
+  If an incomplete user map is supplied, mayhem will ensue. Be ready to catch
+  SQLExceptions if you're doing something innovative."
+  ([user]
+   (let [result (db/update-user! (to-sql user))]
+     ; result will be the rows affected
+     (if (< 0 result) user nil)))
+  ([user f]
+   (update! (f user))))
 
 (defn valid-password?
   "True if the supplied password is correct."

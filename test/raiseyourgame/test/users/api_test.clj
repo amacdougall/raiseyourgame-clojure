@@ -20,7 +20,7 @@
 (deftest test-user-lookup
   (with-rollback-transaction [t-conn db/conn]
     ; we're doing this in a let because we'll need the user-id later
-    (let [user (user/create-user! user-values)
+    (let [user (user/create! user-values)
           test-success
           (fn [criteria]
             (let [response (-> (session app)
@@ -63,7 +63,7 @@
 
 (deftest test-login
   (with-rollback-transaction [t-conn db/conn]
-    (user/create-user! user-values)
+    (user/create! user-values)
 
     (testing "with valid credentials"
       (let [credentials (select-keys user-values #{:username :password})
