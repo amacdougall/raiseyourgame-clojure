@@ -29,14 +29,14 @@
 
   (context* "/api" []
     (context* "/users" []
-      :tags ["users"]
-
+      ;; NOTE: Route order matters! Only check the /:user-id route after others
+      ;; have failed to match.
       (GET* "/lookup" []
             :return User
             :query-params [{user-id :- Long nil}
                            {username :- String nil}
                            {email :- String nil}]
-            :summary ""
+            :summary "One of: user-id, username, password."
             (let [criterion (cond
                               (not (nil? user-id)) {:user-id user-id}
                               (not (nil? username)) {:username username}
@@ -48,6 +48,20 @@
                 (bad-request "Invalid request. Must supply one of the following
                              querystring parameters: id, username, email."))))
 
+      (GET* "/current" request
+            :return User
+            (if-let [user (get-in request [:session :identity])]
+              (ok (dissoc user :password))
+              (not-found)))
+      
+      (GET* "/:user-id" []
+            :return User
+            :path-params [user-id :- Long]
+            :summary "Numeric user id."
+            (if-let [user (user/lookup {:user-id user-id})]
+              (ok (safe-user user))
+              (not-found "No user matched your request.")))
+
       (POST* "/login" request
              :return User
              :body-params [{email :- String ""}
@@ -58,10 +72,4 @@
                (if (user/valid-password? user password)
                  (-> (ok (dissoc user :password))
                    (assoc :session (assoc (:session request) :identity user)))
-                 (unauthorized))))
-
-      (GET* "/current" request
-            :return User
-            (if-let [user (get-in request [:session :identity])]
-              (ok (dissoc user :password))
-              (not-found))))))
+                 (unauthorized)))))))

@@ -17,6 +17,25 @@
     (when (nil? @db/conn) (db/connect!))
     (f)))
 
+(deftest test-get-by-id
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (user/create! user-values)]
+      (testing "with correct id"
+        (let [path (format "/api/users/%d" (:user-id user))
+              response (-> (session app) (request path) :response)]
+          (is (= 200 (:status response))
+              "getting known user by id should return 200")
+          (let [result (user/json->user (slurp (:body response)))]
+            (is (has-values (dissoc user-values :password :email) result)
+                "resulting user has expected values")
+            (is (empty? (filter #{:password :email} result))
+                "resulting user does not have password or email values"))))
+      (testing "with unknown id"
+        (let [path "/api/users/0"
+              response (-> (session app) (request path) :response)]
+          (is (= 404 (:status response))
+              "getting user by nonexistent id should return 404"))))))
+
 (deftest test-user-lookup
   (with-rollback-transaction [t-conn db/conn]
     ; we're doing this in a let because we'll need the user-id later
@@ -24,8 +43,7 @@
           test-success
           (fn [criteria]
             (let [response (-> (session app)
-                             (request "/api/users/lookup"
-                                      :params criteria)
+                             (request "/api/users/lookup" :params criteria)
                              :response)]
               (is (= 200 (:status response)))
               (let [result (user/json->user (slurp (:body response)))]
