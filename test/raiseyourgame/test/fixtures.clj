@@ -8,16 +8,14 @@
    :password "buster wolf"
    :name "Terry Bogard"
    :profile "Are you okay?"
-   :email "tbogard@hakkyokuseiken.org"
-   :user-level 0})
+   :email "tbogard@hakkyokuseiken.org"})
 
 (def moderator-values
   {:username "skusanagi"
    :password "eye of the metropolis"
    :name "Saishu Kusanagi"
    :profile "Yoasobi wa kiken ja zo."
-   :email "skusanagi@magatama.org"
-   :user-level 1})
+   :email "skusanagi@magatama.org"})
 
 ;; User id must be merged in by test code.
 (def video-values

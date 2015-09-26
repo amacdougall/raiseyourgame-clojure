@@ -23,7 +23,7 @@
   please check this condition before attempting to create a user."
   [{:keys [password username] :as params}]
   (let [hashed-password (hashers/encrypt password)
-        details (assoc params :password hashed-password :user_level 0)]
+        details (assoc params :password hashed-password)]
     (try
       (-> details
         (to-sql)
@@ -71,8 +71,3 @@
   "True if the supplied password is correct."
   [user password]
   (and user password (hashers/check password (:password user))))
-
-(defn json->user
-  "Given a JSON string, return a user."
-  [raw-json]
-  (cheshire/parse-string raw-json ->kebab-case-keyword))

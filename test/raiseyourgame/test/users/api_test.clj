@@ -1,14 +1,15 @@
 (ns raiseyourgame.test.users.api-test
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
-            [raiseyourgame.test.helpers :refer [has-values with-rollback-transaction]]
+            [raiseyourgame.test.helpers :refer :all]
             [raiseyourgame.models.user :as user]
             [raiseyourgame.handler :refer [app]]
-            [raiseyourgame.test.fixtures :refer [user-values]]
+            [raiseyourgame.test.fixtures :as fixtures]
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
             [peridot.core :refer [session request]]
             [cheshire.core :as cheshire]
+            [taoensso.timbre :refer [debug]]
             [conman.core :refer [with-transaction]]))
 
 (use-fixtures
@@ -17,16 +18,31 @@
     (when (nil? @db/conn) (db/connect!))
     (f)))
 
+(deftest test-user-create
+  (with-rollback-transaction [t-conn db/conn]
+    (let [response
+          (-> (session app)
+            (request "/api/users"
+                     :request-method :post
+                     :content-type "application/json"
+                     :body (cheshire/generate-string fixtures/user-values))
+            :response)]
+      ; The HTTP 201 Created response includes a Location header where the new
+      ; resource can be found, and includes the resource itself in the body.
+      ; NOTE: strings are not fn-able, so get-in is more convenient.
+      (is (= 201 (:status response)))
+      (is (string? (get-in response [:headers "Location"]))))))
+
 (deftest test-get-by-id
   (with-rollback-transaction [t-conn db/conn]
-    (let [user (user/create! user-values)]
+    (let [user (user/create! fixtures/user-values)]
       (testing "with correct id"
         (let [path (format "/api/users/%d" (:user-id user))
               response (-> (session app) (request path) :response)]
           (is (= 200 (:status response))
               "getting known user by id should return 200")
-          (let [result (user/json->user (slurp (:body response)))]
-            (is (has-values (dissoc user-values :password :email) result)
+          (let [result (response->clj response)]
+            (is (has-values (dissoc fixtures/user-values :password :email) result)
                 "resulting user has expected values")
             (is (empty? (filter #{:password :email} result))
                 "resulting user does not have password or email values"))))
@@ -39,15 +55,15 @@
 (deftest test-user-lookup
   (with-rollback-transaction [t-conn db/conn]
     ; we're doing this in a let because we'll need the user-id later
-    (let [user (user/create! user-values)
+    (let [user (user/create! fixtures/user-values)
           test-success
           (fn [criteria]
             (let [response (-> (session app)
                              (request "/api/users/lookup" :params criteria)
                              :response)]
               (is (= 200 (:status response)))
-              (let [result (user/json->user (slurp (:body response)))]
-                (is (has-values (dissoc user-values :password :email) result)
+              (let [result (response->clj response)]
+                (is (has-values (dissoc fixtures/user-values :password :email) result)
                     "resulting user has expected values")
                 (is (empty? (filter #{:password :email} result))
                     "resulting user does not have password or email values"))))
@@ -81,19 +97,19 @@
 
 (deftest test-login
   (with-rollback-transaction [t-conn db/conn]
-    (user/create! user-values)
+    (user/create! fixtures/user-values)
 
     (testing "with valid credentials"
-      (let [credentials (select-keys user-values #{:username :password})
+      (let [credentials (select-keys fixtures/user-values #{:username :password})
             response
             (-> (session app)
               (request "/api/users/login"
-                               :request-method :post
-                               :content-type "application/json"
-                               :body (cheshire/generate-string credentials))
+                       :request-method :post
+                       :content-type "application/json"
+                       :body (cheshire/generate-string credentials))
               :response)]
         (is (= 200 (:status response)) "login returned 200 response")
-        (let [user (user/json->user (slurp (:body response)))]
+        (let [user (response->clj response)]
           (is (= (:username credentials) (:username user))
               "login returned the authenticated user"))
 
@@ -108,17 +124,17 @@
                 :response)]
           (is (= 200 (:status response))
               "after login, current returned 200 response")
-          (let [user (user/json->user (slurp (:body response)))]
+          (let [user (response->clj response)]
             (is (= (:username credentials) (:username user))
                 "after login, current returned logged-in user")))))
 
     (testing "with invalid credentials"
-      (let [credentials {:username (:username user-values) :password "invalid"}
+      (let [credentials {:username (:username fixtures/user-values) :password "invalid"}
             response
             (-> (session app)
               (request "/api/users/login"
-                               :request-method :post
-                               :content-type "application/json"
-                               :body (cheshire/generate-string credentials))
+                       :request-method :post
+                       :content-type "application/json"
+                       :body (cheshire/generate-string credentials))
               :response)]
         (is (= 401 (:status response)))))))

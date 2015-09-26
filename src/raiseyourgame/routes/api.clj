@@ -45,7 +45,7 @@
             (if-let [user (get-in request [:session :identity])]
               (ok (dissoc user :password))
               (not-found)))
-      
+
       (GET* "/:user-id" []
             :return User
             :path-params [user-id :- Long]
@@ -63,6 +63,17 @@
             (ok (video/find-by-user-id user-id)))
 
       ;; POST routes
+      (POST* "/" request
+             :body-params [username :- String
+                           password :- String
+                           name :- String
+                           {profile :- String nil}
+                           email :- String]
+             (let [user (user/create! (:body-params request))
+                   location (format "/api/users/%d" (:user-id user))
+                   response (created (safe-user user))]
+               (assoc-in response [:headers "Location"] location)))
+
       (POST* "/login" request
              :return User
              :body-params [{email :- String ""}

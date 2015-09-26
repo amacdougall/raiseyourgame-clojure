@@ -9,7 +9,6 @@ INSERT INTO users (
   name,
   profile,
   email,
-  user_level,
   created_at,
   updated_at
 )
@@ -19,7 +18,6 @@ VALUES (
   :name,
   :profile,
   :email,
-  :user_level,
   NOW(),
   NOW()
 );

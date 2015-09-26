@@ -1,6 +1,14 @@
 (ns raiseyourgame.test.helpers
   (:require [clj-time.core :as t]
-            [clojure.java.jdbc :as jdbc]))
+            [clojure.java.jdbc :as jdbc]
+            [cheshire.core :as cheshire]
+            [camel-snake-kebab.core :refer [->kebab-case-keyword]]))
+
+(defn json->clj [raw-json]
+  (cheshire/parse-string raw-json ->kebab-case-keyword))
+
+;; Useful when parsing JSON API responses.
+(def response->clj (comp json->clj slurp :body))
 
 (defn has-values
   "True if the target map has every key-value pair defined in the exemplar map."
