@@ -1,7 +1,7 @@
 (ns raiseyourgame.test.videos.api-test
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
-            [raiseyourgame.test.helpers :refer [has-values with-rollback-transaction]]
+            [raiseyourgame.test.helpers :refer :all]
             [raiseyourgame.models.user :as user]
             [raiseyourgame.models.video :as video]
             [raiseyourgame.handler :refer [app]]
@@ -25,11 +25,6 @@
         video (video/create!
                 (assoc fixtures/video-values :user-id (:user-id user)))]
     [video user]))
-
-(defn json->clj [raw-json]
-  (cheshire/parse-string raw-json ->kebab-case-keyword))
-
-(def response->clj (comp json->clj slurp :body))
 
 (deftest test-find-by-video-id
   (with-rollback-transaction [t-conn db/conn]
