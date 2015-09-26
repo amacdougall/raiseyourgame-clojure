@@ -1,7 +1,6 @@
 (ns raiseyourgame.models.video
   "Namespace containing database and domain logic for video maps."
   (:require [raiseyourgame.db.core :as db]
-            [camel-snake-kebab.core :refer [->kebab-case-keyword]]
             [bugsbio.squirrel :refer [to-sql to-clj]]
             [cheshire.core :as cheshire]
             [buddy.hashers :as hashers]
@@ -38,9 +37,7 @@
 (defn find-by-user-id
   "Returns all videos with the supplied user id."
   [user-id]
-  (let [results (db/find-videos-by-user-id (to-sql {:user-id user-id}))]
-    (when-not (empty? results)
-      (map to-clj results))))
+  (map to-clj (db/find-videos-by-user-id (to-sql {:user-id user-id}))))
 
 (defn update!
   "Given a video model map, updates the database row with that id using those
@@ -64,8 +61,3 @@
      (if (< 0 result) video nil)))
   ([video f]
    (update! (f video))))
-
-(defn json->video
-  "Given a JSON string, return a video."
-  [raw-json]
-  (cheshire/parse-string raw-json ->kebab-case-keyword))

@@ -54,6 +54,14 @@
               (ok (safe-user user))
               (not-found "No user matched your request.")))
 
+      (GET* "/:user-id/videos" []
+            :return [Video]
+            :path-params [user-id :- Long]
+            :summary "Numeric user id."
+            ; Even if the result set is empty, we want to return a 200 OK
+            ; response. Client should be ready for an empty list.
+            (ok (video/find-by-user-id user-id)))
+
       ;; POST routes
       (POST* "/login" request
              :return User
