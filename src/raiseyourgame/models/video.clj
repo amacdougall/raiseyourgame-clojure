@@ -25,14 +25,22 @@
     (catch SQLException e nil)))
 
 ;; Only user can really be looked up by more than one unique key; I kept the
-;; same interface for all the others for consistency.
+;; same interface for all the others for consistency. The lookup methods of all
+;; models return a single element. The find-x-by-y methods return sequences.
 (defn lookup
   "Given a map with a :video-id key, returns the video with the supplied video
   id, or nil if none was found."
   [{video-id :video-id}]
-  (let [result-set (db/get-video-by-video-id (to-sql {:video-id video-id}))]
-    (when-not (empty? result-set)
-      (to-clj (first result-set)))))
+  (let [results (db/find-videos-by-video-id (to-sql {:video-id video-id}))]
+    (when-not (empty? results)
+      (to-clj (first results)))))
+
+(defn find-by-user-id
+  "Returns all videos with the supplied user id."
+  [user-id]
+  (let [results (db/find-videos-by-user-id (to-sql {:user-id user-id}))]
+    (when-not (empty? results)
+      (map to-clj results))))
 
 (defn update!
   "Given a video model map, updates the database row with that id using those

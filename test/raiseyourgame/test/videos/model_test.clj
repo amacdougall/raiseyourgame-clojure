@@ -45,6 +45,15 @@
       (is (nil? (video/lookup {:video-id -1}))
           "lookup by unknown video id should fail"))))
 
+(deftest test-find-by-user-id
+  (with-rollback-transaction [t-conn db/conn]
+    (let [[video user] (create-test-video!)
+          results (video/find-by-user-id (:user-id user))]
+      (is (seq? results)
+          "find by user id should return results")
+      (is (some (partial has-values video) results)
+          "find by user id should include the expected video"))))
+
 (deftest test-video-update
   (with-rollback-transaction [t-conn db/conn]
     (let [old-blurb (:blurb fixtures/video-values)
