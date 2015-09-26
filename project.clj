@@ -97,8 +97,8 @@
                                  [mvxcvi/puget "0.8.1"]]
                   :plugins [[lein-figwheel "0.3.7"]
                             [com.jakemccrary/lein-test-refresh "0.10.0"]]
-                  :test-refresh {:notify-command ["notify-send" "-i" "stop"]
-                                 :notify-on-success false
+                  :test-refresh {:notify-command ["lein-test-refresh-notify"]
+                                 :notify-on-success true
                                  :quiet true}
                   :cljsbuild
                   {:builds
