@@ -1,8 +1,8 @@
 (ns raiseyourgame.test.users.model-test
   (:require [raiseyourgame.models.user :as user]
             [raiseyourgame.db.core :as db]
-            [raiseyourgame.test.fixtures :refer [user-values]]
-            [raiseyourgame.test.helpers :refer [has-values with-rollback-transaction has-approximate-time]]
+            [raiseyourgame.test.fixtures :as fixtures]
+            [raiseyourgame.test.helpers :refer :all]
             [clj-time.core :as t]
             [clj-time.coerce :refer [from-date]]
             [clojure.test :refer :all]
@@ -18,8 +18,8 @@
 
 (deftest test-user-creation
   (with-rollback-transaction [t-conn db/conn]
-    (let [user (user/create! user-values)]
-      (is (has-values (dissoc user-values :password) user)
+    (let [user (user/create! fixtures/user-values)]
+      (is (has-values (dissoc fixtures/user-values :password) user)
           "created user should have supplied values")
       (is (has-approximate-time (t/now) (from-date (:created-at user)))
           "user created-at should be set to current time")
@@ -28,13 +28,13 @@
 
 (deftest test-unique-user-constraint
   (with-rollback-transaction [t-conn db/conn]
-    (user/create! user-values)
-    (is (nil? (user/create! user-values)))))
+    (user/create! fixtures/user-values)
+    (is (nil? (user/create! fixtures/user-values)))))
 
 (deftest test-user-password
   (with-rollback-transaction [t-conn db/conn]
-    (let [user (user/create! user-values)
-          password (:password user-values)
+    (let [user (user/create! fixtures/user-values)
+          password (:password fixtures/user-values)
           hashed (:password user)]
       (is (not= password hashed)
           "hashed password should be different from input")
@@ -45,9 +45,9 @@
 
 (deftest test-user-lookup
   (with-rollback-transaction [t-conn db/conn]
-    (let [user (user/create! user-values)
+    (let [user (user/create! fixtures/user-values)
           user-id (:user-id user)
-          {:keys [username email]} user-values]
+          {:keys [username email]} fixtures/user-values]
       (is (has-values user (user/lookup {:user-id user-id}))
           "lookup by id should succeed")
       (is (has-values user (user/lookup {:user-id nil :username username}))
@@ -63,9 +63,9 @@
 
 (deftest test-user-update
   (with-rollback-transaction [t-conn db/conn]
-    (let [old-username (:username user-values)
+    (let [old-username (:username fixtures/user-values)
           new-username "jbogard"
-          user (user/create! user-values)]
+          user (user/create! fixtures/user-values)]
       (is (not (nil? (user/update! (assoc user :username new-username))))
           "updating user returns user")
       (let [updated-user (user/lookup {:user-id (:user-id user)})]
