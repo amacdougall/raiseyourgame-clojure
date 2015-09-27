@@ -27,10 +27,8 @@
 (deftest test-video-creation
   (with-rollback-transaction [t-conn db/conn]
     (let [[video user] (create-test-video!)]
-      (is (has-values fixtures/video-values video)
+      (is (has-values? fixtures/video-values video)
           "created video should have supplied values")
-      (is (= (:user-id user) (:user-id video))
-          "created video should have correct user-id")
       (is (has-approximate-time (t/now) (from-date (:created-at video)))
           "video created-at should be set to current time")
       (is (has-approximate-time (t/now) (from-date (:updated-at video)))
@@ -39,8 +37,8 @@
 (deftest test-video-lookup
   (with-rollback-transaction [t-conn db/conn]
     (let [[video user] (create-test-video!)]
-      (is (has-values fixtures/video-values
-                      (video/lookup {:video-id (:video-id video)}))
+      (is (has-values? fixtures/video-values
+                       (video/lookup {:video-id (:video-id video)}))
           "lookup by video id should succeed")
       (is (nil? (video/lookup {:video-id -1}))
           "lookup by unknown video id should fail"))))
@@ -51,7 +49,7 @@
           results (video/find-by-user-id (:user-id user))]
       (is (seq? results)
           "find by user id should return results")
-      (is (some (partial has-values video) results)
+      (is (some (partial has-values? video) results)
           "find by user id should include the expected video"))))
 
 (deftest test-video-update

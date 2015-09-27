@@ -19,7 +19,7 @@
 (deftest test-user-creation
   (with-rollback-transaction [t-conn db/conn]
     (let [user (user/create! fixtures/user-values)]
-      (is (has-values (dissoc fixtures/user-values :password) user)
+      (is (has-values? (dissoc fixtures/user-values :password) user)
           "created user should have supplied values")
       (is (has-approximate-time (t/now) (from-date (:created-at user)))
           "user created-at should be set to current time")
@@ -48,11 +48,11 @@
     (let [user (user/create! fixtures/user-values)
           user-id (:user-id user)
           {:keys [username email]} fixtures/user-values]
-      (is (has-values user (user/lookup {:user-id user-id}))
+      (is (has-values? user (user/lookup {:user-id user-id}))
           "lookup by id should succeed")
-      (is (has-values user (user/lookup {:user-id nil :username username}))
+      (is (has-values? user (user/lookup {:user-id nil :username username}))
           "lookup by username should succeed")
-      (is (has-values user (user/lookup {:user-id nil :username nil :email email}))
+      (is (has-values? user (user/lookup {:user-id nil :username nil :email email}))
           "lookup by email should succeed")
       (is (nil? (user/lookup {:user-id -1}))
           "lookup by unknown user-id should fail")

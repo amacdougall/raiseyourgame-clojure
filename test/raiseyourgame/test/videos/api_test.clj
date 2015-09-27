@@ -35,7 +35,7 @@
           (is (= 200 (:status response))
               "should return 200")
           (let [result (response->clj response)]
-            (is (has-values fixtures/video-values result)
+            (is (has-values? fixtures/video-values result)
                 "video has expected values"))))
       (testing "with nonexistent video-id"
         (let [path "/api/videos/0"
@@ -54,7 +54,7 @@
           ; can't compare against video directly, because we aren't
           ; converting the SQL datetime strings into java.util.Dates
           ; or anything. We should probably do this eventually.
-          (is (some (partial has-values fixtures/video-values)
+          (is (some (partial has-values? fixtures/video-values)
                     (response->clj response)))))
       (testing "with nonexistent user-id"
         (let [path "/api/users/0/videos"

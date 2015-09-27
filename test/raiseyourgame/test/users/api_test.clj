@@ -42,7 +42,7 @@
           (is (= 200 (:status response))
               "getting known user by id should return 200")
           (let [result (response->clj response)]
-            (is (has-values (dissoc fixtures/user-values :password :email) result)
+            (is (has-values? (dissoc fixtures/user-values :password :email) result)
                 "resulting user has expected values")
             (is (empty? (filter #{:password :email} result))
                 "resulting user does not have password or email values"))))
@@ -63,7 +63,7 @@
                              :response)]
               (is (= 200 (:status response)))
               (let [result (response->clj response)]
-                (is (has-values (dissoc fixtures/user-values :password :email) result)
+                (is (has-values? (dissoc fixtures/user-values :password :email) result)
                     "resulting user has expected values")
                 (is (empty? (filter #{:password :email} result))
                     "resulting user does not have password or email values"))))

@@ -3,7 +3,7 @@
   resources/sql directory match the database schema."
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
-            [raiseyourgame.test.helpers :refer [has-values has-approximate-time with-rollback-transaction]]
+            [raiseyourgame.test.helpers :refer :all]
             [raiseyourgame.test.fixtures :as fixtures]
             [bugsbio.squirrel :refer [to-sql to-clj]]
             [clojure.test :refer :all]
@@ -30,7 +30,7 @@
                           (map db/create-annotation<!))]
         (is (not (empty? annotations))
             "should build multiple annotations")
-        (is (every? (fn [[expected actual]] (has-values expected actual))
+        (is (every? (fn [[expected actual]] (has-values? expected actual))
                     (map vector annotation-values annotations))
             "all annotations should have fixture values")
         (is (every? #(= user_id (:user_id %)) annotations)
@@ -56,7 +56,7 @@
                 annotation (first (db/find-annotations-by-annotation-id {:annotation_id id}))]
             (is (not (nil? annotation))
                 "can retrieve annotation by annotation_id")
-            (is (has-values (first annotation-values) annotation)
+            (is (has-values? (first annotation-values) annotation)
                 "annotation looked up by annotation_id has correct values")
             (is (= user_id (:user_id annotation))
                 "annotation looked up by annotation_id has correct user_id")
@@ -65,7 +65,7 @@
 
         (testing "looking up annotations by video_id"
           (let [annotations (db/find-annotations-by-video-id {:video_id video_id})]
-            (is (every? (fn [[expected actual]] (has-values expected actual))
+            (is (every? (fn [[expected actual]] (has-values? expected actual))
                         (map vector annotation-values annotations))
                 "all annotations should have fixture values")
             (is (every? #(= video_id (:video_id %)) annotations)

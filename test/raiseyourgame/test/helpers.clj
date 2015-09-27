@@ -10,10 +10,17 @@
 ;; Useful when parsing JSON API responses.
 (def response->clj (comp json->clj slurp :body))
 
-(defn has-values
-  "True if the target map has every key-value pair defined in the exemplar map."
+(defn has-values?
+  "True if the candidate map has every key-value pair defined in the exemplar map."
   [exemplar candidate]
   (every? (fn [k] (= (candidate k) (exemplar k))) (keys exemplar)))
+
+(defn collection-has-values?
+  "True if the elements in the candidate collection match the elements in the
+  exemplar collection, using has-values? on each element pair."
+  [exemplars candidates]
+  (every? (fn [[e c]] (has-values? e c))
+          (partition 2 (interleave exemplars candidates))))
 
 ;; Use this function when comparing timestamps that may not be precisely
 ;; identical. One second's leeway seems fine, since we aren't testing the
