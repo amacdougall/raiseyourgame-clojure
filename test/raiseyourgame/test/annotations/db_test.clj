@@ -53,7 +53,7 @@
 
         (testing "looking up annotation by annotation_id"
           (let [id (:annotation_id (first annotations))
-                annotation (first (db/get-annotation-by-annotation-id {:annotation_id id}))]
+                annotation (first (db/find-annotations-by-annotation-id {:annotation_id id}))]
             (is (not (nil? annotation))
                 "can retrieve annotation by annotation_id")
             (is (has-values (first annotation-values) annotation)
@@ -64,7 +64,7 @@
                 "annotation looked up by annotation_id has correct video_id")))
 
         (testing "looking up annotations by video_id"
-          (let [annotations (db/get-annotations-by-video-id {:video_id video_id})]
+          (let [annotations (db/find-annotations-by-video-id {:video_id video_id})]
             (is (every? (fn [[expected actual]] (has-values expected actual))
                         (map vector annotation-values annotations))
                 "all annotations should have fixture values")

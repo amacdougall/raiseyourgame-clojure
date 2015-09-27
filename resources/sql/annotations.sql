@@ -1,5 +1,5 @@
 -- name: create-annotation<!
--- creates a new annotation record, returning the entire inserted record.
+-- Creates a new annotation record, returning the entire inserted record.
 INSERT INTO annotations (
   video_id,
   user_id,
@@ -17,21 +17,22 @@ INSERT INTO annotations (
 );
 
 -- name: get-annotations
--- selects all annotations
+-- Selects all annotations ever.
 SELECT * FROM annotations;
 
--- name: get-annotation-by-annotation-id
--- retrieve a annotation given the annotation_id.
+-- name: find-annotations-by-annotation-id
+-- Selects all annotations which have :annotation_id. In practice, only one.
 SELECT * FROM annotations
   WHERE annotation_id = :annotation_id;
 
--- name: get-annotations-by-video-id
--- retrieve all annotations for the supplied video
+-- name: find-annotations-by-video-id
+-- Selects all annotations which have :video_id.
 SELECT * FROM annotations
   WHERE video_id = :video_id;
 
 -- name: update-annotation!
--- update an existing annotation record
+-- Updates an existing annotation record. Use the entire desired annotation
+-- record as the argument; the query will key on :annotation_id.
 UPDATE annotations
   SET video_id = :video_id,
       user_id = :user_id,
@@ -42,6 +43,6 @@ UPDATE annotations
   WHERE annotation_id = :annotation_id;
 
 -- name: delete-annotation!
--- delete a annotation given the annotation_id
+-- Deletes the annotation record with :annotation_id.
 DELETE FROM annotations
   WHERE annotation_id = :annotation_id;

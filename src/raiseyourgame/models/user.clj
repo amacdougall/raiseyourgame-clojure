@@ -31,15 +31,16 @@
         (to-clj))
       (catch SQLException e nil))))
 
+;; Unlike others, the lookup function of each model returns a single element.
 (defn lookup
   "Given a map containing at least one of int :user-id, string :username, or
   string :email, returns the matching user, or nil. Keys are checked and used
   in that order."
   [{:keys [user-id username email]}]
   (let [result-set
-        (cond (not (nil? user-id)) (db/get-user-by-user-id (to-sql {:user-id user-id}))
-              (not (nil? username)) (db/get-user-by-username {:username username})
-              (not (nil? email)) (db/get-user-by-email {:email email})
+        (cond (not (nil? user-id)) (db/find-users-by-user-id (to-sql {:user-id user-id}))
+              (not (nil? username)) (db/find-users-by-username {:username username})
+              (not (nil? email)) (db/find-users-by-email {:email email})
               :default '())]
     (when-not (empty? result-set)
       (to-clj (first result-set)))))

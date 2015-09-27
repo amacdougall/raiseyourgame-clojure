@@ -1,8 +1,5 @@
 -- name: create-user<!
--- creates a new user record, returning the entire inserted record.
--- postgres lets you specify a specific resultset to return, using the
--- RETURNING keyword, but YeSQL doesn't support this, and I don't care enough
--- to try to work around it.
+-- Creates a new user record, returning the entire inserted record.
 INSERT INTO users (
   username,
   password,
@@ -11,8 +8,7 @@ INSERT INTO users (
   email,
   created_at,
   updated_at
-)
-VALUES (
+) VALUES (
   :username,
   :password,
   :name,
@@ -23,26 +19,27 @@ VALUES (
 );
 
 -- name: get-users
--- selects all users, regardless of level
+-- Selects all users, regardless of level.
 SELECT * FROM users;
 
--- name: get-user-by-user-id
--- retrieve a user given the user_id.
+-- name: find-users-by-user-id
+-- Selects all users with :user_id. In practice, only one.
 SELECT * FROM users
   WHERE user_id = :user_id;
 
--- name: get-user-by-email
--- retrieve a user given the email.
+-- name: find-users-by-email
+-- Selects all users with :email. In practice, only one.
 SELECT * FROM users
   WHERE email = :email;
 
--- name: get-user-by-username
--- retrieve a user given the username.
+-- name: find-users-by-username
+-- Selects all users with :username. In practice, only one.
 SELECT * FROM users
   WHERE username = :username;
 
 -- name: update-user!
--- update an existing user record
+-- Update an existing user record. Use the entire desired user record as the
+-- argument; the query will key on :user_id.
 UPDATE users
   SET username = :username,
       password = :password,
@@ -55,6 +52,6 @@ UPDATE users
 WHERE user_id = :user_id;
 
 -- name: delete-user!
--- delete a user given the user_id
+-- Deletes the user with :user_id.
 DELETE FROM users
   WHERE user_id = :user_id;
