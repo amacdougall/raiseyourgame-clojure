@@ -29,8 +29,8 @@
 (defn lookup
   "Given a map with a :video-id key, returns the video with the supplied video
   id, or nil if none was found."
-  [{video-id :video-id}]
-  (let [results (db/find-videos-by-video-id (to-sql {:video-id video-id}))]
+  [criteria]
+  (let [results (db/find-videos-by-video-id (to-sql criteria))]
     (when-not (empty? results)
       (to-clj (first results)))))
 
