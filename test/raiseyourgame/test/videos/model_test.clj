@@ -3,7 +3,7 @@
             [raiseyourgame.models.video :as video]
             [raiseyourgame.db.core :as db]
             [raiseyourgame.test.fixtures :as fixtures]
-            [raiseyourgame.test.helpers :refer [has-values with-rollback-transaction has-approximate-time]]
+            [raiseyourgame.test.helpers :refer :all]
             [clj-time.core :as t]
             [clj-time.coerce :refer [from-date]]
             [clojure.test :refer :all]
