@@ -19,78 +19,92 @@
     {:info {:title "Raise Your API"}})
 
   (context* "/api" []
-    (context* "/users" []
-      ;; GET routes
-      ;; NOTE: Route order matters! Only check the /:user-id route after others
-      ;; have failed to match.
-      (GET* "/lookup" []
-            :return User
-            :query-params [{user-id :- Long nil}
-                           {username :- String nil}
-                           {email :- String nil}]
-            :summary "One of: user-id, username, password."
-            (let [criterion (cond
-                              (not (nil? user-id)) {:user-id user-id}
-                              (not (nil? username)) {:username username}
-                              (not (nil? email)) {:email email})]
-              (if criterion
-                (if-let [user (user/lookup criterion)]
-                  (ok (safe-user user))
-                  (not-found "No user matched your request."))
-                (bad-request "Invalid request. Must supply one of the following
-                             querystring parameters: id, username, email."))))
+    ;; user routes
+    ; NOTE: Route order matters! Only check the /:user-id route after others
+    ; have failed to match.
+    (GET* "/users/lookup" []
+          :return User
+          :query-params [{user-id :- Long nil}
+                         {username :- String nil}
+                         {email :- String nil}]
+          :summary "One of: user-id, username, password."
+          (let [criterion (cond
+                            (not (nil? user-id)) {:user-id user-id}
+                            (not (nil? username)) {:username username}
+                            (not (nil? email)) {:email email})]
+            (if criterion
+              (if-let [user (user/lookup criterion)]
+                (ok (user/public user))
+                (not-found "No user matched your request."))
+              (bad-request "Invalid request. Must supply one of the following
+                           querystring parameters: id, username, email."))))
 
-      (GET* "/current" request
-            :return User
-            (if-let [user (get-in request [:session :identity])]
-              (ok (dissoc user :password))
-              (not-found)))
+    (GET* "/users/current" request
+          :return User
+          (if-let [user (get-in request [:session :identity])]
+            (ok (user/private user))
+            (not-found)))
 
-      (GET* "/:user-id" []
-            :return User
-            :path-params [user-id :- Long]
-            :summary "Numeric user id."
-            (if-let [user (user/lookup {:user-id user-id})]
-              (ok (safe-user user))
-              (not-found "No user matched your request.")))
+    (GET* "/users/:user-id" []
+          :return User
+          :path-params [user-id :- Long]
+          :summary "Numeric user id."
+          (if-let [user (user/lookup {:user-id user-id})]
+            (ok (user/public user))
+            (not-found "No user matched your request.")))
 
-      (GET* "/:user-id/videos" []
-            :return [Video]
-            :path-params [user-id :- Long]
-            :summary "Numeric user id."
-            ; Even if the result set is empty, we want to return a 200 OK
-            ; response. Client should be ready for an empty list.
-            (ok (video/find-by-user-id user-id)))
+    ; create
+    (POST* "/users" request
+           :body-params [username :- String
+                         password :- String
+                         name :- String
+                         {profile :- String nil}
+                         email :- String]
+           ;; Return private representation of the user, with Location header.
+           (let [user (user/create! (:body-params request))
+                 location (format "/api/users/%d" (:user-id user))
+                 response (created (user/private user))]
+             (assoc-in response [:headers "Location"] location)))
 
-      ;; POST routes
-      (POST* "/" request
-             :body-params [username :- String
-                           password :- String
-                           name :- String
-                           {profile :- String nil}
-                           email :- String]
-             (let [user (user/create! (:body-params request))
-                   location (format "/api/users/%d" (:user-id user))
-                   response (created (safe-user user))]
-               (assoc-in response [:headers "Location"] location)))
+    ; login
+    (POST* "/users/login" request
+           :return User
+           :body-params [{email :- String ""}
+                         {username :- String ""}
+                         password :- String]
+           :summary "Username or email, and unhashed password."
+           (let [user (user/lookup {:email email, :username username})]
+             (if (user/valid-password? user password)
+               (-> (ok (user/private user))
+                 (assoc :session (assoc (:session request) :identity user)))
+               (unauthorized))))
 
-      (POST* "/login" request
-             :return User
-             :body-params [{email :- String ""}
-                           {username :- String ""}
-                           password :- String]
-             :summary "Username or email, and unhashed password."
-             (let [user (user/lookup {:email email, :username username})]
-               (if (user/valid-password? user password)
-                 (-> (ok (dissoc user :password))
-                   (assoc :session (assoc (:session request) :identity user)))
-                 (unauthorized)))))
+    ;; video routes
+    (GET* "/videos/:video-id" []
+          :return Video
+          :path-params [video-id :- Long]
+          :summary "Numeric video id."
+          (if-let [video (video/lookup {:video-id video-id})]
+            (ok (video/public video))
+            (not-found "No video matched your request.")))
 
-    (context* "/videos" []
-      (GET* "/:video-id" []
-            :return Video
-            :path-params [video-id :- Long]
-            :summary "Numeric video id."
-            (if-let [video (video/lookup {:video-id video-id})]
-              (ok video)
-              (not-found "No video matched your request."))))))
+    (GET* "/users/:user-id/videos" []
+          :return [Video]
+          :path-params [user-id :- Long]
+          :summary "Numeric user id."
+          ; Even if the result set is empty, we want to return a 200 OK
+          ; response. Client should be ready for an empty list.
+          (ok (map video/public (video/find-by-user-id user-id))))
+
+    ; create
+    (POST* "/videos" request
+           :body-params [user-id :- Long
+                         url :- String
+                         title :- String
+                         blurb :- String
+                         description :- String]
+           ;; Return private representation of the video, with Location header.
+           (let [video (video/create! (:body-params request))
+                 location (format "/api/videos/%d" (:video-id video))
+                 response (created (video/public video))]
+             (assoc-in response [:headers "Location"] location)))))

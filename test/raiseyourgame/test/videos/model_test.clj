@@ -57,11 +57,14 @@
     (let [old-blurb (:blurb fixtures/video-values)
           new-blurb "Bad Mr. Frosty wins the fat!"
           [video _] (create-test-video!)]
-      (is (not (nil? (video/update! (assoc video :blurb new-blurb))))
+      (is (map? (video/update! (assoc video :blurb new-blurb)))
           "updating video returns video")
       (let [updated-video (video/lookup {:video-id (:video-id video)})]
-        (testing "can update video"
-          (is (not (nil? updated-video)))
-          (is (= new-blurb (:blurb updated-video))
-              "updated video should have new values on lookup")
-          (is (has-approximate-time (t/now) (from-date (:updated-at video)))))))))
+        (is (map? updated-video)
+            "looking up updated video should succeed")
+        (is (= new-blurb (:blurb updated-video))
+            "updated video should have new values on lookup")
+        ; we're creating and updating this almost instantly, so this test is
+        ; not actually terribly useful.
+        (is (has-approximate-time (t/now) (from-date (:updated-at updated-video)))
+            "updated video should have correct updated-at timestamp")))))

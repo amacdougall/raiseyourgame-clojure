@@ -20,18 +20,26 @@
 
 (deftest test-user-create
   (with-rollback-transaction [t-conn db/conn]
-    (let [response
-          (-> (session app)
-            (request "/api/users"
-                     :request-method :post
-                     :content-type "application/json"
-                     :body (cheshire/generate-string fixtures/user-values))
-            :response)]
+    (let [body (cheshire/generate-string fixtures/user-values)
+          response (-> (session app)
+                     (request "/api/users"
+                              :request-method :post
+                              :content-type "application/json"
+                              :body body)
+                     :response)
+          user (response->clj response)]
       ; The HTTP 201 Created response includes a Location header where the new
       ; resource can be found, and includes the resource itself in the body.
       ; NOTE: strings are not fn-able, so get-in is more convenient.
-      (is (= 201 (:status response)))
-      (is (string? (get-in response [:headers "Location"]))))))
+      (is (= 201 (:status response))
+          "response should be 200 Created")
+      (is (has-values? (user/private fixtures/user-values) user)
+          "response body should be the created user")
+      (is (string? (get-in response [:headers "Location"]))
+          "response should include a Location header")
+      (is (= (format "/api/users/%d" (:user-id user))
+             (get-in response [:headers "Location"]))
+          "Location header should match the resource URL"))))
 
 (deftest test-get-by-id
   (with-rollback-transaction [t-conn db/conn]
