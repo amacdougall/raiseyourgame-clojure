@@ -63,21 +63,26 @@
 
 (deftest test-user-update
   (with-rollback-transaction [t-conn db/conn]
-    (let [old-username (:username fixtures/user-values)
-          new-username "jbogard"
-          user (user/create! fixtures/user-values)]
-      (is (not (nil? (user/update! (assoc user :username new-username))))
-          "updating user returns user")
-      (let [updated-user (user/lookup {:user-id (:user-id user)})]
-        (testing "can update user"
-          (is (not (nil? updated-user)))
-          (is (= new-username (:username updated-user))
-              "updated user should have new values on lookup")
-          (is (has-approximate-time (t/now) (from-date (:updated-at user)))))
-        (testing "can look up by new username"
-          (let [updated-user (user/lookup {:username new-username})]
-            (is (not (nil? updated-user)))
-            (is (= new-username (:username updated-user)))))
-        (testing "cannot look up by old username"
-          (let [updated-user (user/lookup {:username old-username})]
-            (is (nil? updated-user))))))))
+    (let [new-values {:username "jbogard" :password "rising tackle"}
+          user (user/create! fixtures/user-values)
+          updated-user (user/update! (conj user new-values))]
+      (testing "can update user"
+        (is (not (nil? updated-user)))
+        (is (map? updated-user))
+        (is (= (:username new-values) (:username updated-user))
+            "updated user should have new values on lookup")
+        (is (has-approximate-time (t/now) (from-date (:updated-at user)))))
+      (testing "username was changed"
+        (let [found-user (user/lookup new-values)]
+          (is (not (nil? found-user))
+              "should be able to look up user by new username")
+          (is (= (:username new-values) (:username found-user))
+              "looking up user by new username should get updated user"))
+        (let [found-user (user/lookup fixtures/user-values)]
+          (is (nil? found-user)
+              "looking up user by old username should fail")))
+      (testing "password was changed"
+        (is (user/valid-password? updated-user (:password new-values))
+            "new password should be valid for updated user")
+        (is (not (user/valid-password? updated-user (:password fixtures/user-values)))
+            "old password should not be valid for updated user")))))

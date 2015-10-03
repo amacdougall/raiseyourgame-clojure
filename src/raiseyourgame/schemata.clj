@@ -5,6 +5,8 @@
   {:user-id Long
    :active Boolean
    :username String
+   ; password may be used in update requests... but nowhere else.
+   (optional-key :password) String
    (optional-key :email) String
    :name String
    :profile String

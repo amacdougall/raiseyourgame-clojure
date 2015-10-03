@@ -57,7 +57,8 @@
 
 (defn update!
   "Given a user model map, updates the database row with that id using those
-  values.
+  values. If the supplied password does not match the current hashed password,
+  the incoming password will be hashed and stored.
 
   (let [updated-user (assoc user :username 'Ann')]
     update! updated-user)
@@ -72,7 +73,12 @@
   If an incomplete user map is supplied, mayhem will ensue. Be ready to catch
   SQLExceptions if you're doing something innovative."
   ([user]
-   (let [result (db/update-user! (to-sql user))]
+   (let [original (lookup user)
+         ; this awkward construction hashes the password if new
+         user (if (not= (:password original) (:password user))
+                (update-in user [:password] hashers/encrypt)
+                user)
+         result (db/update-user! (to-sql user))]
      ; result will be the rows affected
      (if (< 0 result) user nil)))
   ([user f]
