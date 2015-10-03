@@ -11,6 +11,16 @@
 ;; Note that the raiseyourgame.db.core namespace deals in YeSQL queries, which
 ;; require SQL-style snake_case params. Use to-sql for those.
 
+(defn public
+  "Returns a user map suitable for public display via the API."
+  [user]
+  (dissoc user :password :email))
+
+(defn private
+  "Returns a user map suitable for private view by the user and admins."
+  [user]
+  (dissoc user :password))
+
 (defn create!
   "Creates a user based on a params object containing the following keys:
   :username, :email, :password, :name (optional), :profile (optional). The

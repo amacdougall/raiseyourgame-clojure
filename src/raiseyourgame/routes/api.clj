@@ -85,7 +85,7 @@
           :path-params [video-id :- Long]
           :summary "Numeric video id."
           (if-let [video (video/lookup {:video-id video-id})]
-            (ok (video/public video))
+            (ok video)
             (not-found "No video matched your request.")))
 
     (GET* "/users/:user-id/videos" []
@@ -94,7 +94,7 @@
           :summary "Numeric user id."
           ; Even if the result set is empty, we want to return a 200 OK
           ; response. Client should be ready for an empty list.
-          (ok (map video/public (video/find-by-user-id user-id))))
+          (ok (video/find-by-user-id user-id)))
 
     ; create
     (POST* "/videos" request
@@ -106,5 +106,5 @@
            ;; Return private representation of the video, with Location header.
            (let [video (video/create! (:body-params request))
                  location (format "/api/videos/%d" (:video-id video))
-                 response (created (video/public video))]
+                 response (created video)]
              (assoc-in response [:headers "Location"] location)))))

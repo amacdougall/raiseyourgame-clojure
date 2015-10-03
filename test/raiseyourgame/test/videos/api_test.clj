@@ -43,7 +43,7 @@
       ; NOTE: strings are not fn-able, so get-in is more convenient.
       (is (= 201 (:status response))
           "response should be 200 Created")
-      (is (has-values? (video/public fixtures/video-values) video)
+      (is (has-values? fixtures/video-values video)
           "response body should be the created video")
       (is (string? (get-in response [:headers "Location"]))
           "response should include a Location header")
