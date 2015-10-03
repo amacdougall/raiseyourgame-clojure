@@ -50,34 +50,6 @@
              (get-in response [:headers "Location"]))
           "Location header should match the resource URL"))))
 
-(deftest test-user-update
-  (with-rollback-transaction [t-conn db/conn]
-    (let [user (create-test-user!)
-          expected (conj user {:password "rising tackle"
-                               :email "tbogard@garou.org"})
-          response (-> (session app)
-                     (request (format "/api/users/%d" (:user-id expected))
-                              :request-method :put
-                              :content-type "application/json"
-                              :body (cheshire/generate-string expected))
-                     :response)
-          actual (response->clj response)]
-      (testing "update succeeded"
-        (is (= 200 (:status response))
-            "response should be 200 Created")
-        (is (has-values? (without-timestamps (user/private expected)) actual)
-            "response body should be the updated user, ignoring timestamps"))
-
-      ; TODO; #_ skips the form
-      #_(testing "could find user by updated email"
-
-          )
-
-      ; TODO; #_ skips the form
-      #_(testing "could log in with updated password"
-
-          ))))
-
 (deftest test-get-by-id
   (with-rollback-transaction [t-conn db/conn]
     (let [user (user/create! fixtures/user-values)]
@@ -108,7 +80,7 @@
                              :response)]
               (is (= 200 (:status response)))
               (let [result (response->clj response)]
-                (is (has-values? (dissoc fixtures/user-values :password :email) result)
+                (is (has-values? (user/public fixtures/user-values) result)
                     "resulting user has expected values")
                 (is (empty? (filter #{:password :email} result))
                     "resulting user does not have password or email values"))))
@@ -140,46 +112,87 @@
                          :response)]
           (is (= 400 (:status response))))))))
 
+;; Given a user and a {:username String :password String} map, test login using
+;; the API. This helper method should be used to test logins after user
+;; creation/update. It conveniently also attempts to log in with an invalid
+;; password.
+; Not the greatest name, I know.
+(defn- exercise-login-routes [user credentials]
+  (let [response
+        (-> (session app)
+          (request "/api/users/login"
+                   :request-method :post
+                   :content-type "application/json"
+                   :body (cheshire/generate-string credentials))
+          :response)
+        user (response->clj response)]
+    (is (= 200 (:status response)) "login returned 200 response")
+    (is (= (:username credentials) (:username user))
+        "login returned the authenticated user"))
+
+  ; log in, then hit the /api/users/current route to test logged-in-ness
+  (let [response
+        (-> (session app)
+          (request "/api/users/login"
+                   :request-method :post
+                   :content-type "application/json"
+                   :body (cheshire/generate-string credentials))
+          (request "/api/users/current")
+          :response)
+        user (response->clj response)]
+    (is (= 200 (:status response))
+        "after login, current returned 200 response")
+    (is (= (:username credentials) (:username user))
+        "after login, current returned logged-in user"))
+
+  (let [invalid-credentials (assoc credentials :password "hunter2")
+        response
+        (-> (session app)
+          (request "/api/users/login"
+                   :request-method :post
+                   :content-type "application/json"
+                   :body (cheshire/generate-string invalid-credentials))
+          :response)]
+    (is (= 401 (:status response))
+        "logging in with incorrect password should fail")))
+
 (deftest test-login
   (with-rollback-transaction [t-conn db/conn]
-    (user/create! fixtures/user-values)
+    (exercise-login-routes (user/create! fixtures/user-values)
+                           (select-keys fixtures/user-values #{:username :password}))))
 
-    (testing "with valid credentials"
-      (let [credentials (select-keys fixtures/user-values #{:username :password})
-            response
-            (-> (session app)
-              (request "/api/users/login"
-                       :request-method :post
-                       :content-type "application/json"
-                       :body (cheshire/generate-string credentials))
-              :response)]
-        (is (= 200 (:status response)) "login returned 200 response")
-        (let [user (response->clj response)]
-          (is (= (:username credentials) (:username user))
-              "login returned the authenticated user"))
+(deftest test-user-update
+  (with-rollback-transaction [t-conn db/conn]
+    (let [original (create-test-user!)
+          expected (conj original {:password "rising tackle"
+                                   :email "tbogard@garou.org"})
+          response (-> (session app)
+                     (request (format "/api/users/%d" (:user-id expected))
+                              :request-method :put
+                              :content-type "application/json"
+                              :body (cheshire/generate-string expected))
+                     :response)
+          actual (response->clj response)]
+      (testing "update succeeded"
+        ; since update requires authorization, assume a user/private response
+        (is (= 200 (:status response))
+            "response should be 200 Created")
+        (is (has-values? (without-timestamps (user/private expected)) actual)
+            "response body should be the updated user, ignoring timestamps"))
 
-        ; log in, then hit the /api/users/current route to test logged-in-ness
-        (let [response
-              (-> (session app)
-                (request "/api/users/login"
-                         :request-method :post
-                         :content-type "application/json"
-                         :body (cheshire/generate-string credentials))
-                (request "/api/users/current")
-                :response)]
+      (testing "could find user by updated email"
+        (let [response (-> (session app)
+                         (request "/api/users/lookup"
+                                  :params {:email (:email expected)})
+                         :response)]
           (is (= 200 (:status response))
-              "after login, current returned 200 response")
-          (let [user (response->clj response)]
-            (is (= (:username credentials) (:username user))
-                "after login, current returned logged-in user")))))
+              "should be able to look up user by new email"))
+        (let [response (-> (session app)
+                         (request "/api/users/lookup"
+                                  :params {:email (:email original)})
+                         :response)]
+          (is (= 404 (:status response))
+              "should not be able to look up user by old email")))
 
-    (testing "with invalid credentials"
-      (let [credentials {:username (:username fixtures/user-values) :password "invalid"}
-            response
-            (-> (session app)
-              (request "/api/users/login"
-                       :request-method :post
-                       :content-type "application/json"
-                       :body (cheshire/generate-string credentials))
-              :response)]
-        (is (= 401 (:status response)))))))
+      (testing "could log in with updated password"
+        (exercise-login-routes actual (select-keys expected #{:username :password}))))))
