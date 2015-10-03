@@ -18,6 +18,15 @@
     (when (nil? @db/conn) (db/connect!))
     (f)))
 
+;; Creates a test user and returns a private representation, as if loaded from
+;; the API by an owner/admin.
+(defn create-test-user! []
+  (user/private (user/create! fixtures/user-values)))
+
+;; When testing updates, timestamps can confuse the issue.
+(defn- without-timestamps [user]
+  (dissoc user :last-login :updated-at :created-at))
+
 (deftest test-user-create
   (with-rollback-transaction [t-conn db/conn]
     (let [body (cheshire/generate-string fixtures/user-values)
@@ -32,7 +41,7 @@
       ; resource can be found, and includes the resource itself in the body.
       ; NOTE: strings are not fn-able, so get-in is more convenient.
       (is (= 201 (:status response))
-          "response should be 200 Created")
+          "response should be 201 Created")
       (is (has-values? (user/private fixtures/user-values) user)
           "response body should be the created user")
       (is (string? (get-in response [:headers "Location"]))
@@ -40,6 +49,34 @@
       (is (= (format "/api/users/%d" (:user-id user))
              (get-in response [:headers "Location"]))
           "Location header should match the resource URL"))))
+
+(deftest test-user-update
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (create-test-user!)
+          expected (conj user {:password "rising tackle"
+                               :email "tbogard@garou.org"})
+          response (-> (session app)
+                     (request (format "/api/users/%d" (:user-id expected))
+                              :request-method :put
+                              :content-type "application/json"
+                              :body (cheshire/generate-string expected))
+                     :response)
+          actual (response->clj response)]
+      (testing "update succeeded"
+        (is (= 200 (:status response))
+            "response should be 200 Created")
+        (is (has-values? (without-timestamps (user/private expected)) actual)
+            "response body should be the updated user, ignoring timestamps"))
+
+      ; TODO; #_ skips the form
+      #_(testing "could find user by updated email"
+
+          )
+
+      ; TODO; #_ skips the form
+      #_(testing "could log in with updated password"
+
+          ))))
 
 (deftest test-get-by-id
   (with-rollback-transaction [t-conn db/conn]

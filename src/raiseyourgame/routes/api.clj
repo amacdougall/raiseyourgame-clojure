@@ -60,11 +60,27 @@
                          name :- String
                          {profile :- String nil}
                          email :- String]
+           :return User
+           :summary "JSON body representing initial user information."
            ;; Return private representation of the user, with Location header.
            (let [user (user/create! (:body-params request))
                  location (format "/api/users/%d" (:user-id user))
                  response (created (user/private user))]
              (assoc-in response [:headers "Location"] location)))
+
+    ; update
+    (PUT* "/users/:user-id" request
+          :path-params [user-id :- Long]
+          :body [user User]
+          :return User
+          :summary "JSON body representing desired user information."
+          ;; Return private representation of the updated user.
+          (if-let [user (user/update! (assoc user :user-id user-id))]
+            (ok (user/private user))
+            (internal-server-error "The update could not be performed as requested.")))
+
+    ; remove
+
 
     ; login
     (POST* "/users/login" request
