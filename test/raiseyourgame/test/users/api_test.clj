@@ -23,6 +23,14 @@
 (defn create-test-user! []
   (user/private (user/create! fixtures/user-values)))
 
+;; Creates a test user with the moderator user-level and returns a private
+;; representation, as if loaded from the API by an owner/admin.
+(defn create-test-moderator! []
+  (-> fixtures/moderator-values
+    (user/create!) ; all users are created with user-level 0
+    (user/update! update :user-level inc)
+    (user/private)))
+
 ;; When testing updates, timestamps can confuse the issue.
 (defn- without-timestamps [user]
   (dissoc user :last-login :updated-at :created-at))
@@ -117,7 +125,7 @@
 ;; creation/update. It conveniently also attempts to log in with an invalid
 ;; password.
 ; Not the greatest name, I know.
-(defn- exercise-login-routes [user credentials]
+(defn- exercise-login-routes [credentials]
   (let [response
         (-> (session app)
           (request "/api/users/login"
@@ -125,10 +133,10 @@
                    :content-type "application/json"
                    :body (cheshire/generate-string credentials))
           :response)
-        user (response->clj response)]
+        authenticated-user (response->clj response)]
     (is (= 200 (:status response)) "login returned 200 response")
-    (is (= (:username credentials) (:username user))
-        "login returned the authenticated user"))
+    (is (= (:username credentials) (:username authenticated-user))
+        "login returned the expected user"))
 
   ; log in, then hit the /api/users/current route to test logged-in-ness
   (let [response
@@ -139,10 +147,10 @@
                    :body (cheshire/generate-string credentials))
           (request "/api/users/current")
           :response)
-        user (response->clj response)]
+        current-user (response->clj response)]
     (is (= 200 (:status response))
         "after login, current returned 200 response")
-    (is (= (:username credentials) (:username user))
+    (is (= (:username credentials) (:username current-user))
         "after login, current returned logged-in user"))
 
   (let [invalid-credentials (assoc credentials :password "hunter2")
@@ -158,41 +166,148 @@
 
 (deftest test-login
   (with-rollback-transaction [t-conn db/conn]
-    (exercise-login-routes (user/create! fixtures/user-values)
-                           (select-keys fixtures/user-values #{:username :password}))))
+    (user/create! fixtures/user-values)
+    (exercise-login-routes
+      (select-keys fixtures/user-values #{:username :password}))))
 
-(deftest test-user-update
+(deftest test-user-update-failures
   (with-rollback-transaction [t-conn db/conn]
-    (let [original (create-test-user!)
+    (let [credentials-for #(select-keys % #{:username :password})
+          original (create-test-user!)
+          moderator (create-test-moderator!)
           expected (conj original {:password "rising tackle"
-                                   :email "tbogard@garou.org"})
-          response (-> (session app)
-                     (request (format "/api/users/%d" (:user-id expected))
-                              :request-method :put
-                              :content-type "application/json"
-                              :body (cheshire/generate-string expected))
-                     :response)
-          actual (response->clj response)]
-      (testing "update succeeded"
+                                   :email "tbogard@garou.org"})]
+      ; attempt to update while logged out
+      (let [response
+            (-> (session app)
+              (request (format "/api/users/%d" (:user-id expected))
+                       :request-method :put
+                       :content-type "application/json"
+                       :body (cheshire/generate-string expected))
+              :response)]
+        (is (= 401 (:status response))
+            "attempting to update user while logged out should fail"))
+
+      ; attempt to update nonexistent user
+      (let [response
+            (-> (session app)
+              ; log in first...
+              (request "/api/users/login"
+                       :request-method :post
+                       :content-type "application/json"
+                       :body (cheshire/generate-string
+                               (credentials-for fixtures/user-values)))
+              ; ...and then update a nonexistent user
+              (request (format "/api/users/%d" -1)
+                       :request-method :put
+                       :content-type "application/json"
+                       :body (cheshire/generate-string expected))
+              :response)]
+        (is (= 404 (:status response))
+            "attempting to update nonexistent user should fail"))
+
+      ; attempt to update impermissible user
+      (let [response
+            (-> (session app)
+              ; log in first...
+              (request "/api/users/login"
+                       :request-method :post
+                       :content-type "application/json"
+                       :body (cheshire/generate-string
+                               (credentials-for fixtures/user-values)))
+              ; ...and then update an impermissible user
+              (request (format "/api/users/%d" (:user-id moderator))
+                       :request-method :put
+                       :content-type "application/json"
+                       :body (cheshire/generate-string
+                               (assoc moderator :username "syabuki")))
+              :response)]
+        (is (= 401 (:status response))
+            "attempting to update a user without proper permissions should fail")))))
+
+(deftest test-user-update-self
+  (with-rollback-transaction [t-conn db/conn]
+    (let [credentials-for #(select-keys % #{:username :password})
+          original (create-test-user!)
+          expected (conj original {:password "rising tackle"
+                                   :email "tbogard@garou.org"})]
+      (let [response
+            (-> (session app)
+              ; log in first...
+              (request "/api/users/login"
+                       :request-method :post
+                       :content-type "application/json"
+                       :body (cheshire/generate-string
+                               (credentials-for fixtures/user-values)))
+              ; ...and then update self
+              (request (format "/api/users/%d" (:user-id original))
+                       :request-method :put
+                       :content-type "application/json"
+                       :body (cheshire/generate-string expected))
+              :response)
+            actual (response->clj response)]
         ; since update requires authorization, assume a user/private response
         (is (= 200 (:status response))
-            "response should be 200 Created")
+            "response should be 200")
         (is (has-values? (without-timestamps (user/private expected)) actual)
             "response body should be the updated user, ignoring timestamps"))
 
-      (testing "could find user by updated email"
-        (let [response (-> (session app)
-                         (request "/api/users/lookup"
-                                  :params {:email (:email expected)})
-                         :response)]
-          (is (= 200 (:status response))
-              "should be able to look up user by new email"))
-        (let [response (-> (session app)
-                         (request "/api/users/lookup"
-                                  :params {:email (:email original)})
-                         :response)]
-          (is (= 404 (:status response))
-              "should not be able to look up user by old email")))
+      (let [response
+            (-> (session app)
+              (request "/api/users/lookup" :params {:email (:email expected)})
+              :response)]
+        (is (= 200 (:status response))
+            "should be able to look up user by new email"))
+
+      (let [response (-> (session app)
+                       (request "/api/users/lookup"
+                                :params {:email (:email original)})
+                       :response)]
+        (is (= 404 (:status response))
+            "should not be able to look up user by old email"))
 
       (testing "could log in with updated password"
-        (exercise-login-routes actual (select-keys expected #{:username :password}))))))
+        (exercise-login-routes (credentials-for expected))))))
+
+;; Implicitly tests any user updating a user with a lower user level.
+(deftest test-admin-update-other
+  (with-rollback-transaction [t-conn db/conn]
+    (let [credentials-for #(select-keys % #{:username :password})
+          original (create-test-user!)
+          moderator (create-test-moderator!) ; will do the update
+          expected (conj original {:password "rising tackle"
+                                   :email "tbogard@garou.org"})]
+      (let [response
+            (-> (session app)
+              ; log in as moderator...
+              (request "/api/users/login"
+                       :request-method :post
+                       :content-type "application/json"
+                       :body (cheshire/generate-string
+                               (credentials-for fixtures/moderator-values)))
+              ; ...and then update the user
+              (request (format "/api/users/%d" (:user-id original))
+                       :request-method :put
+                       :content-type "application/json"
+                       :body (cheshire/generate-string expected))
+              :response)
+            actual (response->clj response)]
+        ; since update requires authorization, assume a user/private response
+        (is (= 200 (:status response))
+            "response should be 200")
+        (is (has-values? (without-timestamps (user/private expected)) actual)
+            "response body should be the updated user, ignoring timestamps"))
+
+      (let [response
+            (-> (session app)
+              (request "/api/users/lookup" :params {:email (:email expected)})
+              :response)]
+        (is (= 200 (:status response))
+            "should be able to look up user by new email"))
+
+      (let [response
+            (-> (session app)
+              (request "/api/users/lookup" :params {:email (:email original)})
+              :response)]
+        (is (= 404 (:status response))
+            "should not be able to look up user by old email")))))

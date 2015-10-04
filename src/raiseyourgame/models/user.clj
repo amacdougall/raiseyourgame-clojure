@@ -68,7 +68,14 @@
 
   (update! user #(assoc :username 'Ann'))
 
-  In both cases, returns the updated user if successful, nil otherwise.
+  Given a user model map, a transition function, and a variable number of
+  arguments, applies the function to the map, with the additional arguments,
+  and updates the user in the database. For simpler updates, this is more
+  convenient that providing a transition function.
+
+  (update! user assoc :username 'Ann')
+
+  In all cases, returns the updated user if successful, nil otherwise.
   
   If an incomplete user map is supplied, mayhem will ensue. Be ready to catch
   SQLExceptions if you're doing something innovative."
@@ -82,9 +89,18 @@
      ; result will be the rows affected
      (if (< 0 result) user nil)))
   ([user f]
-   (update! (f user))))
+   (update! (f user)))
+  ([user f & args]
+   (update! (apply (partial f user) args))))
 
 (defn valid-password?
   "True if the supplied password is correct."
   [user password]
   (and user password (hashers/check password (:password user))))
+
+(defn can-update-user?
+  "True if the supplied user has permission to update the target user. Users
+  may only update themselves, or users with a lower user-level."
+  [user target]
+  (or (= user target)
+      (> (:user-level user) (:user-level target))))

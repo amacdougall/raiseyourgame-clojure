@@ -75,9 +75,24 @@
           :return User
           :summary "JSON body representing desired user information."
           ;; Return private representation of the updated user.
-          (if-let [user (user/update! (assoc user :user-id user-id))]
-            (ok (user/private user))
-            (internal-server-error "The update could not be performed as requested.")))
+          (let [current (:identity (:session request))
+                target (user/lookup {:user-id user-id})]
+            (cond
+              ; if nobody is logged in, 401
+              (nil? current)
+              (unauthorized "You must be logged in to update a user.")
+              ; if target is not found, 404
+              (nil? target)
+              (not-found (format "No user with id %d exists." user-id))
+              ; if logged-in user has insufficient permissions, 401
+              (not (user/can-update-user? current target))
+              (unauthorized "If you do not have admin privileges, you can only
+                            update yourself.")
+              :else
+              (if-let [user (user/update! (assoc user :user-id user-id))]
+                (ok (user/private user))
+                ; refine this message if common failure types emerge
+                (internal-server-error "The update could not be performed as requested.")))))
 
     ; remove
 
@@ -112,15 +127,15 @@
           ; response. Client should be ready for an empty list.
           (ok (video/find-by-user-id user-id)))
 
-    ; create
-    (POST* "/videos" request
-           :body-params [user-id :- Long
-                         url :- String
-                         title :- String
-                         blurb :- String
-                         description :- String]
-           ;; Return private representation of the video, with Location header.
-           (let [video (video/create! (:body-params request))
-                 location (format "/api/videos/%d" (:video-id video))
-                 response (created video)]
-             (assoc-in response [:headers "Location"] location)))))
+; create
+(POST* "/videos" request
+       :body-params [user-id :- Long
+                     url :- String
+                     title :- String
+                     blurb :- String
+                     description :- String]
+       ;; Return private representation of the video, with Location header.
+       (let [video (video/create! (:body-params request))
+             location (format "/api/videos/%d" (:video-id video))
+             response (created video)]
+         (assoc-in response [:headers "Location"] location)))))
