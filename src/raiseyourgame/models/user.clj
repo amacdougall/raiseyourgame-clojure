@@ -21,26 +21,6 @@
   [user]
   (dissoc user :password))
 
-(defn create!
-  "Creates a user based on a params object containing the following keys:
-  :username, :email, :password, :name (optional), :profile (optional). The
-  password will be stored hashed in the database; the original is discarded.
-  Users are created with user_level 0; moderators and admins must be promoted
-  after creation.
-
-  On success, returns the newly created user. On failure, returns nil. One
-  likely reason for failure is that a username or email has already been used;
-  please check this condition before attempting to create a user."
-  [{:keys [password username] :as params}]
-  (let [hashed-password (hashers/encrypt password)
-        details (assoc params :password hashed-password)]
-    (try
-      (-> details
-        (to-sql)
-        (db/create-user<! @db/conn)
-        (to-clj))
-      (catch SQLException e nil))))
-
 ;; Unlike others, the lookup function of each model returns a single element.
 (defn lookup
   "Given a map containing at least one of int :user-id, string :username, or
@@ -55,13 +35,61 @@
     (when-not (empty? result-set)
       (to-clj (first result-set)))))
 
+(defn valid-password?
+  "True if the supplied password is correct."
+  [user password]
+  (and user password (hashers/check password (:password user))))
+
+(defn can-update-user?
+  "True if the supplied user has permission to update the target user. Users
+  may only update themselves, or users with a lower user-level."
+  [user target]
+  (or (= user target)
+      (> (:user-level user) (:user-level target))))
+
+(defn username-available?
+  "True if the supplied username is not already in use."
+  [username]
+  (nil? (lookup {:username username})))
+
+(defn email-available?
+  "True if the supplied email is not already in use."
+  [email]
+  (nil? (lookup {:email email})))
+
+(defn valid-new-user?
+  "True if the supplied user map contains an available username and email."
+  [{:keys [username email]}]
+  (and (username-available? username) (email-available? email)))
+
+(defn create!
+  "Creates a user based on a params object containing the following keys:
+  :username, :email, :password, :name (optional), :profile (optional). The
+  password will be stored hashed in the database; the original is discarded.
+  Users are created with user_level 0; moderators and admins must be promoted
+  after creation.
+
+  On success, returns the newly created user. On failure, returns nil. One
+  likely reason for failure is that a username or email has already been used;
+  please check this condition using can-create-user? before attempting to
+  create a user."
+  [{:keys [password username] :as params}]
+  (let [hashed-password (hashers/encrypt password)
+        details (assoc params :password hashed-password)]
+    (try
+      (-> details
+        (to-sql)
+        (db/create-user<! @db/conn)
+        (to-clj))
+      (catch SQLException e nil))))
+
 (defn update!
   "Given a user model map, updates the database row with that id using those
   values. If the supplied password does not match the current hashed password,
   the incoming password will be hashed and stored.
 
   (let [updated-user (assoc user :username 'Ann')]
-    update! updated-user)
+  update! updated-user)
 
   Given a user model map and a transition function, applies the function to the
   map and updates the user in the database.
@@ -76,31 +104,26 @@
   (update! user assoc :username 'Ann')
 
   In all cases, returns the updated user if successful, nil otherwise.
-  
+
   If an incomplete user map is supplied, mayhem will ensue. Be ready to catch
   SQLExceptions if you're doing something innovative."
   ([user]
-   (let [original (lookup user)
-         ; this awkward construction hashes the password if new
-         user (if (not= (:password original) (:password user))
-                (update-in user [:password] hashers/encrypt)
-                user)
-         result (db/update-user! (to-sql user))]
-     ; result will be the rows affected
-     (if (< 0 result) user nil)))
+   (let [original (lookup user)]
+     (if (or (and (contains? user :username)
+                  (not= (:username original) (:username user))
+                  (not (username-available? (:username user))))
+             (and (contains? user :email)
+                  (not= (:email original) (:email user))
+                  (not (email-available? (:email user)))))
+       nil ; if attempting to change username or email to an unavailable value
+       (let [; this awkward construction hashes the password if new
+             user (if (not= (:password original) (:password user))
+                    (update-in user [:password] hashers/encrypt)
+                    user)
+             result (db/update-user! (to-sql user))]
+         ; result will be the rows affected
+         (if (< 0 result) user nil)))))
   ([user f]
    (update! (f user)))
   ([user f & args]
    (update! (apply (partial f user) args))))
-
-(defn valid-password?
-  "True if the supplied password is correct."
-  [user password]
-  (and user password (hashers/check password (:password user))))
-
-(defn can-update-user?
-  "True if the supplied user has permission to update the target user. Users
-  may only update themselves, or users with a lower user-level."
-  [user target]
-  (or (= user target)
-      (> (:user-level user) (:user-level target))))
