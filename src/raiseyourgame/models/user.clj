@@ -86,7 +86,8 @@
 (defn update!
   "Given a user model map, updates the database row with that id using those
   values. If the supplied password does not match the current hashed password,
-  the incoming password will be hashed and stored.
+  the incoming password will be hashed and stored. Fails when attempting to
+  change username or email to an unavailable value.
 
   (let [updated-user (assoc user :username 'Ann')]
   update! updated-user)
@@ -99,30 +100,26 @@
   Given a user model map, a transition function, and a variable number of
   arguments, applies the function to the map, with the additional arguments,
   and updates the user in the database. For simpler updates, this is more
-  convenient that providing a transition function.
+  convenient than providing a transition function.
 
   (update! user assoc :username 'Ann')
 
   In all cases, returns the updated user if successful, nil otherwise.
 
-  If an incomplete user map is supplied, mayhem will ensue. Be ready to catch
-  SQLExceptions if you're doing something innovative."
+  If an incomplete user map is supplied, the resulting SQLException will also
+  cause this function to return nil; don't do that."
+  ;; NOTE: If the issue comes up, we can always raise an uncaught exception.
   ([user]
-   (let [original (lookup user)]
-     (if (or (and (contains? user :username)
-                  (not= (:username original) (:username user))
-                  (not (username-available? (:username user))))
-             (and (contains? user :email)
-                  (not= (:email original) (:email user))
-                  (not (email-available? (:email user)))))
-       nil ; if attempting to change username or email to an unavailable value
-       (let [; this awkward construction hashes the password if new
-             user (if (not= (:password original) (:password user))
-                    (update-in user [:password] hashers/encrypt)
-                    user)
-             result (db/update-user! (to-sql user))]
-         ; result will be the rows affected
-         (if (< 0 result) user nil)))))
+   (try
+     (let [original (lookup user)
+           ; this awkward construction hashes the password if new
+           user (if (not= (:password original) (:password user))
+                  (update-in user [:password] hashers/encrypt)
+                  user)
+           result (db/update-user! (to-sql user))]
+       ; result will be the rows affected
+       (if (< 0 result) user nil))
+     (catch SQLException e nil)))
   ([user f]
    (update! (f user)))
   ([user f & args]
