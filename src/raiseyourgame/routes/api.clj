@@ -5,7 +5,6 @@
             [raiseyourgame.models.video :as video]
             [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
-            [schema.core :as s]
             [taoensso.timbre :refer [debug]]))
 
 (defn- safe-user [user]
@@ -63,20 +62,30 @@
            :return User
            :summary "JSON body representing initial user information."
            ;; Return private representation of the user, with Location header.
-           (let [user (user/create! (:body-params request))
-                 location (format "/api/users/%d" (:user-id user))
-                 response (created (user/private user))]
-             (assoc-in response [:headers "Location"] location)))
+           (cond
+             ; if username is not available, 400
+             (not (user/username-available? username))
+             (bad-request (format "username %s is not available" username))
+             (not (user/email-available? email))
+             (bad-request (format "email %s is not available" email))
+             :else
+             (let [user (user/create! (:body-params request))
+                   location (format "/api/users/%d" (:user-id user))
+                   response (created (user/private user))]
+               (assoc-in response [:headers "Location"] location))))
 
     ; update
     (PUT* "/users/:user-id" request
           :path-params [user-id :- Long]
-          :body [user User]
+          :body [incoming User] ; desired values
           :return User
           :summary "JSON body representing desired user information."
           ;; Return private representation of the updated user.
           (let [current (:identity (:session request))
-                target (user/lookup {:user-id user-id})]
+                target (user/lookup {:user-id user-id})
+                desired (-> target
+                          (merge incoming)
+                          (assoc :user-id user-id))]
             (cond
               ; if nobody is logged in, 401
               (nil? current)
@@ -88,8 +97,16 @@
               (not (user/can-update-user? current target))
               (unauthorized "If you do not have admin privileges, you can only
                             update yourself.")
+              ; if username is being changed to an unavilable one, 400
+              (not (or (= (:username incoming) (:username target))
+                       (user/username-available? (:username incoming))))
+              (bad-request (format "username %s is not available" (:username incoming)))
+              ; if email is being changed to an unavilable one, 400
+              (not (or (= (:email incoming) (:email target))
+                       (user/email-available? (:email incoming))))
+              (bad-request (format "email %s is not available" (:email incoming)))
               :else
-              (if-let [user (user/update! (assoc user :user-id user-id))]
+              (if-let [user (user/update! desired)]
                 (ok (user/private user))
                 ; refine this message if common failure types emerge
                 (internal-server-error "The update could not be performed as requested.")))))
@@ -127,15 +144,15 @@
           ; response. Client should be ready for an empty list.
           (ok (video/find-by-user-id user-id)))
 
-; create
-(POST* "/videos" request
-       :body-params [user-id :- Long
-                     url :- String
-                     title :- String
-                     blurb :- String
-                     description :- String]
-       ;; Return private representation of the video, with Location header.
-       (let [video (video/create! (:body-params request))
-             location (format "/api/videos/%d" (:video-id video))
-             response (created video)]
-         (assoc-in response [:headers "Location"] location)))))
+    ; create
+    (POST* "/videos" request
+           :body-params [user-id :- Long
+                         url :- String
+                         title :- String
+                         blurb :- String
+                         description :- String]
+           ;; Return private representation of the video, with Location header.
+           (let [video (video/create! (:body-params request))
+                 location (format "/api/videos/%d" (:video-id video))
+                 response (created video)]
+             (assoc-in response [:headers "Location"] location)))))

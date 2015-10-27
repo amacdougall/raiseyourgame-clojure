@@ -58,6 +58,29 @@
              (get-in response [:headers "Location"]))
           "Location header should match the resource URL"))))
 
+;; It should not be possible to create a user with an email or username which
+;; is already in use.
+(deftest test-user-create-duplicate
+  (with-rollback-transaction [t-conn db/conn]
+    (user/create! fixtures/user-values) ; make sure user already exists
+    (let [with-dupe-username (assoc fixtures/user-values :email "available@example.com")
+          with-dupe-email (assoc fixtures/user-values :username "available")
+          test-user-creation
+          (fn [user-values error-keys]
+            (let [body (cheshire/generate-string user-values)
+                  response (-> (session app)
+                             (request "/api/users"
+                                      :request-method :post
+                                      :content-type "application/json"
+                                      :body body)
+                             :response)
+                  response-body (response->clj response)]
+              (is (= 400 (:status response))
+                  "response should be 400 Bad Request")))]
+      (test-user-creation fixtures/user-values [:username :email])
+      (test-user-creation with-dupe-username [:username])
+      (test-user-creation with-dupe-email [:email]))))
+
 (deftest test-get-by-id
   (with-rollback-transaction [t-conn db/conn]
     (let [user (user/create! fixtures/user-values)]
@@ -223,7 +246,45 @@
                                (assoc moderator :username "syabuki")))
               :response)]
         (is (= 401 (:status response))
-            "attempting to update a user without proper permissions should fail")))))
+            "attempting to update a user without proper permissions should fail"))
+
+      ; attempt to set unavailable username
+      (let [bad-username (assoc expected :username (:username moderator))
+            response
+            (-> (session app)
+              ; log in first...
+              (request "/api/users/login"
+                       :request-method :post
+                       :content-type "application/json"
+                       :body (cheshire/generate-string
+                               (credentials-for fixtures/user-values)))
+              ; ...and then update sending an unavailable username
+              (request (format "/api/users/%d" (:user-id original))
+                       :request-method :put
+                       :content-type "application/json"
+                       :body (cheshire/generate-string bad-username))
+              :response)]
+        (is (= 400 (:status response))
+            "attempting to update to unavailable username should fail"))
+
+      ; attempt to set unavailable email
+      (let [bad-email (assoc expected :email (:email moderator))
+            response
+            (-> (session app)
+              ; log in first...
+              (request "/api/users/login"
+                       :request-method :post
+                       :content-type "application/json"
+                       :body (cheshire/generate-string
+                               (credentials-for fixtures/user-values)))
+              ; ...and then update sending an unavailable email
+              (request (format "/api/users/%d" (:user-id original))
+                       :request-method :put
+                       :content-type "application/json"
+                       :body (cheshire/generate-string bad-email))
+              :response)]
+        (is (= 400 (:status response))
+            "attempting to update to unavailable email should fail")))))
 
 (deftest test-user-update-self
   (with-rollback-transaction [t-conn db/conn]

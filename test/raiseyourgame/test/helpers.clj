@@ -7,8 +7,14 @@
 (defn json->clj [raw-json]
   (cheshire/parse-string raw-json ->kebab-case-keyword))
 
-;; Useful when parsing JSON API responses.
-(def response->clj (comp json->clj slurp :body))
+;; If the body of the supplied response is a Java InputStream, reads its string
+;; value and converts it using json->clj. Otherwise, returns the body
+;; unchanged. In general, it should be possible to throw a Ring response at
+;; this function and get back usable Clojure data.
+(defn response->clj [{body :body}]
+  (if (instance? java.io.InputStream body)
+    (json->clj (slurp body))
+    body))
 
 (defn has-values?
   "True if the candidate map has every key-value pair defined in the exemplar map."
