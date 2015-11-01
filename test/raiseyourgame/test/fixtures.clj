@@ -17,6 +17,13 @@
    :profile "Yoasobi wa kiken ja zo."
    :email "skusanagi@magatama.org"})
 
+(def admin-values
+  {:username "rbernstein"
+   :password "genocide cutter"
+   :name "Rugal Bernstein"
+   :profile "Tournament host"
+   :email "rbernstein@blacknoah.org"})
+
 ;; User id must be merged in by test code.
 (def video-values
   {:url "http://www.example.com/v/100"

@@ -8,6 +8,8 @@
             [taoensso.timbre :refer [debug]])
   (:import java.sql.SQLException))
 
+(def user-levels {:user 0, :moderator 1, :admin 2})
+
 ;; Note that the raiseyourgame.db.core namespace deals in YeSQL queries, which
 ;; require SQL-style snake_case params. Use to-sql for those.
 
@@ -46,6 +48,16 @@
   [user target]
   (or (= user target)
       (> (:user-level user) (:user-level target))))
+
+(defn can-remove-user?
+  "Given a user, returns true if the user has permission to remove every user
+  in the system. Given a user and a target, returns true if the user has
+  permission to remove the target."
+  ([user]
+   (>= (:user-level user) (:admin user-levels)))
+  ([user target]
+   ;; for now, all decisions are based on user level anyway
+   (can-remove-user? user)))
 
 (defn username-available?
   "True if the supplied username is not already in use."
@@ -119,3 +131,11 @@
    (update! (f user)))
   ([user f & args]
    (update! (apply (partial f user) args))))
+
+(defn remove!
+  "Removes the supplied user by setting the user's :active property to false.
+  This should have the effect of making the user invisible to the public API,
+  and therefore to the website, apps, etc; but it is the responsibility of API
+  handlers to enforce this property."
+  [user]
+  (update! user assoc :active false))

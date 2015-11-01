@@ -93,10 +93,10 @@
               ; if target is not found, 404
               (nil? target)
               (not-found (format "No user with id %d exists." user-id))
-              ; if logged-in user has insufficient permissions, 401
+              ; if logged-in user has insufficient permissions, 403
               (not (user/can-update-user? current target))
-              (unauthorized "If you do not have admin privileges, you can only
-                            update yourself.")
+              (forbidden "If you do not have admin privileges, you can only
+                         update yourself.")
               ; if username is being changed to an unavilable one, 400
               (not (or (= (:username incoming) (:username target))
                        (user/username-available? (:username incoming))))
@@ -112,7 +112,26 @@
                 (internal-server-error "The update could not be performed as requested.")))))
 
     ; remove
-
+    (DELETE* "/users/:user-id" request
+             :path-params [user-id :- Long]
+             :summary "ID of the user to be removed."
+             ;; Return 204 No Content response, or 401/403 as appropriate
+             (let [current (:identity (:session request))
+                   target (user/lookup {:user-id user-id})]
+               (cond
+                 ; if nobody is logged in, 401
+                 (nil? current)
+                 (unauthorized "You must be logged in to remove a user.")
+                 ; if target is not found, 404
+                 (nil? target)
+                 (not-found (format "No user with id %d existed in the first place." user-id))
+                 ; if logged-in user has insufficient permissions, 403
+                 (not (user/can-remove-user? current target))
+                 (forbidden "You do not have permission to remove this user.")
+                 :else
+                 (if (user/remove! target)
+                   (no-content) ; this is actually success: 204 No Content
+                   (internal-server-error "The user could not be removed as requested.")))))
 
     ; login
     (POST* "/users/login" request

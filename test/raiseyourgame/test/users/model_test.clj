@@ -123,12 +123,30 @@
           "should be impossible to change email to one already in use"))))
 
 (deftest test-can-update
+  ; we know that this only tests :user-level, so...
+  (let [user {:user-level (:user user/user-levels)}
+        moderator {:user-level (:moderator user/user-levels)}]
+    (is (= true (user/can-update-user? moderator user))
+        "moderator should be able to update user")
+    (is (= false (user/can-update-user? user moderator))
+        "user should not be able to update moderator")))
+
+(deftest test-can-remove
+  (let [user {:user-level (:user user/user-levels)}
+        moderator {:user-level (:moderator user/user-levels)}
+        admin {:user-level (:admin user/user-levels)}]
+    (is (= false (user/can-remove-user? user))
+        "user should not be able to remove users")
+    (is (= false (user/can-remove-user? moderator))
+        "moderator should not be able to remove users")
+    (is (= true (user/can-remove-user? admin))
+        "admin should be able to remove users")))
+
+(deftest test-user-remove
   (with-rollback-transaction [t-conn db/conn]
     (let [user (user/create! fixtures/user-values)
-          moderator (-> fixtures/moderator-values
-                      (user/create!)
-                      (user/update! update :user-level inc))]
-      (is (= true (user/can-update-user? moderator user))
-          "moderator should be able to update user")
-      (is (= false (user/can-update-user? user moderator))
-          "user should not be able to update moderator"))))
+          removed-user (user/remove! user)]
+      (is (not (nil? removed-user)))
+      (is (map? removed-user))
+      (is (= (:active removed-user) false)
+          "removed user should not be active"))))

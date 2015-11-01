@@ -41,7 +41,8 @@ SELECT * FROM users
 -- Update an existing user record. Use the entire desired user record as the
 -- argument; the query will key on :user_id.
 UPDATE users
-  SET username = :username,
+  SET active = :active,
+      username = :username,
       password = :password,
       name = :name,
       profile = :profile,
@@ -50,8 +51,3 @@ UPDATE users
       last_login = :last_login,
       updated_at = NOW()
 WHERE user_id = :user_id;
-
--- name: delete-user!
--- Deletes the user with :user_id.
-DELETE FROM users
-  WHERE user_id = :user_id;

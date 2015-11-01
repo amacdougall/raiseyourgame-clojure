@@ -28,7 +28,13 @@
 (defn create-test-moderator! []
   (-> fixtures/moderator-values
     (user/create!) ; all users are created with user-level 0
-    (user/update! update :user-level inc)
+    (user/update! assoc :user-level 1)
+    (user/private)))
+
+(defn create-test-admin! []
+  (-> fixtures/admin-values
+    (user/create!) ; all users are created with user-level 0
+    (user/update! assoc :user-level 2)
     (user/private)))
 
 ;; When testing updates, timestamps can confuse the issue.
@@ -245,7 +251,7 @@
                        :body (cheshire/generate-string
                                (assoc moderator :username "syabuki")))
               :response)]
-        (is (= 401 (:status response))
+        (is (= 403 (:status response))
             "attempting to update a user without proper permissions should fail"))
 
       ; attempt to set unavailable username
@@ -372,3 +378,66 @@
               :response)]
         (is (= 404 (:status response))
             "should not be able to look up user by old email")))))
+
+(deftest test-user-remove
+  (with-rollback-transaction [t-conn db/conn]
+    (let [credentials-for #(select-keys % #{:username :password})
+          user (create-test-user!)
+          moderator (create-test-moderator!)
+          admin (create-test-admin!)
+          ;; the following two functions take a peridot session
+          login-request
+          (fn [session user]
+            (request session "/api/users/login"
+                     :request-method :post
+                     :content-type "application/json"
+                     :body (cheshire/generate-string (credentials-for user))))
+          remove-request
+          (fn [session user]
+            (request session (format "/api/users/%d" (:user-id user))
+                     :request-method :delete))]
+
+      ; cannot remove anything while logged out
+      (let [response (-> (session app) (remove-request user) :response)]
+        (is (= 401 (:status response))
+            "logged-out users cannot remove users"))
+
+      ; cannot remove nonexistent user
+      (let [response (-> (session app)
+                       (login-request fixtures/user-values)
+                       (remove-request (assoc user :user-id -1))
+                       :response)]
+        (is (= 404 (:status response))
+            "nonexistent users cannot be removed"))
+
+      ; user cannot remove self
+      (let [response (-> (session app)
+                       (login-request fixtures/user-values)
+                       (remove-request user)
+                       :response)]
+        (is (= 403 (:status response))
+            "users cannot remove users"))
+
+      ; moderator cannot remove user
+      (let [response (-> (session app)
+                       (login-request fixtures/moderator-values)
+                       (remove-request user)
+                       :response)]
+        (is (= 403 (:status response))
+            "moderators cannot remove users"))
+
+      ; admin can remove user
+      (let [response (-> (session app)
+                       (login-request fixtures/admin-values)
+                       (remove-request user)
+                       :response)]
+        (is (= 204 (:status response))
+            "admins can remove users"))
+
+      ; admin can remove moderator
+      (let [response (-> (session app)
+                       (login-request fixtures/admin-values)
+                       (remove-request moderator)
+                       :response)]
+        (is (= 204 (:status response))
+            "admins can remove moderators")))))
