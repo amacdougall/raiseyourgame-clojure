@@ -57,11 +57,6 @@
   [email]
   (nil? (lookup {:email email})))
 
-(defn valid-new-user?
-  "True if the supplied user map contains an available username and email."
-  [{:keys [username email]}]
-  (and (username-available? username) (email-available? email)))
-
 (defn create!
   "Creates a user based on a params object containing the following keys:
   :username, :email, :password, :name (optional), :profile (optional). The
