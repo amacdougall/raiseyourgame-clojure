@@ -7,9 +7,6 @@
             [compojure.api.sweet :refer :all]
             [taoensso.timbre :refer [debug]]))
 
-(defn- safe-user [user]
-  (dissoc user :password :email))
-
 (defapi api-routes
   (ring.swagger.ui/swagger-ui
     "/swagger-ui")
