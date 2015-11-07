@@ -18,8 +18,8 @@
     (when (nil? @db/conn) (db/connect!))
     (f)))
 
-;; Creates a test user and returns a private representation, as if loaded from
-;; the API by an owner/admin.
+;; Creates a test user at the standard level and returns a private
+;; representation, as if loaded from the API by an owner/admin.
 (defn create-test-user! []
   (user/private (user/create! fixtures/user-values)))
 
@@ -28,13 +28,15 @@
 (defn create-test-moderator! []
   (-> fixtures/moderator-values
     (user/create!) ; all users are created with user-level 0
-    (user/update! assoc :user-level 1)
+    (user/update! assoc :user-level (:moderator user/user-levels))
     (user/private)))
 
+;; Creates a test user with the admin user-level and returns a private
+;; representation, as if loaded from the API by an owner/admin.
 (defn create-test-admin! []
   (-> fixtures/admin-values
     (user/create!) ; all users are created with user-level 0
-    (user/update! assoc :user-level 2)
+    (user/update! assoc :user-level (:admin user/user-levels))
     (user/private)))
 
 ;; When testing updates, timestamps can confuse the issue.
@@ -434,10 +436,75 @@
         (is (= 204 (:status response))
             "admins can remove users"))
 
+      ; removed user was removed
+      (let [updated-user (user/lookup {:user-id (:user-id user)})]
+        (is (not (nil? updated-user))
+            "removed users still exist in database")
+        (is (= false (:active updated-user))
+            "removed users have :active false"))
+
+
       ; admin can remove moderator
       (let [response (-> (session app)
                        (login-request fixtures/admin-values)
                        (remove-request moderator)
                        :response)]
         (is (= 204 (:status response))
-            "admins can remove moderators")))))
+            "admins can remove moderators"))
+
+      ; NOTE: at this point, `user` and `moderator` are removed
+      ; user removal is idempotent: returns 204 each time
+      (let [response (-> (session app)
+                       (login-request fixtures/admin-values)
+                       (remove-request moderator)
+                       :response)]
+        (is (= 204 (:status response))
+            "user removal is idempotent, returning 204 if user is already removed")))))
+
+(deftest test-removed-user-lookup
+  (let [credentials-for #(select-keys % #{:username :password})
+        ;; the following two functions take a peridot session
+        login-request
+        (fn [session user]
+          (request session "/api/users/login"
+                   :request-method :post
+                   :content-type "application/json"
+                   :body (cheshire/generate-string (credentials-for user))))
+        remove-request
+        (fn [session user]
+          (request session (format "/api/users/%d" (:user-id user))
+                   :request-method :delete))]
+
+    ; remove as admin, retrieve as admin: should be 200
+    (with-rollback-transaction [t-conn db/conn]
+      (let [user (create-test-user!)
+            admin (create-test-admin!)
+            response (-> (session app)
+                       (login-request fixtures/admin-values)
+                       (remove-request user)
+                       (request (format "/api/users/%d" (:user-id user)))
+                       :response)
+            result (response->clj response)]
+        (is (= 200 (:status response)) "admins can look up removed users")
+        (is (= false (:active result)) "removed user should not be active")
+        (is (has-values? (dissoc fixtures/user-values :password :email) result)
+            "resulting user has expected values")))
+
+    ; remove as admin, retrieve as user; should be 404
+    (with-rollback-transaction [t-conn db/conn]
+      (let [user (create-test-user!)
+            retriever-values (assoc fixtures/user-values
+                                    :username "gdaimon"
+                                    :email "gdaimon@judo.org")
+            retriever (user/private (user/create! retriever-values))
+            admin (create-test-admin!)
+            response (do (-> (session app)
+                           (login-request fixtures/admin-values)
+                           (remove-request user))
+
+                         (-> (session app)
+                           (login-request retriever-values)
+                           (request (format "/api/users/%d" (:user-id user)))
+                           :response))
+            result (response->clj response)]
+        (is (= 404 (:status response)) "non-admins cannot look up removed users")))))

@@ -21,22 +21,33 @@
     ;; user routes
     ; NOTE: Route order matters! Only check the /:user-id route after others
     ; have failed to match.
-    (GET* "/users/lookup" []
+    (GET* "/users/lookup" request
           :return User
           :query-params [{user-id :- Long nil}
                          {username :- String nil}
                          {email :- String nil}]
           :summary "One of: user-id, username, password."
-          (let [criterion (cond
+          (let [current (:identity (:session request))
+                criterion (cond
                             (not (nil? user-id)) {:user-id user-id}
                             (not (nil? username)) {:username username}
-                            (not (nil? email)) {:email email})]
-            (if criterion
-              (if-let [user (user/lookup criterion)]
-                (ok (user/public user))
-                (not-found "No user matched your request."))
+                            (not (nil? email)) {:email email})
+                user (user/lookup criterion)]
+            (cond
+              ; if no criteria, 400
+              (nil? criterion)
               (bad-request "Invalid request. Must supply one of the following
-                           querystring parameters: id, username, email."))))
+                           querystring parameters: id, username, email.")
+
+              ; if no user found, or user is inactive and no login, 404
+              (or (nil? user)
+                  (and (not (:active user)) (nil? current)))
+              (not-found "No user matched your request.")
+
+              ; if user is active, or current login is admin, 200
+              (or (:active user)
+                  (>= (:user-level current) (:admin user/user-levels)))
+              (ok (user/public user)))))
 
     (GET* "/users/current" request
           :return User
@@ -44,13 +55,22 @@
             (ok (user/private user))
             (not-found)))
 
-    (GET* "/users/:user-id" []
+    (GET* "/users/:user-id" request
           :return User
           :path-params [user-id :- Long]
           :summary "Numeric user id."
-          (if-let [user (user/lookup {:user-id user-id})]
-            (ok (user/public user))
-            (not-found "No user matched your request.")))
+          (let [current (:identity (:session request))
+                user (user/lookup {:user-id user-id})]
+            (cond
+              ; if no user found, or user is inactive and no login, 404
+              (or (nil? user)
+                  (and (not (:active user)) (nil? current)))
+              (not-found "No user matched your request.")
+
+              ; if user is active, or current login is admin, 200
+              (or (:active user)
+                  (>= (:user-level current) (:admin user/user-levels)))
+              (ok (user/public user)))))
 
     ; create
     (POST* "/users" request
