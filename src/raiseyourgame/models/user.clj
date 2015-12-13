@@ -47,14 +47,14 @@
   information, such as email."
   [user target]
   (or (= user target)
-      (= (:user-level user) (:admin user-levels))
+      (>= (:user-level user) (:admin user-levels))
       (> (:user-level user) (:user-level target))))
 
 (defn can-update-user?
-  "True if the supplied user has permission to update the target user. Users
-  may only update themselves, or users with a lower user-level."
+  "True if the supplied user has permission to update the target user."
   [user target]
   (or (= user target)
+      (>= (:user-level user) (:admin user-levels))
       (> (:user-level user) (:user-level target))))
 
 (defn can-remove-user?

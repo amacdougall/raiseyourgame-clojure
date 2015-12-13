@@ -133,8 +133,8 @@
       ; user should be able to view own private data only
       (is (user/can-view-private-data? user user)
           "user should be able to view own data")
-      (is (not (user/can-view-private-data? user moderator))
-          "user should not be able to view higher data")
+      (is (not (user/can-view-private-data? user user-two))
+          "user should not be able to view other users' data")
 
       ; moderator should be able to view private data only of users
       (is (user/can-view-private-data? moderator user)
@@ -153,12 +153,35 @@
           "admins should be able to view admin data"))))
 
 (deftest test-can-update-user
-  (let [user {:user-level (:user user/user-levels)}
-        moderator {:user-level (:moderator user/user-levels)}]
-    (is (= true (user/can-update-user? moderator user))
-        "moderator should be able to update user")
-    (is (= false (user/can-update-user? user moderator))
-        "user should not be able to update moderator")))
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (fixtures/create-test-user!)
+          user-two (fixtures/create-test-user-two!)
+          moderator (fixtures/create-test-moderator!)
+          moderator-two (fixtures/create-test-moderator-two!)
+          admin (fixtures/create-test-admin!)
+          admin-two (fixtures/create-test-admin-two!)]
+
+      ; user should be able to update self only
+      (is (user/can-update-user? user user)
+          "user should be able to update self")
+      (is (not (user/can-update-user? user user-two))
+          "user should not be able to update other users")
+
+      ; moderator should be able to update only users with lower level
+      (is (user/can-update-user? moderator user)
+          "moderator should be able to update users")
+      (is (not (user/can-update-user? moderator moderator-two))
+          "moderator should not be able to update other moderators")
+      (is (not (user/can-update-user? moderator admin))
+          "moderator should not be able to update admins")
+
+      ; admins should be able to view all data
+      (is (user/can-update-user? admin user)
+          "admins should be able to update users")
+      (is (user/can-update-user? admin moderator)
+          "admins should be able to update moderators")
+      (is (user/can-update-user? admin admin-two)
+          "admins should be able to update other admins"))))
 
 (deftest test-can-remove-user
   (with-rollback-transaction [t-conn db/conn]
