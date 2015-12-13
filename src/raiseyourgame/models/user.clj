@@ -56,8 +56,8 @@
   ([user]
    (>= (:user-level user) (:admin user-levels)))
   ([user target]
-   ;; for now, all decisions are based on user level anyway
-   (can-remove-user? user)))
+   (and (not (= user target)) ; do not let users delete themselves
+        (can-remove-user? user))))
 
 (defn username-available?
   "True if the supplied username is not already in use."

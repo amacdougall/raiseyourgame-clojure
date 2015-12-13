@@ -131,7 +131,8 @@
     (is (= false (user/can-update-user? user moderator))
         "user should not be able to update moderator")))
 
-(deftest test-can-remove
+;; Tests for universal user-remove privileges.
+(deftest test-can-remove-any
   (let [user {:user-level (:user user/user-levels)}
         moderator {:user-level (:moderator user/user-levels)}
         admin {:user-level (:admin user/user-levels)}]
@@ -141,6 +142,36 @@
         "moderator should not be able to remove users")
     (is (= true (user/can-remove-user? admin))
         "admin should be able to remove users")))
+
+(deftest test-can-remove-user
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (user/create! fixtures/user-values)
+          moderator (-> fixtures/moderator-values
+                      (user/create!)
+                      (user/update! assoc :user-level (:moderator user/user-levels)))
+          admin (-> fixtures/admin-values
+                  (user/create!)
+                  (user/update! assoc :user-level (:admin user/user-levels)))]
+      (is (= false (user/can-remove-user? user user))
+          "user should not be able to remove self")
+      (is (= false (user/can-remove-user? user moderator))
+          "user should not be able to remove moderator")
+      (is (= false (user/can-remove-user? user admin))
+          "user should not be able to remove admin")
+
+      (is (= false (user/can-remove-user? moderator user))
+          "moderator should not be able to remove user")
+      (is (= false (user/can-remove-user? moderator moderator))
+          "moderator should not be able to remove self")
+      (is (= false (user/can-remove-user? moderator admin))
+          "moderator should not be able to remove admin")
+
+      (is (= true (user/can-remove-user? admin user))
+          "admin should be able to remove user")
+      (is (= true (user/can-remove-user? admin moderator))
+          "admin should be able to remove moderator")
+      (is (= false (user/can-remove-user? admin admin))
+          "admin should not be able to remove self"))))
 
 (deftest test-user-remove
   (with-rollback-transaction [t-conn db/conn]
