@@ -1,6 +1,6 @@
 (ns raiseyourgame.routes.api
-  (:require [raiseyourgame.routes.api.users :as users]
-            [raiseyourgame.routes.api.videos :as videos]
+  (:require [raiseyourgame.routes.api.users :refer [users-routes]]
+            [raiseyourgame.routes.api.videos :refer [videos-routes]]
             [compojure.api.sweet :refer :all]))
 
 (defapi api-routes
@@ -11,5 +11,7 @@
     {:info {:title "Raise Your API"}})
 
   (context* "/api" []
-    users/api-context
-    videos/api-context))
+    (context* "/users" []
+      users-routes)
+    (context* "/videos" []
+      videos-routes)))
