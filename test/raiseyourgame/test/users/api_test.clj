@@ -36,6 +36,9 @@
 (defn create-test-admin! []
   (user/private (fixtures/create-test-admin!)))
 
+(defn create-test-admin-two! []
+  (user/private (fixtures/create-test-admin-two!)))
+
 ;; When testing updates, timestamps can confuse the issue.
 (defn- without-timestamps [user]
   (dissoc user :last-login :updated-at :created-at))
@@ -502,3 +505,66 @@
                            :response))
             result (response->clj response)]
         (is (= 404 (:status response)) "non-admins cannot look up removed users")))))
+
+(deftest test-user-data-visibility
+  (with-rollback-transaction [t-conn db/conn]
+  (let [credentials-for #(select-keys % #{:username :password})
+        user (create-test-user!)
+        user-two (create-test-user-two!)
+        moderator (create-test-moderator!)
+        admin (create-test-admin!)
+        admin-two (create-test-admin-two!)
+        login-request
+        (fn [session user]
+          (request session "/api/users/login"
+                   :request-method :post
+                   :content-type "application/json"
+                   :body (cheshire/generate-string (credentials-for user))))
+        lookup-request
+        (fn [session criteria]
+          (request session "/api/users/lookup" :params criteria))]
+
+    (testing "user looking up self"
+      (let [response (-> (session app)
+                       (login-request fixtures/user-values)
+                       (lookup-request {:user-id (:user-id user)})
+                       :response)
+            result (response->clj response)]
+        (is (= 200 (:status response)))
+        (is (contains? result :email) "should load private information")))
+
+    (testing "user looking up other user"
+      (let [response (-> (session app)
+                       (login-request fixtures/user-values)
+                       (lookup-request {:user-id (:user-id user-two)})
+                       :response)
+            result (response->clj response)]
+        (is (= 200 (:status response)))
+        (is (not (contains? result :email))) "should not load private information"))
+
+    (testing "moderator looking up user"
+      (let [response (-> (session app)
+                       (login-request fixtures/moderator-values)
+                       (lookup-request {:user-id (:user-id user)})
+                       :response)
+            result (response->clj response)]
+        (is (= 200 (:status response)))
+        (is (contains? result :email)) "should load private information"))
+
+    (testing "admin looking up user"
+      (let [response (-> (session app)
+                       (login-request fixtures/admin-values)
+                       (lookup-request {:user-id (:user-id user)})
+                       :response)
+            result (response->clj response)]
+        (is (= 200 (:status response)))
+        (is (contains? result :email) "should load private information")))
+
+    (testing "admin looking up another admin"
+      (let [response (-> (session app)
+                       (login-request fixtures/admin-values)
+                       (lookup-request {:user-id (:user-id admin-two)})
+                       :response)
+            result (response->clj response)]
+        (is (= 200 (:status response)))
+        (is (contains? result :email) "should load private information"))))))

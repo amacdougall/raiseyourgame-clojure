@@ -37,7 +37,9 @@
             ; if user is active, or current login is admin, 200
             (or (:active user)
                 (>= (:user-level current) (:admin user/user-levels)))
-            (ok (user/public user)))))
+            (if (and current (user/can-view-private-data? current user))
+              (ok (user/private user))
+              (ok (user/public user))))))
 
   (GET* "/current" request
         :return User
@@ -60,7 +62,9 @@
             ; if user is active, or current login is admin, 200
             (or (:active user)
                 (>= (:user-level current) (:admin user/user-levels)))
-            (ok (user/public user)))))
+            (if (and current (user/can-view-private-data? current user))
+              (ok (user/private user))
+              (ok (user/public user))))))
 
   ; create
   (POST* "/" request
