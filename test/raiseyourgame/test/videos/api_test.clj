@@ -19,12 +19,12 @@
     (when (nil? @db/conn) (db/connect!))
     (f)))
 
-;; Returns a [video user] vector.
+;; Returns a [video user] vector, as fixtures/create-test-video!, but applies
+;; the private representation of the user, as if loaded from the API by the
+;; user or an admin.
 (defn- create-test-video! []
-  (let [user (user/create! fixtures/user-values)
-        video (video/create!
-                (assoc fixtures/video-values :user-id (:user-id user)))]
-    [video user]))
+  (let [[video user] (fixtures/create-test-video!)]
+    [video (user/private user)]))
 
 (deftest test-video-create
   (with-rollback-transaction [t-conn db/conn]

@@ -21,23 +21,17 @@
 ;; Creates a test user at the standard level and returns a private
 ;; representation, as if loaded from the API by an owner/admin.
 (defn create-test-user! []
-  (user/private (user/create! fixtures/user-values)))
+  (user/private (fixtures/create-test-user!)))
 
 ;; Creates a test user with the moderator user-level and returns a private
 ;; representation, as if loaded from the API by an owner/admin.
 (defn create-test-moderator! []
-  (-> fixtures/moderator-values
-    (user/create!) ; all users are created with user-level 0
-    (user/update! assoc :user-level (:moderator user/user-levels))
-    (user/private)))
+  (user/private (fixtures/create-test-moderator!)))
 
 ;; Creates a test user with the admin user-level and returns a private
 ;; representation, as if loaded from the API by an owner/admin.
 (defn create-test-admin! []
-  (-> fixtures/admin-values
-    (user/create!) ; all users are created with user-level 0
-    (user/update! assoc :user-level (:admin user/user-levels))
-    (user/private)))
+  (user/private (fixtures/create-test-admin!)))
 
 ;; When testing updates, timestamps can confuse the issue.
 (defn- without-timestamps [user]
