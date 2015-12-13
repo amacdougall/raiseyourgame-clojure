@@ -12,6 +12,13 @@
    :profile "Are you okay?"
    :email "tbogard@hakkyokuseiken.org"})
 
+(def user-values-two
+  {:username "gdaimon"
+   :password "heaven to hell drop"
+   :name "Goro Daimon"
+   :profile "Judo master"
+   :email "gdaimon@judo.org"})
+
 (def moderator-values
   {:username "skusanagi"
    :password "eye of the metropolis"
@@ -19,12 +26,26 @@
    :profile "Yoasobi wa kiken ja zo."
    :email "skusanagi@magatama.org"})
 
+(def moderator-values-two
+  {:username "kkapwhan"
+   :password "phoenix flattener"
+   :name "Kim Kaphwan"
+   :profile "Aku wa urusan!"
+   :email "kkaphwan@taekwondo.org"})
+
 (def admin-values
   {:username "rbernstein"
    :password "genocide cutter"
    :name "Rugal Bernstein"
    :profile "Tournament host"
    :email "rbernstein@blacknoah.org"})
+
+(def admin-values-two
+  {:username "wkrauser"
+   :password "kaiser wave"
+   :name "Wolfgang Krauser"
+   :profile "I will chisel your tombstone!"
+   :email "wkrauser@kampfringen.org"})
 
 ;; User id must be merged in by test code.
 (def video-values
@@ -47,6 +68,11 @@
   the user to the database and returns it."
   (user/create! user-values))
 
+(defn create-test-user-two! []
+  "Creates the user described in user-values-two at the standard
+  user-level. Adds the user to the database and returns it."
+  (user/create! user-values-two))
+
 (defn create-test-moderator! []
   "Creates the user described in moderator-values at the moderator user-level. Adds
   the user to the database and returns it."
@@ -54,10 +80,24 @@
     (user/create!) ; all users are created with user-level 0
     (user/update! assoc :user-level (:moderator user/user-levels))))
 
+(defn create-test-moderator-two! []
+  "Creates the user described in moderator-values-two at the moderator user-level. Adds
+  the user to the database and returns it."
+  (-> moderator-values-two
+    (user/create!) ; all users are created with user-level 0
+    (user/update! assoc :user-level (:moderator user/user-levels))))
+
 (defn create-test-admin! []
   "Creates the user described in admin-values at the admin user-level. Adds
   the user to the database and returns it."
   (-> admin-values
+    (user/create!) ; all users are created with user-level 0
+    (user/update! assoc :user-level (:admin user/user-levels))))
+
+(defn create-test-admin-two! []
+  "Creates the user described in admin-values-two at the admin user-level. Adds
+  the user to the database and returns it."
+  (-> admin-values-two
     (user/create!) ; all users are created with user-level 0
     (user/update! assoc :user-level (:admin user/user-levels))))
 

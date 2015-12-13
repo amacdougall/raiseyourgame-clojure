@@ -23,6 +23,9 @@
 (defn create-test-user! []
   (user/private (fixtures/create-test-user!)))
 
+(defn create-test-user-two! []
+  (user/private (fixtures/create-test-user-two!)))
+
 ;; Creates a test user with the moderator user-level and returns a private
 ;; representation, as if loaded from the API by an owner/admin.
 (defn create-test-moderator! []
@@ -64,7 +67,7 @@
 ;; is already in use.
 (deftest test-user-create-duplicate
   (with-rollback-transaction [t-conn db/conn]
-    (user/create! fixtures/user-values) ; make sure user already exists
+    (create-test-user!) ; make sure user already exists
     (let [with-dupe-username (assoc fixtures/user-values :email "available@example.com")
           with-dupe-email (assoc fixtures/user-values :username "available")
           test-user-creation
@@ -85,7 +88,7 @@
 
 (deftest test-get-by-id
   (with-rollback-transaction [t-conn db/conn]
-    (let [user (user/create! fixtures/user-values)]
+    (let [user (create-test-user!)]
       (testing "with correct id"
         (let [path (format "/api/users/%d" (:user-id user))
               response (-> (session app) (request path) :response)]
@@ -105,7 +108,7 @@
 (deftest test-user-lookup
   (with-rollback-transaction [t-conn db/conn]
     ; we're doing this in a let because we'll need the user-id later
-    (let [user (user/create! fixtures/user-values)
+    (let [user (create-test-user!)
           test-success
           (fn [criteria]
             (let [response (-> (session app)
@@ -191,7 +194,7 @@
 
 (deftest test-login
   (with-rollback-transaction [t-conn db/conn]
-    (user/create! fixtures/user-values)
+    (create-test-user!)
     (exercise-login-routes
       (select-keys fixtures/user-values #{:username :password}))))
 
@@ -487,17 +490,14 @@
     ; remove as admin, retrieve as user; should be 404
     (with-rollback-transaction [t-conn db/conn]
       (let [user (create-test-user!)
-            retriever-values (assoc fixtures/user-values
-                                    :username "gdaimon"
-                                    :email "gdaimon@judo.org")
-            retriever (user/private (user/create! retriever-values))
+            retriever (create-test-user-two!)
             admin (create-test-admin!)
             response (do (-> (session app)
                            (login-request fixtures/admin-values)
                            (remove-request user))
 
                          (-> (session app)
-                           (login-request retriever-values)
+                           (login-request fixtures/user-values-two)
                            (request (format "/api/users/%d" (:user-id user)))
                            :response))
             result (response->clj response)]

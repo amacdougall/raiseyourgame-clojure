@@ -122,8 +122,37 @@
       (is (nil? (user/update! (assoc user :email (:email moderator))))
           "should be impossible to change email to one already in use"))))
 
+(deftest test-can-view-private-data
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (fixtures/create-test-user!)
+          user-two (fixtures/create-test-user-two!)
+          moderator (fixtures/create-test-moderator!)
+          moderator-two (fixtures/create-test-moderator-two!)
+          admin (fixtures/create-test-admin!)
+          admin-two (fixtures/create-test-admin-two!)]
+      ; user should be able to view own private data only
+      (is (user/can-view-private-data? user user)
+          "user should be able to view own data")
+      (is (not (user/can-view-private-data? user moderator))
+          "user should not be able to view higher data")
+
+      ; moderator should be able to view private data only of users
+      (is (user/can-view-private-data? moderator user)
+          "moderator should be able to view user data")
+      (is (not (user/can-view-private-data? moderator moderator-two))
+          "moderator should not be able to view other moderators' data")
+      (is (not (user/can-view-private-data? moderator admin))
+          "moderator should not be able to view admins' data")
+
+      ; admins should be able to view all data
+      (is (user/can-view-private-data? admin user)
+          "admins should be able to view user data")
+      (is (user/can-view-private-data? admin moderator)
+          "admins should be able to view moderator data")
+      (is (user/can-view-private-data? admin admin-two)
+          "admins should be able to view admin data"))))
+
 (deftest test-can-update-user
-  ; we know that this only tests :user-level, so...
   (let [user {:user-level (:user user/user-levels)}
         moderator {:user-level (:moderator user/user-levels)}]
     (is (= true (user/can-update-user? moderator user))

@@ -42,6 +42,14 @@
   [user password]
   (and user password (hashers/check password (:password user))))
 
+(defn can-view-private-data?
+  "True if the supplied user has permission to view the target's non-public
+  information, such as email."
+  [user target]
+  (or (= user target)
+      (= (:user-level user) (:admin user-levels))
+      (> (:user-level user) (:user-level target))))
+
 (defn can-update-user?
   "True if the supplied user has permission to update the target user. Users
   may only update themselves, or users with a lower user-level."
