@@ -50,14 +50,11 @@
       (> (:user-level user) (:user-level target))))
 
 (defn can-remove-user?
-  "Given a user, returns true if the user has permission to remove every user
-  in the system. Given a user and a target, returns true if the user has
-  permission to remove the target."
-  ([user]
-   (>= (:user-level user) (:admin user-levels)))
-  ([user target]
-   (and (not (= user target)) ; do not let users delete themselves
-        (can-remove-user? user))))
+  "Given a user and a target, returns true if the user has permission to remove
+  the target."
+  [user target]
+  (and (not (= user target)) ; do not let users delete themselves
+       (>= (:user-level user) (:admin user-levels))))
 
 (defn username-available?
   "True if the supplied username is not already in use."

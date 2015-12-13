@@ -122,7 +122,7 @@
       (is (nil? (user/update! (assoc user :email (:email moderator))))
           "should be impossible to change email to one already in use"))))
 
-(deftest test-can-update
+(deftest test-can-update-user
   ; we know that this only tests :user-level, so...
   (let [user {:user-level (:user user/user-levels)}
         moderator {:user-level (:moderator user/user-levels)}]
@@ -130,18 +130,6 @@
         "moderator should be able to update user")
     (is (= false (user/can-update-user? user moderator))
         "user should not be able to update moderator")))
-
-;; Tests for universal user-remove privileges.
-(deftest test-can-remove-any
-  (let [user {:user-level (:user user/user-levels)}
-        moderator {:user-level (:moderator user/user-levels)}
-        admin {:user-level (:admin user/user-levels)}]
-    (is (= false (user/can-remove-user? user))
-        "user should not be able to remove users")
-    (is (= false (user/can-remove-user? moderator))
-        "moderator should not be able to remove users")
-    (is (= true (user/can-remove-user? admin))
-        "admin should be able to remove users")))
 
 (deftest test-can-remove-user
   (with-rollback-transaction [t-conn db/conn]
