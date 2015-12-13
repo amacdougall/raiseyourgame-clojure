@@ -145,13 +145,10 @@
 
 (deftest test-can-remove-user
   (with-rollback-transaction [t-conn db/conn]
-    (let [user (user/create! fixtures/user-values)
-          moderator (-> fixtures/moderator-values
-                      (user/create!)
-                      (user/update! assoc :user-level (:moderator user/user-levels)))
-          admin (-> fixtures/admin-values
-                  (user/create!)
-                  (user/update! assoc :user-level (:admin user/user-levels)))]
+    (let [user (fixtures/create-test-user!)
+          moderator (fixtures/create-test-moderator!)
+          admin (fixtures/create-test-admin!)]
+
       (is (= false (user/can-remove-user? user user))
           "user should not be able to remove self")
       (is (= false (user/can-remove-user? user moderator))
