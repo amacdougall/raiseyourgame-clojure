@@ -18,27 +18,6 @@
     (when (nil? @db/conn) (db/connect!))
     (f)))
 
-;; Creates a test user at the standard level and returns a private
-;; representation, as if loaded from the API by an owner/admin.
-(defn create-test-user! []
-  (user/private (fixtures/create-test-user!)))
-
-(defn create-test-user-two! []
-  (user/private (fixtures/create-test-user-two!)))
-
-;; Creates a test user with the moderator user-level and returns a private
-;; representation, as if loaded from the API by an owner/admin.
-(defn create-test-moderator! []
-  (user/private (fixtures/create-test-moderator!)))
-
-;; Creates a test user with the admin user-level and returns a private
-;; representation, as if loaded from the API by an owner/admin.
-(defn create-test-admin! []
-  (user/private (fixtures/create-test-admin!)))
-
-(defn create-test-admin-two! []
-  (user/private (fixtures/create-test-admin-two!)))
-
 ;; When testing updates, timestamps can confuse the issue.
 (defn- without-timestamps [user]
   (dissoc user :last-login :updated-at :created-at))
@@ -70,7 +49,7 @@
 ;; is already in use.
 (deftest test-user-create-duplicate
   (with-rollback-transaction [t-conn db/conn]
-    (create-test-user!) ; make sure user already exists
+    (fixtures/create-test-user!) ; make sure user already exists
     (let [with-dupe-username (assoc fixtures/user-values :email "available@example.com")
           with-dupe-email (assoc fixtures/user-values :username "available")
           test-user-creation
@@ -91,7 +70,7 @@
 
 (deftest test-get-by-id
   (with-rollback-transaction [t-conn db/conn]
-    (let [user (create-test-user!)]
+    (let [user (fixtures/create-test-user!)]
       (testing "with correct id"
         (let [path (format "/api/users/%d" (:user-id user))
               response (-> (session app) (request path) :response)]
@@ -111,7 +90,7 @@
 (deftest test-user-lookup
   (with-rollback-transaction [t-conn db/conn]
     ; we're doing this in a let because we'll need the user-id later
-    (let [user (create-test-user!)
+    (let [user (fixtures/create-test-user!)
           test-success
           (fn [criteria]
             (let [response (-> (session app)
@@ -197,14 +176,14 @@
 
 (deftest test-login
   (with-rollback-transaction [t-conn db/conn]
-    (create-test-user!)
+    (fixtures/create-test-user!)
     (exercise-login-routes
       (select-keys fixtures/user-values #{:username :password}))))
 
 (deftest test-user-update-failures
   (with-rollback-transaction [t-conn db/conn]
-    (let [original (create-test-user!)
-          moderator (create-test-moderator!)
+    (let [original (fixtures/create-test-user!)
+          moderator (fixtures/create-test-moderator!)
           expected (conj original {:password "rising tackle"
                                    :email "tbogard@garou.org"})]
       ; attempt to update while logged out
@@ -295,7 +274,7 @@
 
 (deftest test-user-update-self
   (with-rollback-transaction [t-conn db/conn]
-    (let [original (create-test-user!)
+    (let [original (fixtures/create-test-user!)
           expected (conj original {:password "rising tackle"
                                    :email "tbogard@garou.org"})]
       (let [response
@@ -339,8 +318,8 @@
 ;; Implicitly tests any user updating a user with a lower user level.
 (deftest test-admin-update-other
   (with-rollback-transaction [t-conn db/conn]
-    (let [original (create-test-user!)
-          moderator (create-test-moderator!) ; will do the update
+    (let [original (fixtures/create-test-user!)
+          moderator (fixtures/create-test-moderator!) ; will do the update
           expected (conj original {:password "rising tackle"
                                    :email "tbogard@garou.org"})]
       (let [response
@@ -380,9 +359,9 @@
 
 (deftest test-user-remove
   (with-rollback-transaction [t-conn db/conn]
-    (let [user (create-test-user!)
-          moderator (create-test-moderator!)
-          admin (create-test-admin!)
+    (let [user (fixtures/create-test-user!)
+          moderator (fixtures/create-test-moderator!)
+          admin (fixtures/create-test-admin!)
           remove-request (fn [session user]
                            (request session (format "/api/users/%d" (:user-id user))
                                     :request-method :delete))]
@@ -458,8 +437,8 @@
 
     ; remove as admin, retrieve as admin: should be 200
     (with-rollback-transaction [t-conn db/conn]
-      (let [user (create-test-user!)
-            admin (create-test-admin!)
+      (let [user (fixtures/create-test-user!)
+            admin (fixtures/create-test-admin!)
             response (-> (session app)
                        (login-request fixtures/admin-values)
                        (remove-request user)
@@ -473,9 +452,9 @@
 
     ; remove as admin, retrieve as user; should be 404
     (with-rollback-transaction [t-conn db/conn]
-      (let [user (create-test-user!)
-            retriever (create-test-user-two!)
-            admin (create-test-admin!)
+      (let [user (fixtures/create-test-user!)
+            retriever (fixtures/create-test-user-two!)
+            admin (fixtures/create-test-admin!)
             response (do (-> (session app)
                            (login-request fixtures/admin-values)
                            (remove-request user))
@@ -489,11 +468,11 @@
 
 (deftest test-user-data-visibility
   (with-rollback-transaction [t-conn db/conn]
-  (let [user (create-test-user!)
-        user-two (create-test-user-two!)
-        moderator (create-test-moderator!)
-        admin (create-test-admin!)
-        admin-two (create-test-admin-two!)
+  (let [user (fixtures/create-test-user!)
+        user-two (fixtures/create-test-user-two!)
+        moderator (fixtures/create-test-moderator!)
+        admin (fixtures/create-test-admin!)
+        admin-two (fixtures/create-test-admin-two!)
         lookup-request
         (fn [session criteria]
           (request session "/api/users/lookup" :params criteria))]

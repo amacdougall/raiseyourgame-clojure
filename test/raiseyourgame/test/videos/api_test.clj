@@ -19,13 +19,6 @@
     (when (nil? @db/conn) (db/connect!))
     (f)))
 
-;; Returns a [video user] vector, as fixtures/create-test-video!, but applies
-;; the private representation of the user, as if loaded from the API by the
-;; user or an admin.
-(defn- create-test-video! []
-  (let [[video user] (fixtures/create-test-video!)]
-    [video (user/private user)]))
-
 ;; When testing updates, timestamps can confuse the issue.
 (defn- without-timestamps [video]
   (dissoc video :updated-at :created-at))
@@ -77,7 +70,7 @@
 
 (deftest test-find-by-video-id
   (with-rollback-transaction [t-conn db/conn]
-    (let [[video _] (create-test-video!)]
+    (let [[video _] (fixtures/create-test-video!)]
       (testing "with correct video-id"
         (let [path (format "/api/videos/%d" (:video-id video))
               response (-> (session app) (request path) :response)]
@@ -94,7 +87,7 @@
 
 (deftest test-find-by-user-id
   (with-rollback-transaction [t-conn db/conn]
-    (let [[video user] (create-test-video!)]
+    (let [[video user] (fixtures/create-test-video!)]
       (testing "with correct user-id"
         (let [path (format "/api/users/%d/videos" (:user-id user))
               response (-> (session app) (request path) :response)]
@@ -115,7 +108,7 @@
 
 (deftest test-video-update-as-owner
   (with-rollback-transaction [t-conn db/conn]
-    (let [[video user] (create-test-video!)
+    (let [[video user] (fixtures/create-test-video!)
           desired (assoc video :title "New title")
           expected (without-timestamps desired)]
       (let [response (-> (session app)
@@ -130,7 +123,7 @@
 
 (deftest test-video-update-as-admin
   (with-rollback-transaction [t-conn db/conn]
-    (let [[video user] (create-test-video!)
+    (let [[video user] (fixtures/create-test-video!)
           admin (fixtures/create-test-admin!)
           desired (assoc video :title "New title")
           expected (without-timestamps desired)]
@@ -146,7 +139,7 @@
 
 (deftest test-video-update-failures
   (with-rollback-transaction [t-conn db/conn]
-    (let [[video user] (create-test-video!)
+    (let [[video user] (fixtures/create-test-video!)
           user-two (fixtures/create-test-user-two!)
           desired (assoc video :title "New title")
           expected (without-timestamps desired)]
