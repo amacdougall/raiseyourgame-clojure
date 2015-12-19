@@ -28,28 +28,41 @@
 
 (deftest test-video-create
   (with-rollback-transaction [t-conn db/conn]
-    (let [{user-id :user-id} (user/create! fixtures/user-values)
+    (let [user (user/create! fixtures/user-values)
           body (cheshire/generate-string
-                 (assoc fixtures/video-values :user-id user-id))
-          response (-> (session app)
-                     (request "/api/videos"
-                              :request-method :post
-                              :content-type "application/json"
-                              :body body)
-                     :response)
-          video (response->clj response)]
-      ; The HTTP 201 Created response includes a Location header where the new
-      ; resource can be found, and includes the resource itself in the body.
-      ; NOTE: strings are not fn-able, so get-in is more convenient.
-      (is (= 201 (:status response))
-          "response should be 200 Created")
-      (is (has-values? fixtures/video-values video)
-          "response body should be the created video")
-      (is (string? (get-in response [:headers "Location"]))
-          "response should include a Location header")
-      (is (= (format "/api/videos/%d" (:video-id video))
-             (get-in response [:headers "Location"]))
-          "Location header should match the resource URL"))))
+                 (assoc fixtures/video-values :user-id (:user-id user)))]
+      (testing "without login"
+        (let [response (-> (session app)
+                         (request "/api/videos"
+                                  :request-method :post
+                                  :content-type "application/json"
+                                  :body body)
+                         :response)
+              video (response->clj response)]
+          (is (= 401 (:status response))
+              "attempting to create video while logged out should fail")))
+      (testing "with login"
+        (let [response (-> (session app)
+                         (login-request fixtures/user-values)
+                         (request "/api/videos"
+                                  :request-method :post
+                                  :content-type "application/json"
+                                  :body body)
+                         :response)
+              video (response->clj response)]
+          ; The HTTP 201 Created response includes a Location header where the new
+          ; resource can be found, and includes the resource itself in the body.
+          ; The header must be a string, not a keyword; and since strings are
+          ; not fn-able, get-in is more convenient.
+          (is (= 201 (:status response))
+              "response should be 201 Created")
+          (is (has-values? fixtures/video-values video)
+              "response body should be the created video")
+          (is (string? (get-in response [:headers "Location"]))
+              "response should include a Location header")
+          (is (= (format "/api/videos/%d" (:video-id video))
+                 (get-in response [:headers "Location"]))
+              "Location header should match the resource URL"))))))
 
 (deftest test-find-by-video-id
   (with-rollback-transaction [t-conn db/conn]

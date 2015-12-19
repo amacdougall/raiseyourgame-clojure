@@ -25,8 +25,11 @@
                        title :- String
                        blurb :- String
                        description :- String]
-         ;; Return private representation of the video, with Location header.
-         (let [video (video/create! (:body-params request))
-               location (format "/api/videos/%d" (:video-id video))
-               response (created video)]
-           (assoc-in response [:headers "Location"] location))))
+         (if (:identity (:session request))
+           ; Return private representation of the video, with Location header.
+           (let [video (video/create! (:body-params request))
+                 location (format "/api/videos/%d" (:video-id video))
+                 response (created video)]
+             (assoc-in response [:headers "Location"] location))
+           ; If no user is logged in, return 401
+           (unauthorized "You must be logged in to create a video."))))
