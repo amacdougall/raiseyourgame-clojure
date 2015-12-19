@@ -26,6 +26,17 @@
   (let [[video user] (fixtures/create-test-video!)]
     [video (user/private user)]))
 
+;; When testing updates, timestamps can confuse the issue.
+(defn- without-timestamps [video]
+  (dissoc video :updated-at :created-at))
+
+(defn- update-request [session video]
+  (request session
+           (format "/api/videos/%d" (:video-id video))
+           :request-method :put
+           :content-type "application/json"
+           :body (cheshire/generate-string video)))
+
 (deftest test-video-create
   (with-rollback-transaction [t-conn db/conn]
     (let [user (user/create! fixtures/user-values)
@@ -101,3 +112,56 @@
               "should return 200, even though no results were found")
           (is (empty? (response->clj response))
               "result set should be an empty list"))))))
+
+(deftest test-video-update-as-owner
+  (with-rollback-transaction [t-conn db/conn]
+    (let [[video user] (create-test-video!)
+          desired (assoc video :title "New title")
+          expected (without-timestamps desired)]
+      (let [response (-> (session app)
+                       (login-request fixtures/user-values)
+                       (update-request desired)
+                       :response)
+            actual (response->clj response)]
+        (is (= 200 (:status response))
+            "response should be 200")
+        (is (has-values? expected actual)
+            "response body should be the updated video")))))
+
+(deftest test-video-update-as-admin
+  (with-rollback-transaction [t-conn db/conn]
+    (let [[video user] (create-test-video!)
+          admin (fixtures/create-test-admin!)
+          desired (assoc video :title "New title")
+          expected (without-timestamps desired)]
+      (let [response (-> (session app)
+                       (login-request fixtures/admin-values)
+                       (update-request desired)
+                       :response)
+            actual (response->clj response)]
+        (is (= 200 (:status response))
+            "response should be 200")
+        (is (has-values? expected actual)
+            "response body should be the updated video")))))
+
+(deftest test-video-update-failures
+  (with-rollback-transaction [t-conn db/conn]
+    (let [[video user] (create-test-video!)
+          user-two (fixtures/create-test-user-two!)
+          desired (assoc video :title "New title")
+          expected (without-timestamps desired)]
+      (testing "while logged out"
+        (let [response (-> (session app)
+                         (update-request desired)
+                         :response)
+              actual (response->clj response)]
+          (is (= 401 (:status response))
+              "attempting to modify video while logged out should fail")))
+      (testing "as unprivileged user"
+        (let [response (-> (session app)
+                         (login-request fixtures/user-values-two)
+                         (update-request desired)
+                         :response)
+              actual (response->clj response)]
+          (is (= 403 (:status response))
+              "unprivileged users should be forbidden to update video"))))))

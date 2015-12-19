@@ -64,6 +64,13 @@
   (and (not (= user target)) ; do not let users delete themselves
        (>= (:user-level user) (:admin user-levels))))
 
+(defn can-update-video?
+  "Given a user and a video, returns true if the user has permission to update
+  the video."
+  [user video]
+  (or (= (:user-id user) (:user-id video))
+      (>= (:user-level user) (:admin user-levels))))
+
 (defn username-available?
   "True if the supplied username is not already in use."
   [username]
