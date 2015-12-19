@@ -203,8 +203,7 @@
 
 (deftest test-user-update-failures
   (with-rollback-transaction [t-conn db/conn]
-    (let [credentials-for #(select-keys % #{:username :password})
-          original (create-test-user!)
+    (let [original (create-test-user!)
           moderator (create-test-moderator!)
           expected (conj original {:password "rising tackle"
                                    :email "tbogard@garou.org"})]
@@ -296,8 +295,7 @@
 
 (deftest test-user-update-self
   (with-rollback-transaction [t-conn db/conn]
-    (let [credentials-for #(select-keys % #{:username :password})
-          original (create-test-user!)
+    (let [original (create-test-user!)
           expected (conj original {:password "rising tackle"
                                    :email "tbogard@garou.org"})]
       (let [response
@@ -341,8 +339,7 @@
 ;; Implicitly tests any user updating a user with a lower user level.
 (deftest test-admin-update-other
   (with-rollback-transaction [t-conn db/conn]
-    (let [credentials-for #(select-keys % #{:username :password})
-          original (create-test-user!)
+    (let [original (create-test-user!)
           moderator (create-test-moderator!) ; will do the update
           expected (conj original {:password "rising tackle"
                                    :email "tbogard@garou.org"})]
@@ -383,21 +380,12 @@
 
 (deftest test-user-remove
   (with-rollback-transaction [t-conn db/conn]
-    (let [credentials-for #(select-keys % #{:username :password})
-          user (create-test-user!)
+    (let [user (create-test-user!)
           moderator (create-test-moderator!)
           admin (create-test-admin!)
-          ;; the following two functions take a peridot session
-          login-request
-          (fn [session user]
-            (request session "/api/users/login"
-                     :request-method :post
-                     :content-type "application/json"
-                     :body (cheshire/generate-string (credentials-for user))))
-          remove-request
-          (fn [session user]
-            (request session (format "/api/users/%d" (:user-id user))
-                     :request-method :delete))]
+          remove-request (fn [session user]
+                           (request session (format "/api/users/%d" (:user-id user))
+                                    :request-method :delete))]
 
       ; cannot remove anything while logged out
       (let [response (-> (session app) (remove-request user) :response)]
@@ -462,15 +450,8 @@
             "user removal is idempotent, returning 204 if user is already removed")))))
 
 (deftest test-removed-user-lookup
-  (let [credentials-for #(select-keys % #{:username :password})
-        ;; the following two functions take a peridot session
-        login-request
-        (fn [session user]
-          (request session "/api/users/login"
-                   :request-method :post
-                   :content-type "application/json"
-                   :body (cheshire/generate-string (credentials-for user))))
-        remove-request
+  ;; the following two functions take a peridot session
+  (let [remove-request
         (fn [session user]
           (request session (format "/api/users/%d" (:user-id user))
                    :request-method :delete))]
@@ -508,18 +489,11 @@
 
 (deftest test-user-data-visibility
   (with-rollback-transaction [t-conn db/conn]
-  (let [credentials-for #(select-keys % #{:username :password})
-        user (create-test-user!)
+  (let [user (create-test-user!)
         user-two (create-test-user-two!)
         moderator (create-test-moderator!)
         admin (create-test-admin!)
         admin-two (create-test-admin-two!)
-        login-request
-        (fn [session user]
-          (request session "/api/users/login"
-                   :request-method :post
-                   :content-type "application/json"
-                   :body (cheshire/generate-string (credentials-for user))))
         lookup-request
         (fn [session criteria]
           (request session "/api/users/lookup" :params criteria))]

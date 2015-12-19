@@ -2,6 +2,7 @@
   (:require [clj-time.core :as t]
             [clojure.java.jdbc :as jdbc]
             [cheshire.core :as cheshire]
+            [peridot.core :refer [session request]]
             [camel-snake-kebab.core :refer [->kebab-case-keyword]]))
 
 (defn json->clj [raw-json]
@@ -38,6 +39,20 @@
                    (t/minus exemplar (t/seconds 1))
                    (t/plus exemplar (t/seconds 1)))]
     (t/within? timespan candidate)))
+
+(defn credentials-for
+  "Returns a hash containing only the :username and :password keys for the supplied user."
+  [user]
+  (select-keys user #{:username :password}))
+
+(defn login-request
+  "Given a Peridot session and a user object, generates a Ring request
+  representing a login request for that user."
+  [session user]
+  (request session "/api/users/login"
+           :request-method :post
+           :content-type "application/json"
+           :body (cheshire/generate-string (credentials-for user))))
 
 (defmacro with-rollback-transaction [args & body]
   `(clojure.java.jdbc/with-db-transaction [~(first args) (deref ~(second args))]
