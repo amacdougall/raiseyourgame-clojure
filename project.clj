@@ -39,7 +39,8 @@
                  [secretary "1.2.3"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [cljs-ajax "0.3.14"]
-                 [metosin/compojure-api "0.22.2"]
+                 [prismatic/schema "1.0.4"]
+                 [metosin/compojure-api "0.24.3"]
                  [metosin/ring-swagger-ui "2.1.1"]
                  [org.immutant/web "2.0.2"]]
 
