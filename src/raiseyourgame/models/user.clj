@@ -42,6 +42,13 @@
   [user password]
   (and user password (hashers/check password (:password user))))
 
+(defn can-view-user?
+  "True if the supplied user has permission to view the target user. Active
+  users can always be viewed; inactive users can be viewed only by admins."
+  [user target]
+  (or (:active target)
+      (>= (:user-level user) (:admin user-levels))))
+
 (defn can-view-private-data?
   "True if the supplied user has permission to view the target's non-public
   information, such as email."
@@ -155,6 +162,8 @@
   "Removes the supplied user by setting the user's :active property to false.
   This should have the effect of making the user invisible to the public API,
   and therefore to the website, apps, etc; but it is the responsibility of API
-  handlers to enforce this property."
+  handlers to enforce this property.
+
+  As with update!, returns the removed user."
   [user]
   (update! user assoc :active false))

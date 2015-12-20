@@ -122,6 +122,19 @@
       (is (nil? (user/update! (assoc user :email (:email moderator))))
           "should be impossible to change email to one already in use"))))
 
+(deftest test-can-view-user
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (fixtures/create-test-user!)
+          user-two (fixtures/create-test-user-two!)
+          deleted-user (assoc user-two :active false)
+          admin (fixtures/create-test-admin!)]
+      (is (user/can-view-user? user user-two)
+          "user should be able to view standard user")
+      (is (not (user/can-view-user? user deleted-user))
+          "user should not be able to view inactive user")
+      (is (user/can-view-user? admin deleted-user)
+          "admin should be able to view inactive user"))))
+
 (deftest test-can-view-private-data
   (with-rollback-transaction [t-conn db/conn]
     (let [user (fixtures/create-test-user!)
@@ -136,7 +149,7 @@
       (is (not (user/can-view-private-data? user user-two))
           "user should not be able to view other users' data")
 
-      ; moderator should be able to view private data only of users
+      ; moderator should be able to view private data only of normal users
       (is (user/can-view-private-data? moderator user)
           "moderator should be able to view user data")
       (is (not (user/can-view-private-data? moderator moderator-two))
