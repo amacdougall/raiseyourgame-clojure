@@ -29,19 +29,17 @@
             (bad-request "Invalid request. Must supply one of the following
                          querystring parameters: id, username, email.")
 
-            ; if no user found, or user is inactive and no login, 404
+            ; if no user found, or current user does not have permission to
+            ; view, return 404. We intentionally return 404 instead of 403 to
+            ; hide the very existence of the resource from unprivileged users.
             (or (nil? user)
-                (and (not (:active user)) (nil? current)))
+                (not (user/can-view-user? current user)))
             (not-found "No user matched your request.")
 
-            ; if user is active, or current login is admin, 200 with appropriate representation
-            (or (:active user)
-                (and current (>= (:user-level current) (:admin user/user-levels))))
-            (if (and current (user/can-view-private-data? current user))
-              (ok (user/private user))
-              (ok (user/public user)))
             :else
-            (not-found "No user matched your request."))))
+            (if (user/can-view-private-data? current user)
+              (ok (user/private user))
+              (ok (user/public user))))))
 
   (GET* "/current" request
         :return User

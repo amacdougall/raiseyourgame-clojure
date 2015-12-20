@@ -23,6 +23,18 @@
   [user]
   (dissoc user :password))
 
+(defn is-moderator?
+  "True if the supplied user has moderator privileges."
+  [user]
+  (and user
+       (>= (:user-level user) (:moderator user-levels))))
+
+(defn is-admin?
+  "True if the supplied user has admin privileges."
+  [user]
+  (and user
+       (>= (:user-level user) (:admin user-levels))))
+
 ;; Unlike others, the lookup function of each model returns a single element.
 (defn lookup
   "Given a map containing at least one of int :user-id, string :username, or
@@ -47,44 +59,47 @@
   users can always be viewed; inactive users can be viewed only by admins."
   [user target]
   (or (:active target)
-      (>= (:user-level user) (:admin user-levels))))
+      (is-admin? user)))
 
 (defn can-view-private-data?
   "True if the supplied user has permission to view the target's non-public
-  information, such as email."
+  information, such as email. Always false when user is nil."
   [user target]
-  (or (= user target)
-      (>= (:user-level user) (:admin user-levels))
-      (> (:user-level user) (:user-level target))))
+  (and user
+       (or (= user target)
+           (is-admin? user)
+           (> (:user-level user) (:user-level target)))))
 
 (defn can-update-user?
-  "True if the supplied user has permission to update the target user."
+  "True if the supplied user has permission to update the target user. Always
+  false when user is nil."
   [user target]
-  (or (= user target)
-      (>= (:user-level user) (:admin user-levels))
-      (> (:user-level user) (:user-level target))))
+  (and user
+       (or (= user target)
+           (is-admin? user)
+           (> (:user-level user) (:user-level target)))))
 
 (defn can-remove-user?
   "Given a user and a target, returns true if the user has permission to remove
-  the target."
+  the target. Always false when user is nil."
   [user target]
   (and (not (= user target)) ; do not let users delete themselves
-       (>= (:user-level user) (:admin user-levels))))
+       (is-admin? user)))
 
 (defn can-view-video?
   "Given a user and a video, returns true if the user has permission to view
   the video. Anonymous and standard users may view videos that have no
   restrictions; only the owner, mods, and admins may view videos that are
-  locked or drafts."
+  locked or drafts. If user is nil, true only for unrestricted videos."
   [user video]
   (cond
     ; if video is inactive, only permit admins to view
     (not (:active video))
-    (>= (:user-level user) (:admin user-levels))
+    (is-admin? user)
     ; if video is locked or is a draft, only permit admins and mods to view
     (or (:draft video) (:locked video))
     (or (= (:user-id user) (:user-id video))
-        (>= (:user-level user) (:moderator user-levels)))
+        (is-moderator? user))
     ; if not inactive, locked, or draft, return true
     :else true))
 
@@ -93,14 +108,14 @@
   the video."
   [user video]
   (or (= (:user-id user) (:user-id video))
-      (>= (:user-level user) (:admin user-levels))))
+      (is-admin? user)))
 
 (defn can-remove-video?
   "Given a user and a video, returns true if the user has permission to remove
   the video."
   [user video]
   (or (= (:user-id user) (:user-id video))
-      (>= (:user-level user) (:admin user-levels))))
+      (is-admin? user)))
 
 (defn username-available?
   "True if the supplied username is not already in use."
