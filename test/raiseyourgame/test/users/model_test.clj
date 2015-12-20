@@ -165,6 +165,43 @@
       (is (user/can-view-private-data? admin admin-two)
           "admins should be able to view admin data"))))
 
+(deftest test-can-view-video
+  (with-rollback-transaction [t-conn db/conn]
+    (let [[video user] (fixtures/create-test-video!)
+          removed-video (assoc video :active false)
+          locked-video (assoc video :locked true)
+          draft-video (assoc video :draft true)
+          user-two (fixtures/create-test-user-two!)
+          moderator (fixtures/create-test-moderator!)
+          admin (fixtures/create-test-admin!)]
+      (is (user/can-view-video? user-two video)
+          "standard user should be able to view unrestricted video")
+      ; removed videos
+      (is (not (user/can-view-video? user removed-video))
+          "even the owner should not be able to view removed video")
+      (is (not (user/can-view-video? moderator removed-video))
+          "moderator should not be able to view removed video")
+      (is (user/can-view-video? admin removed-video)
+          "admin should be able to view removed video")
+      ; locked videos
+      (is (not (user/can-view-video? user-two locked-video))
+          "other user should not be able to view locked video")
+      (is (user/can-view-video? user locked-video)
+          "owner should be able to view locked video")
+      (is (user/can-view-video? moderator locked-video)
+          "moderator should be able to view locked video")
+      (is (user/can-view-video? admin locked-video)
+          "admin should be able to view locked video")
+      ; draft videos
+      (is (not (user/can-view-video? user-two draft-video))
+          "other user should not be able to view draft video")
+      (is (user/can-view-video? user draft-video)
+          "owner should be able to view draft video")
+      (is (user/can-view-video? moderator draft-video)
+          "moderator should be able to view draft video")
+      (is (user/can-view-video? admin draft-video)
+          "admin should be able to view draft video"))))
+
 (deftest test-can-update-user
   (with-rollback-transaction [t-conn db/conn]
     (let [user (fixtures/create-test-user!)

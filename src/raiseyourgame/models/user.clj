@@ -71,6 +71,23 @@
   (and (not (= user target)) ; do not let users delete themselves
        (>= (:user-level user) (:admin user-levels))))
 
+(defn can-view-video?
+  "Given a user and a video, returns true if the user has permission to view
+  the video. Anonymous and standard users may view videos that have no
+  restrictions; only the owner, mods, and admins may view videos that are
+  locked or drafts."
+  [user video]
+  (cond
+    ; if video is inactive, only permit admins to view
+    (not (:active video))
+    (>= (:user-level user) (:admin user-levels))
+    ; if video is locked or is a draft, only permit admins and mods to view
+    (or (:draft video) (:locked video))
+    (or (= (:user-id user) (:user-id video))
+        (>= (:user-level user) (:moderator user-levels)))
+    ; if not inactive, locked, or draft, return true
+    :else true))
+
 (defn can-update-video?
   "Given a user and a video, returns true if the user has permission to update
   the video."
