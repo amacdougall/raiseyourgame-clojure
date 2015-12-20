@@ -45,8 +45,8 @@
 
   (GET* "/current" request
         :return User
-        (if-let [user (get-in request [:session :identity])]
-          (ok (user/private user))
+        (if-let [current (:identity (:session request))]
+          (ok (user/private current))
           (not-found)))
 
   (GET* "/:user-id" request
