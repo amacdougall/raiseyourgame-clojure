@@ -51,7 +51,11 @@
 
   (update! video #(assoc :videoname 'A battle of epic proportions!'))
 
-  In both cases, returns the updated video if successful, nil otherwise.
+  Given a video model map, a transition functions, and any number of additional
+  arguments, applies the function to the map with those arguments and updates
+  the video in the database.
+
+  In all cases, returns the updated video if successful, nil otherwise.
   
   If an incomplete video map is supplied, mayhem will ensue. Be ready to catch
   SQLExceptions if you're doing something innovative."
@@ -60,4 +64,14 @@
      ; result will be the rows affected
      (if (< 0 result) video nil)))
   ([video f]
-   (update! (f video))))
+   (update! (f video)))
+  ([video f & args]
+   (update! (apply (partial f video) args))))
+
+(defn remove!
+  "Removes the supplied video by setting the video's :active property to false.
+  This should have the effect of making the video invisible to the public API,
+  and therefore to the website, apps, etc; but it is the responsibility of API
+  handlers to enforce this property."
+  [video]
+  (update! video assoc :active false))

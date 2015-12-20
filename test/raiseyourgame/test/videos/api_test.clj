@@ -24,11 +24,14 @@
   (dissoc video :updated-at :created-at))
 
 (defn- update-request [session video]
-  (request session
-           (format "/api/videos/%d" (:video-id video))
+  (request session (format "/api/videos/%d" (:video-id video))
            :request-method :put
            :content-type "application/json"
            :body (cheshire/generate-string video)))
+
+(defn- remove-request [session video]
+  (request session (format "/api/videos/%d" (:video-id video))
+           :request-method :delete))
 
 (deftest test-video-create
   (with-rollback-transaction [t-conn db/conn]
@@ -158,3 +161,47 @@
               actual (response->clj response)]
           (is (= 403 (:status response))
               "unprivileged users should be forbidden to update video"))))))
+
+(deftest test-video-remove-as-owner
+  (with-rollback-transaction [t-conn db/conn]
+    (let [[video user] (fixtures/create-test-video!)]
+      (let [response (-> (session app)
+                       (login-request fixtures/user-values)
+                       (remove-request video)
+                       :response)]
+        (is (= 204 (:status response))
+            "response should be 204"))
+      (let [response (-> (session app)
+                       (request (format "/api/videos/%d" (:video-id video)))
+                       :response)]
+        (is (= 404 (:status response))
+            "removed videos should be invisible to public API")))))
+
+(deftest test-video-remove-as-admin
+  (with-rollback-transaction [t-conn db/conn]
+    (let [[video user] (fixtures/create-test-video!)
+          admin (fixtures/create-test-admin!)]
+      (let [response (-> (session app)
+                       (login-request fixtures/admin-values)
+                       (remove-request video)
+                       :response)]
+        (is (= 204 (:status response))
+            "response should be 204")))))
+
+(deftest test-video-remove-failures
+  (with-rollback-transaction [t-conn db/conn]
+    (let [[video user] (fixtures/create-test-video!)
+          user-two (fixtures/create-test-user-two!)]
+      (testing "while logged out"
+        (let [response (-> (session app)
+                         (remove-request video)
+                         :response)]
+          (is (= 401 (:status response))
+              "attempting to remove video while logged out should fail")))
+      (testing "as unprivileged user"
+        (let [response (-> (session app)
+                         (login-request fixtures/user-values-two)
+                         (remove-request video)
+                         :response)]
+          (is (= 403 (:status response))
+              "unprivileged users should be forbidden to remove video"))))))

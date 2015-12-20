@@ -34,12 +34,14 @@
                 (and (not (:active user)) (nil? current)))
             (not-found "No user matched your request.")
 
-            ; if user is active, or current login is admin, 200
+            ; if user is active, or current login is admin, 200 with appropriate representation
             (or (:active user)
-                (>= (:user-level current) (:admin user/user-levels)))
+                (and current (>= (:user-level current) (:admin user/user-levels))))
             (if (and current (user/can-view-private-data? current user))
               (ok (user/private user))
-              (ok (user/public user))))))
+              (ok (user/public user)))
+            :else
+            (not-found "No user matched your request."))))
 
   (GET* "/current" request
         :return User

@@ -10,13 +10,22 @@
 ;; Routes to be included in the "/api/videos" context.
 (defroutes* videos-routes
   ; lookup by id
-  (GET* "/:video-id" []
+  (GET* "/:video-id" request
         :return Video
         :path-params [video-id :- Long]
         :summary "Numeric video id."
-        (if-let [video (video/lookup {:video-id video-id})]
-          (ok video)
-          (not-found "No video matched your request.")))
+        (let [current (:identity (:session request))
+              video (video/lookup {:video-id video-id})]
+          (cond
+            ; if video not found, 404
+            (nil? video)
+            (not-found "No video matched your request.")
+            ; if video is active, or current account is admin, 200
+            (or (:active video)
+                (and current (>= (:user-level current) (:admin user/user-levels))))
+            (ok video)
+            :else
+            (not-found "No video matched your request."))))
 
   ; create
   (POST* "/" request
@@ -58,4 +67,25 @@
             (if-let [video (video/update! desired)]
               (ok video)
               ; refine this message if common failure types emerge
-              (internal-server-error "The update could not be performed as requested."))))))
+              (internal-server-error "The update could not be performed as requested.")))))
+
+  (DELETE* "/:video-id" request
+           :path-params [video-id :- Long]
+           :summary "ID of the video to be removed."
+           ;; Return 204 No Content response, or 401/403 as appropriate
+           (let [current (:identity (:session request))
+                 target (video/lookup {:video-id video-id})]
+             (cond
+               ; if nobody is logged in, 401
+               (nil? current)
+               (unauthorized "You must be logged in to remove a video.")
+               ; if target is not found, 404
+               (nil? target)
+               (not-found "No video matched your request.")
+               ; if logged-in user has insufficient permissions, 403
+               (not (user/can-remove-video? current target))
+               (forbidden "You do not have permission to remove this video.")
+               :else
+               (if (video/remove! target)
+                 (no-content) ; this is actually success: 204 No Content
+                 (internal-server-error "The video could not be removed as requested."))))))
