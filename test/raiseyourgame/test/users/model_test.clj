@@ -3,6 +3,8 @@
             [raiseyourgame.db.core :as db]
             [raiseyourgame.test.fixtures :as fixtures]
             [raiseyourgame.test.helpers :refer :all]
+            [raiseyourgame.test.schemata :refer :all]
+            [schema.experimental.generators :refer [generate]]
             [clj-time.core :as t]
             [clj-time.coerce :refer [from-date]]
             [clojure.test :refer :all]
@@ -75,6 +77,29 @@
           "lookup by unknown username should fail")
       (is (nil? (user/lookup {:email "unknown"}))
           "lookup by unknown email should fail"))))
+
+(defn- test-users []
+  (let [step (fn step [users usernames emails]
+               (lazy-seq
+                 ((fn [[u :as users] usernames emails] ; first user, usernames, emails
+                    (when-let [s (seq users)]
+                      (if (or (contains? usernames (:username u))
+                              (contains? emails (:email u)))
+                        (recur (rest s) usernames emails)
+                        (cons u (step (rest s)
+                                      (conj usernames (:username u))
+                                      (conj emails (:email u)))))))
+                  users usernames emails)))]
+    (step (repeatedly (partial generate NewUser)) #{} #{})))
+
+(deftest test-user-list
+  (with-rollback-transaction [t-conn db/conn]
+    ; doall realizes the lazy sequence, invoking user/create!
+    (let [users (doall (map user/create! (take 100 (test-users))))
+          user-page (user/get-users)]
+      (is (= 100 (count users)) "100 test usersu should be created")
+      (is (not (nil? user-page)) "user page should be retrieved")
+      (is (= 30 (count user-page)) "default user page should have 30 results"))))
 
 (deftest test-user-update
   (with-rollback-transaction [t-conn db/conn]

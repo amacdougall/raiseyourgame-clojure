@@ -19,8 +19,13 @@ INSERT INTO users (
 );
 
 -- name: get-users
--- Selects all users, regardless of level.
-SELECT * FROM users;
+-- Selects all users, beginning at :offset, limited to :limit results, ordered
+-- by :order_by. Postgres doesn't allow dynamic sort order, believe it or not,
+-- so unless we want to bypass YesQL and build query strings from scratch,
+-- we can't do a :sort_direction parameter.
+SELECT * FROM users
+  LIMIT :limit
+  OFFSET :offset;
 
 -- name: find-users-by-user-id
 -- Selects all users with :user_id. In practice, only one.

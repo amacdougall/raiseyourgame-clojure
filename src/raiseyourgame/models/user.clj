@@ -49,6 +49,21 @@
     (when-not (empty? result-set)
       (to-clj (first result-set)))))
 
+(defn get-users
+  "Returns a vec of users. Takes an options hash with the following keys:
+
+  :per-page - The number of users to return. Default 30.
+  :page - The page at which to begin. Acts as multiplier of :per-page, so if
+  per-page is 20 and page is 3, the returned vec will skip the first 40
+  results and return the next 20. Default 1."
+  ([] (get-users {})) ;; handle zero-arg call by passing an empty hash
+  ([{:keys [per-page page]
+     :or {per-page 30, page 1}}]
+   (let [result-set (db/get-users (to-sql {:offset (* per-page (- page 1))
+                                           :limit per-page}))]
+     (when-not (empty? result-set)
+       (map to-clj result-set)))))
+
 (defn valid-password?
   "True if the supplied password is correct."
   [user password]

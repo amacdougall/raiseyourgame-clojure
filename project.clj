@@ -40,6 +40,7 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [cljs-ajax "0.3.14"]
                  [prismatic/schema "1.0.4"]
+                 [org.clojure/test.check "0.9.0"] ; required for Prismatic Schema random generators
                  [metosin/compojure-api "0.24.3"]
                  [metosin/ring-swagger-ui "2.1.1"]
                  [org.immutant/web "2.0.2"]]
