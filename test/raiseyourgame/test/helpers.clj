@@ -58,4 +58,6 @@
   `(clojure.java.jdbc/with-db-transaction [~(first args) (deref ~(second args))]
      (jdbc/db-set-rollback-only! ~(first args)) ; force rollback at end of transaction
      (binding [~(second args) (atom ~(first args))]
-       ~@body)))
+       (with-redefs [buddy.hashers/encrypt clojure.string/reverse
+                     buddy.hashers/check #(= %1 (clojure.string/reverse %2))]
+         ~@body))))
