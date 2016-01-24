@@ -94,12 +94,40 @@
 
 (deftest test-user-list
   (with-rollback-transaction [t-conn db/conn]
-    ; doall realizes the lazy sequence, invoking user/create!
-    (let [users (doall (map user/create! (take 100 (test-users))))
-          user-page (user/get-users)]
+    ; vec realizes the lazy sequence, invoking user/create!;
+    ; also lets us look things up by index later
+    (let [users (vec (map user/create! (take 100 (test-users))))]
       (is (= 100 (count users)) "100 test usersu should be created")
-      (is (not (nil? user-page)) "user page should be retrieved")
-      (is (= 30 (count user-page)) "default user page should have 30 results"))))
+      (testing "default user page"
+        (let [user-page (user/get-users)]
+          (is (not (nil? user-page)) "user page should be retrieved")
+          (is (= 30 (count user-page)) "user page should have 30 results")
+          (is (= (:id (first user-page)) (:id (first users)))
+              "first user in page should be first user in table")))
+      (testing "user page one"
+        (let [user-page (user/get-users {:page 1})]
+          (is (not (nil? user-page)) "user page should be retrieved")
+          (is (= 30 (count user-page)) "user page should have 30 results")
+          (is (= (:id (first user-page)) (:id (first users)))
+              "first user in page should be first user in table")))
+      (testing "user page two"
+        (let [user-page (user/get-users {:page 2})]
+          (is (not (nil? user-page)) "user page should be retrieved")
+          (is (= 30 (count user-page)) "user page should have 30 results")
+          (is (= (:id (first user-page)) (:id (users 30)))
+              "first user in page should be 31st user in table")))
+      (testing "short user page"
+        (let [user-page (user/get-users {:per-page 10})]
+          (is (not (nil? user-page)) "user page should be retrieved")
+          (is (= 10 (count user-page)) "user page should have 10 results")
+          (is (= (:id (first user-page)) (:id (first users)))
+              "first user in page should be first user in table")))
+      (testing "short user page two"
+        (let [user-page (user/get-users {:page 2 :per-page 10})]
+          (is (not (nil? user-page)) "user page should be retrieved")
+          (is (= 10 (count user-page)) "user page should have 10 results")
+          (is (= (:id (first user-page)) (:id (users 10)))
+              "first user in page should be eleventh user in table"))))))
 
 (deftest test-user-update
   (with-rollback-transaction [t-conn db/conn]
