@@ -1,14 +1,11 @@
 (ns raiseyourgame.models.video
   "Namespace containing database and domain logic for video maps."
   (:require [raiseyourgame.db.core :as db]
-            [bugsbio.squirrel :refer [to-sql to-clj]]
+            [taoclj.foundation :as pg]
             [cheshire.core :as cheshire]
             [buddy.hashers :as hashers]
             [taoensso.timbre :refer [debug]])
   (:import java.sql.SQLException))
-
-;; Note that the raiseyourgame.db.core namespace deals in YeSQL queries, which
-;; require SQL-style snake_case params. Use to-sql for those.
 
 (defn create!
   "Creates a video based on a params object containing the following keys:
@@ -17,10 +14,7 @@
   On success, returns the newly created video. On failure, returns nil."
   [params]
   (try
-    (-> params
-      (to-sql)
-      (db/create-video<! @db/conn)
-      (to-clj))
+    (pg/qry-> db/conn (db/create-video! params))
     (catch SQLException e nil)))
 
 ;; Only user can really be looked up by more than one unique key; I kept the
@@ -30,14 +24,14 @@
   "Given a map with a :video-id key, returns the video with the supplied video
   id, or nil if none was found."
   [criteria]
-  (let [results (db/find-videos-by-video-id (to-sql criteria))]
+  (let [results (pg/qry-> db/conn (db/find-videos-by-video-id criteria))]
     (when-not (empty? results)
-      (to-clj (first results)))))
+      (first results))))
 
 (defn find-by-user-id
   "Returns all videos with the supplied user id."
   [user-id]
-  (map to-clj (db/find-videos-by-user-id (to-sql {:user-id user-id}))))
+  (pg/qry-> db/conn (db/find-videos-by-user-id {:user-id user-id})))
 
 (defn update!
   "Given a video model map, updates the database row with that id using those
@@ -60,7 +54,7 @@
   If an incomplete video map is supplied, mayhem will ensue. Be ready to catch
   SQLExceptions if you're doing something innovative."
   ([video]
-   (let [result (db/update-video! (to-sql video))]
+   (let [result (pg/qry-> db/conn (db/update-video! video))]
      ; result will be the rows affected
      (if (< 0 result) video nil)))
   ([video f]

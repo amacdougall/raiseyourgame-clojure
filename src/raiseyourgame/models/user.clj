@@ -1,6 +1,7 @@
 (ns raiseyourgame.models.user
   "Namespace containing database and domain logic for user maps."
   (:require [raiseyourgame.db.core :as db]
+            [taoclj.foundation :as pg]
             [camel-snake-kebab.core :refer [->kebab-case-keyword]]
             [bugsbio.squirrel :refer [to-sql to-clj]]
             [cheshire.core :as cheshire]
@@ -42,9 +43,9 @@
   in that order."
   [{:keys [user-id username email]}]
   (let [result-set
-        (cond (not (nil? user-id)) (db/find-users-by-user-id (to-sql {:user-id user-id}))
-              (not (nil? username)) (db/find-users-by-username {:username username})
-              (not (nil? email)) (db/find-users-by-email {:email email})
+        (cond (not (nil? user-id)) (pg/qry-> db/conn (db/find-users-by-user-id {:user-id user-id}))
+              (not (nil? username)) (pg/qry-> db/conn (db/find-users-by-username {:username username}))
+              (not (nil? email)) (pg/qry-> db/conn (db/find-users-by-email {:email email}))
               :default '())]
     (when-not (empty? result-set)
       (to-clj (first result-set)))))
@@ -59,8 +60,8 @@
   ([] (get-users {})) ;; handle zero-arg call by passing an empty hash
   ([{:keys [per-page page]
      :or {per-page 30, page 1}}]
-   (let [result-set (db/get-users (to-sql {:offset (* per-page (- page 1))
-                                           :limit per-page}))]
+   (let [result-set (pg/qry-> db/conn (db/get-users {:offset (* per-page (- page 1))
+                                                     :limit per-page}))]
      (when-not (empty? result-set)
        (map to-clj result-set)))))
 
@@ -157,10 +158,7 @@
   (let [hashed-password (hashers/encrypt password)
         details (assoc params :password hashed-password)]
     (try
-      (-> details
-        (to-sql)
-        (db/create-user<! @db/conn)
-        (to-clj))
+      (pg/qry-> db/conn (db/create-user! details))
       (catch SQLException e nil))))
 
 (defn update!
@@ -196,7 +194,7 @@
            user (if (not= (:password original) (:password user))
                   (update-in user [:password] hashers/encrypt)
                   user)
-           result (db/update-user! (to-sql user))]
+           result (pg/qry-> db/conn (db/update-user! user))]
        ; result will be the rows affected
        (if (< 0 result) user nil))
      (catch SQLException e nil)))

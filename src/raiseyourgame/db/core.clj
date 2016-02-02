@@ -1,80 +1,28 @@
 (ns raiseyourgame.db.core
   (:require
-    [cheshire.core :refer [generate-string parse-string]]
     [clojure.java.jdbc :as jdbc]
-    [conman.core :as conman]
-    [environ.core :refer [env]]
-    [clj-time.core :refer [date-time now]])
-  (:import org.postgresql.util.PGobject
-           org.postgresql.jdbc4.Jdbc4Array
-           clojure.lang.IPersistentMap
-           clojure.lang.IPersistentVector
-           [java.sql
-            BatchUpdateException
-            Date
-            Timestamp
-            PreparedStatement]))
+    [taoclj.foundation :as pg]
+    [environ.core :refer [env]]))
 
-(defonce ^:dynamic conn (atom nil))
+; Stub
+(defn connect! [] nil)
 
-(conman/bind-connection
-  conn
-  "sql/users.sql"
-  "sql/videos.sql"
-  "sql/annotations.sql")
+; Stub
+(defn disconnect! [] nil)
 
-(def pool-spec
-  {:adapter    :postgresql
-   :init-size  1
-   :min-idle   1
-   :max-idle   4
-   :max-active 32})
+; this macro creates a def, so we can refer to it elsewhere
+(pg/def-datasource conn (env :datasource))
 
-(defn connect! []
-  (conman/connect!
-   conn
-   (assoc
-     pool-spec
-     :jdbc-url (env :database-url))))
+(pg/def-query create-user! {:file "sql/users/create_user.sql"})
+(pg/def-query get-users {:file "sql/users/get_users.sql"})
+(pg/def-query find-users-by-user-id {:file "sql/users/find_users_by_user_id.sql"})
+(pg/def-query find-users-by-email {:file "sql/users/find_users_by_email.sql"})
+(pg/def-query find-users-by-username {:file "sql/users/find_users_by_username.sql"})
+(pg/def-query update-user! {:file "sql/users/update_user.sql"})
 
-(defn disconnect! []
-  (conman/disconnect! conn))
-
-(defn to-date [sql-date]
-  (-> sql-date (.getTime) (java.util.Date.)))
-
-(extend-protocol jdbc/IResultSetReadColumn
-  Date
-  (result-set-read-column [v _ _] (to-date v))
-
-  Timestamp
-  (result-set-read-column [v _ _] (to-date v))
-
-  Jdbc4Array
-  (result-set-read-column [v _ _] (vec (.getArray v)))
-
-  PGobject
-  (result-set-read-column [pgobj _metadata _index]
-    (let [type  (.getType pgobj)
-          value (.getValue pgobj)]
-      (case type
-        "json" (parse-string value true)
-        "jsonb" (parse-string value true)
-        "citext" (str value)
-        value))))
-
-(extend-type java.util.Date
-  jdbc/ISQLParameter
-  (set-parameter [v ^PreparedStatement stmt idx]
-    (.setTimestamp stmt idx (Timestamp. (.getTime v)))))
-
-(defn to-pg-json [value]
-  (doto (PGobject.)
-    (.setType "jsonb")
-    (.setValue (generate-string value))))
-
-(extend-protocol jdbc/ISQLValue
-  IPersistentMap
-  (sql-value [value] (to-pg-json value))
-  IPersistentVector
-  (sql-value [value] (to-pg-json value)))
+(pg/def-query create-video! {:file "sql/videos/create_video.sql"})
+(pg/def-query get-videos {:file  "sql/videos/get_videos.sql"})
+(pg/def-query find-videos-by-video-id {:file  "sql/videos/find_videos_by_video_id.sql"})
+(pg/def-query find-videos-by-user-id {:file  "sql/videos/find_videos_by_user_id.sql"})
+(pg/def-query update-video! {:file  "sql/videos/update_video.sql"})
+(pg/def-query delete-video! {:file  "sql/videos/delete_video.sql"})
