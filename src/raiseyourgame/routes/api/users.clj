@@ -11,12 +11,49 @@
 (defroutes* users-routes
   ; NOTE: Route order matters! Only check the /:user-id route after others
   ; have failed to match.
+  (GET* "/" request
+        :return {:page Long
+                 :per-page Long
+                 :users [User]}
+        ; These defaults are repeated in raiseyourgame.models.user/get-users.
+        ; I am not sure if this is a bad thing or not, but if it becomes a
+        ; hassle, we can read both from some central namespace.
+        :query-params [{page :- Long 1}
+                       {per-page :- Long 30}
+                       {order-by :- String "user-id"}
+                       {sort-direction :- String "asc"}]
+        :summary "Returns a user list in the specified form."
+        (let [current (:identity (:session request))]
+          (if-not (user/can-list-users? current)
+            ; if current user does not have permission to view user lists, 403
+            (forbidden "You do not have permission to view lists of users.")
+            ; otherwise, look up users
+            (let [apply-privacy
+                  (fn [user]
+                    (if (user/can-view-private-data? current user)
+                      (user/private user)
+                      (user/public user)))
+
+                  users
+                  (user/get-users {:page page
+                                   :per-page per-page
+                                   :order-by (keyword order-by)
+                                   :sort-direction (keyword sort-direction)})]
+              (if (empty? users)
+                ; if no users were actually found, 404
+                (not-found "This query did not return any users.")
+                ; otherwise, return user list
+                (ok {:page page
+                     :per-page per-page
+                     :users (map apply-privacy users)}))))))
+
   (GET* "/lookup" request
         :return User
         :query-params [{user-id :- Long nil}
                        {username :- String nil}
                        {email :- String nil}]
-        :summary "One of: user-id, username, password."
+        :summary "Returns a user based on the criterion supplied. Prefers
+                 user-id, then username, then email."
         (let [current (:identity (:session request))
               criterion (cond
                           (not (nil? user-id)) {:user-id user-id}

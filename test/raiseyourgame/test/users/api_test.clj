@@ -68,6 +68,89 @@
       (test-user-creation with-dupe-username [:username])
       (test-user-creation with-dupe-email [:email]))))
 
+(deftest test-get-users
+  (with-rollback-transaction [t-conn db/conn]
+    ; create users; use vec to realize the sequence
+    (let [moderator (fixtures/create-test-moderator!)
+          users (vec (map user/create! (take 100 (fixtures/test-users))))]
+      (testing "as standard user"
+        (let [path "/api/users/"
+              response (-> (session app) (request path) :response)]
+          (is (= 403 (:status response))
+              "getting user list as unprivileged user should return 403 Forbidden")))
+      (testing "as moderator"
+        (let [path "/api/users/"
+              response (-> (session app)
+                         (login-request fixtures/moderator-values)
+                         (request path)
+                         :response)]
+          (is (= 200 (:status response))
+              "getting user list as moderator should return 200 OK")
+          (let [result (response->clj response)
+                user-page (:users result)]
+            (is (= 1 (:page result))
+                "user list should have a valid :page value")
+            (is (= 30 (:per-page result))
+                "user list should have a valid :per-page value")
+            (is (or (vector? user-page) (seq? user-page)))
+            (is (= 30 (count user-page))
+                "default user list should contain 30 elements"))))
+      (testing "as admin"
+        (let [path "/api/users/"
+              response (-> (session app)
+                         (login-request fixtures/moderator-values)
+                         (request path)
+                         :response)]
+          (is (= 200 (:status response))
+              "getting user list as admin should return 200 OK")
+          (let [result (response->clj response)
+                user-page (:users result)]
+            (is (= 1 (:page result))
+                "user list should have a valid :page value")
+            (is (= 30 (:per-page result))
+                "user list should have a valid :per-page value")
+            (is (or (vector? user-page) (seq? user-page)))
+            (is (= 30 (count user-page))
+                "default user list should contain 30 elements"))))
+      (testing "sorted by username ascending"
+        (let [path "/api/users?order-by=username"
+              response (-> (session app)
+                         (login-request fixtures/moderator-values)
+                         (request path)
+                         :response)]
+          (is (= 200 (:status response))
+              "getting user list as admin should return 200 OK")
+          (let [result (response->clj response)
+                user-page (:users result)]
+            (is (= 1 (:page result))
+                "user list should have a valid :page value")
+            (is (= 30 (:per-page result))
+                "user list should have a valid :per-page value")
+            (is (or (vector? user-page) (seq? user-page)))
+            (is (= 30 (count user-page))
+                "user list should contain 30 elements")
+            (is (sorted-by user-page :username)
+                "user list should be sorted by username"))))
+      (testing "sorted by username descending"
+        (let [path "/api/users?order-by=username&sort-direction=desc"
+              response (-> (session app)
+                         (login-request fixtures/moderator-values)
+                         (request path)
+                         :response)]
+          (is (= 200 (:status response))
+              "getting user list as admin should return 200 OK")
+          (let [result (response->clj response)
+                user-page (:users result)]
+            (is (= 1 (:page result))
+                "user list should have a valid :page value")
+            (is (= 30 (:per-page result))
+                "user list should have a valid :per-page value")
+            (is (or (vector? user-page) (seq? user-page)))
+            (is (= 30 (count user-page))
+                "user list should contain 30 elements")
+            (is (sorted-by user-page :username :desc)
+                "user list should be sorted by username")))))))
+
 (deftest test-get-by-id
   (with-rollback-transaction [t-conn db/conn]
     (let [user (fixtures/create-test-user!)]
