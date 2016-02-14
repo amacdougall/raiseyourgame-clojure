@@ -76,6 +76,16 @@
   [user password]
   (and user password (hashers/check password (:password user))))
 
+(defn can-list-users?
+  "True if the supplied user has permission to view lists of users. This is a
+  security measure to prevent malicious users from easily seeing the full list
+  of users.
+
+  Yes, they can still look up users who usernames are exposed in the videos,
+  annotations, and so forth, but this is at least a basic step."
+  [user]
+  (or (is-admin? user) (is-moderator? user)))
+
 (defn can-view-user?
   "True if the supplied user has permission to view the target user. Active
   users can always be viewed; inactive users can be viewed only by admins."

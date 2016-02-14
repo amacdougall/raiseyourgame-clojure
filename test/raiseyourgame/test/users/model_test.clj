@@ -171,6 +171,18 @@
       (is (nil? (user/update! (assoc user :email (:email moderator))))
           "should be impossible to change email to one already in use"))))
 
+(deftest test-can-list-users
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (fixtures/create-test-user!)
+          moderator (fixtures/create-test-moderator!)
+          admin (fixtures/create-test-admin!)]
+      (is (not (user/can-list-users? user))
+          "standard user should not be able to list users")
+      (is (user/can-list-users? moderator)
+          "moderator should be able to list users")
+      (is (user/can-list-users? admin)
+          "admin should be able to list users"))))
+
 (deftest test-can-view-user
   (with-rollback-transaction [t-conn db/conn]
     (let [user (fixtures/create-test-user!)
