@@ -57,10 +57,17 @@
   per-page is 20 and page is 3, the returned vec will skip the first 40
   results and return the next 20. Default 1."
   ([] (get-users {})) ;; handle zero-arg call by passing an empty hash
-  ([{:keys [per-page page]
-     :or {per-page 30, page 1}}]
-   (let [result-set (db/get-users (to-sql {:offset (* per-page (- page 1))
-                                           :limit per-page}))]
+  ([{:keys [per-page page order-by sort-direction]
+     :or {per-page 30
+          page 1
+          order-by :user-id
+          sort-direction :asc}}]
+   (let [lookup-fn (condp = [order-by sort-direction]
+                     [:user-id :asc] db/get-users
+                     [:username :asc] db/get-users-order-by-username-asc
+                     [:username :desc] db/get-users-order-by-username-desc)
+         result-set (lookup-fn (to-sql {:offset (* per-page (- page 1))
+                                        :limit per-page}))]
      (when-not (empty? result-set)
        (map to-clj result-set)))))
 

@@ -3,7 +3,9 @@
   Functions which add values to the database should be run within a
   transaction and rolled back; nothing in this namespace provides for that."
   (:require [raiseyourgame.models.user :as user]
-            [raiseyourgame.models.video :as video]))
+            [raiseyourgame.models.video :as video]
+            [raiseyourgame.test.schemata :refer :all]
+            [schema.experimental.generators :refer [generate]]))
 
 (def user-values
   {:username "tbogard"
@@ -46,6 +48,21 @@
    :name "Wolfgang Krauser"
    :profile "I will chisel your tombstone!"
    :email "wkrauser@kampfringen.org"})
+
+(defn test-users []
+  (let [step (fn step [users usernames emails]
+               (lazy-seq
+                 ((fn [[u :as users] usernames emails] ; first user, usernames, emails
+                    (when-let [s (seq users)]
+                      (if (or (contains? usernames (:username u))
+                              (contains? emails (:email u)))
+                        (recur (rest s) usernames emails)
+                        (cons u (step (rest s)
+                                      (conj usernames (:username u))
+                                      (conj emails (:email u)))))))
+                  users usernames emails)))]
+    (step (repeatedly (partial generate NewUser)) #{} #{})))
+
 
 ;; User id must be merged in by test code.
 (def video-values

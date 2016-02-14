@@ -20,12 +20,16 @@ INSERT INTO users (
 
 -- name: get-users
 -- Selects all users, beginning at :offset, limited to :limit results, ordered
--- by :order_by. Postgres doesn't allow dynamic sort order, believe it or not,
--- so unless we want to bypass YesQL and build query strings from scratch,
--- we can't do a :sort_direction parameter.
-SELECT * FROM users
-  LIMIT :limit
-  OFFSET :offset;
+-- by :order_by. Uses the default sort order.
+SELECT * FROM users LIMIT :limit OFFSET :offset;
+
+-- name: get-users-order-by-username-asc
+-- As get-users, but orders by username, ascending.
+SELECT * FROM users ORDER BY username ASC OFFSET :offset LIMIT :limit;
+
+-- name: get-users-order-by-username-desc
+-- As get-users, but orders by username, descending.
+SELECT * FROM users ORDER BY username DESC OFFSET :offset LIMIT :limit;
 
 -- name: find-users-by-user-id
 -- Selects all users with :user_id. In practice, only one.

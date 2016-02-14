@@ -3,8 +3,6 @@
             [raiseyourgame.db.core :as db]
             [raiseyourgame.test.fixtures :as fixtures]
             [raiseyourgame.test.helpers :refer :all]
-            [raiseyourgame.test.schemata :refer :all]
-            [schema.experimental.generators :refer [generate]]
             [clj-time.core :as t]
             [clj-time.coerce :refer [from-date]]
             [clojure.test :refer :all]
@@ -78,25 +76,11 @@
       (is (nil? (user/lookup {:email "unknown"}))
           "lookup by unknown email should fail"))))
 
-(defn- test-users []
-  (let [step (fn step [users usernames emails]
-               (lazy-seq
-                 ((fn [[u :as users] usernames emails] ; first user, usernames, emails
-                    (when-let [s (seq users)]
-                      (if (or (contains? usernames (:username u))
-                              (contains? emails (:email u)))
-                        (recur (rest s) usernames emails)
-                        (cons u (step (rest s)
-                                      (conj usernames (:username u))
-                                      (conj emails (:email u)))))))
-                  users usernames emails)))]
-    (step (repeatedly (partial generate NewUser)) #{} #{})))
-
 (deftest test-user-list
   (with-rollback-transaction [t-conn db/conn]
     ; vec realizes the lazy sequence, invoking user/create!;
     ; also lets us look things up by index later
-    (let [users (vec (map user/create! (take 100 (test-users))))]
+    (let [users (vec (map user/create! (take 100 (fixtures/test-users))))]
       (is (= 100 (count users)) "100 test usersu should be created")
       (testing "default user page"
         (let [user-page (user/get-users)]
@@ -127,7 +111,19 @@
           (is (not (nil? user-page)) "user page should be retrieved")
           (is (= 10 (count user-page)) "user page should have 10 results")
           (is (= (:id (first user-page)) (:id (users 10)))
-              "first user in page should be eleventh user in table"))))))
+              "first user in page should be eleventh user in table")))
+      (testing "user page sorted by username ascending"
+        (let [user-page (user/get-users {:order-by :username})]
+          (is (not (nil? user-page)) "user page should be retrieved")
+          (is (= 30 (count user-page)) "user page should have 30 results")
+          (is (sorted-by user-page :username :asc)
+              "rows should be sorted by username in ascending order")))
+      (testing "user page sorted by username descending"
+        (let [user-page (user/get-users {:order-by :username :sort-direction :desc})]
+          (is (not (nil? user-page)) "user page should be retrieved")
+          (is (= 30 (count user-page)) "user page should have 30 results")
+          (is (sorted-by user-page :username :desc)
+              "rows should be sorted by username in descending order"))))))
 
 (deftest test-user-update
   (with-rollback-transaction [t-conn db/conn]

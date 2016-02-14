@@ -54,6 +54,30 @@
            :content-type "application/json"
            :body (cheshire/generate-string (credentials-for user))))
 
+(defn pg-collation
+  "Given a string, returns the string as Postgres interprets it under the us_EN
+  collation.
+
+  Strings are customarily sorted in different ways in different locales.
+  Postgres embodies this concept in the term \"collation\". In its us_EN
+  collation, non-alpha characters, including - and _, are completely ignored.
+  Therefore, to verify that a given sort order has been applied to a string
+  column, we need to duplicate that collation."
+  [s]
+  (.toLowerCase (clojure.string/replace s #"[^a-zA-Z0-9]+" "")))
+
+(defn sorted-by
+  ""
+  ([rows column] (sorted-by rows column :asc))
+  ([rows column direction]
+   (->> rows
+     (map (comp pg-collation column))
+     (partition 2 1)
+     (map (fn [[a b]] (compare a b)))
+     (every? (condp = direction
+               :asc (partial > 1)
+               :desc (partial < -1))))))
+
 (defmacro with-rollback-transaction [args & body]
   `(clojure.java.jdbc/with-db-transaction [~(first args) (deref ~(second args))]
      (jdbc/db-set-rollback-only! ~(first args)) ; force rollback at end of transaction
