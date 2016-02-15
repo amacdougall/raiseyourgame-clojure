@@ -1,17 +1,17 @@
 (ns raiseyourgame.test.schemata
   "Schemata used in the generation of test data."
-  (:require [schema.core :refer :all]))
+  (:require [schema.core :as s]))
 
 ;; A schema to generate hashes for user creation requests.
-(defschema NewUser
-  {:username (constrained String #(not (empty? %)))
-   :password (constrained String #(not (empty? %)))
-   :email (constrained String #(not (empty? %)))
+(s/defschema NewUser
+  {:username (s/constrained String #(not (empty? %)))
+   :password (s/constrained String #(not (empty? %)))
+   :email (s/constrained String #(not (empty? %)))
    :name String
    :profile String})
 
 ;; A schema to generate hashes for video creation requests.
-(defschema NewVideo
+(s/defschema NewVideo
   {:user-id Long
    :url String
    :length Long
