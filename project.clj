@@ -56,14 +56,16 @@
 
                  ;; CLOJURESCRIPT
                  ; core
-                 [org.clojure/clojurescript "1.7.107" :scope "provided"]
+                 [org.clojure/clojurescript "1.7.170" :scope "provided"]
                  [org.clojure/tools.reader "0.9.2"]
-                 [reagent "0.6.0-alpha"]
-                 [re-frame "0.7.0-alpha-2"]
                  [org.clojure/core.async "0.2.374"]
+                 [reagent "0.6.0-alpha"]
+                 [reagent-utils "0.1.7"]
+                 [re-frame "0.7.0-alpha-2"]
+                 [secretary "1.2.3"]
                  [cljs-ajax "0.5.3"]]
 
-  :min-lein-version "2.0.0"
+  :min-lein-version "2.5.3"
   :uberjar-name "raiseyourgame.jar"
   :jvm-opts ["-server"]
 
@@ -75,7 +77,7 @@
 
   :plugins [[lein-environ "1.0.0"]
             [migratus-lein "0.1.7"]
-            [lein-cljsbuild "1.0.6"]
+            [lein-cljsbuild "1.1.2" :exclusions [[org.clojure/clojure]]]
             [lein-sassc "0.10.4"]]
   :sassc [{:src "resources/scss/screen.scss"
            :output-to "resources/public/css/screen.css"
@@ -86,14 +88,13 @@
   :clean-targets ^{:protect false} [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
   :cljsbuild
   {:builds
-   {:app
-    {:source-paths ["src-cljs"]
-     :compiler
-     {:output-to "resources/public/js/app.js"
-      :output-dir "resources/public/js/out"
-      :externs ["react/externs/react.js"]
-      :optimizations :none
-      :pretty-print true}}}}
+   ; for dev/test builds, see the profile-specific configs below
+   [{:id "admin-prod"
+     :source-paths ["src-cljs/admin"]
+     :compiler {:output-to "resources/public/js/compiled/admin/admin.js"
+                :main raiseyourgame.core
+                :optimizations :advanced
+                :pretty-print false}}]}
 
   :profiles
   {:uberjar {:omit-source true
@@ -102,6 +103,7 @@
              :cljsbuild
              {:jar true
               :builds
+              ; TODO: get this working
               {:app
                {:source-paths ["env/prod/cljs"]
                 :compiler {:optimizations :advanced :pretty-print false}}}} 
@@ -113,6 +115,7 @@
                                  [peridot "0.4.1"]
                                  [pjstadig/humane-test-output "0.7.0"]
                                  [org.clojure/tools.nrepl "0.2.10"]
+                                 [com.cemerick/piggieback "0.2.1"]
                                  [lein-figwheel "0.5.0-6"]
                                  [mvxcvi/puget "0.8.1"]]
                   :plugins [[lein-figwheel "0.5.0-6"]
@@ -122,9 +125,22 @@
                                  :quiet true}
                   :cljsbuild
                   {:builds
-                   {:app
-                    {:compiler {:source-map true} :source-paths ["env/dev/cljs"]}}} 
-
+                   [{:id "admin-dev"
+                     :source-paths ["src-cljs/admin"]
+                     :figwheel true
+                     :compiler {:main raiseyourgame.core
+                                :asset-path "js/compiled/admin/out"
+                                :output-to "resources/public/js/compiled/admin/admin.js"
+                                :output-dir "resources/public/js/compiled/admin/out"
+                                :source-map-timestamp true}}
+                    {:id "app-dev"
+                     :source-paths ["src-cljs/app"]
+                     :figwheel {:on-jsload "raiseyourgame.core/main"}
+                     :compiler {:main raiseyourgame.core
+                                :asset-path "js/compiled/app/out"
+                                :output-to "resources/public/js/compiled/app/app.js"
+                                :output-dir "resources/public/js/compiled/app/out"
+                                :source-map-timestamp true}}]}
                   :figwheel
                   {:http-server-root "public"
                    :server-port 3449
@@ -132,7 +148,8 @@
                    :css-dirs ["resources/public/css"]
                    :ring-handler raiseyourgame.handler/app}
 
-                  :repl-options {:init-ns raiseyourgame.core}
+                  :repl-options {:init-ns raiseyourgame.core
+                                 :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]
                   ;;when :nrepl-port is set the application starts the nREPL server on load

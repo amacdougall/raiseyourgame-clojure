@@ -7,7 +7,9 @@
 (defn home-page []
   (layout/render "home.html"))
 
+(defn admin-page []
+  (layout/render "admin.html"))
+
 (defroutes home-routes
   (GET "/" [] (home-page))
-  (GET "/docs" [] (ok (-> "docs/docs.md" io/resource slurp))))
-
+  (GET "/admin" [] (admin-page)))

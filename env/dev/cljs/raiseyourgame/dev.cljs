@@ -1,3 +1,4 @@
+; TODO: replace with current Figwheel practices
 (ns ^:figwheel-no-load raiseyourgame.app
   (:require [raiseyourgame.core :as core]
             [figwheel.client :as figwheel :include-macros true]))
