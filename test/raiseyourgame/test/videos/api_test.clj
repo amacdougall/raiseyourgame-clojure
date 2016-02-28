@@ -9,7 +9,7 @@
             [camel-snake-kebab.core :refer [->kebab-case-keyword]]
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
-            [peridot.core :refer [session request]]
+            [peridot.core :refer [request]]
             [cheshire.core :as cheshire]
             [conman.core :refer [with-transaction]]))
 

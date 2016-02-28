@@ -18,6 +18,7 @@
                  [environ "1.0.0"]
 
                  ; data wrangling
+                 [com.cognitect/transit-clj "0.8.285"]
                  [camel-snake-kebab "0.3.2"]
                  [clj-time "0.11.0"]
 
@@ -59,6 +60,7 @@
                  [org.clojure/clojurescript "1.7.170" :scope "provided"]
                  [org.clojure/tools.reader "0.9.2"]
                  [org.clojure/core.async "0.2.374"]
+                 [com.cognitect/transit-cljs "0.8.237"]
                  [reagent "0.6.0-alpha"]
                  [reagent-utils "0.1.7"]
                  [re-frame "0.7.0-alpha-2"]

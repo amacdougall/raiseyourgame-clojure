@@ -2,20 +2,34 @@
   (:require [clj-time.core :as t]
             [clojure.java.jdbc :as jdbc]
             [cheshire.core :as cheshire]
-            [peridot.core :refer [session request]]
+            [cognitect.transit :as transit]
+            [peridot.core :as peridot]
+            [taoensso.timbre :refer [debug]]
             [camel-snake-kebab.core :refer [->kebab-case-keyword]]))
+
+;; A Peridot session, but with an "accept" header specifying Transit.
+(defn session [app]
+  (-> (peridot/session app)
+    (peridot/header "Accept" "application/transit+json")))
 
 (defn json->clj [raw-json]
   (cheshire/parse-string raw-json ->kebab-case-keyword))
 
 ;; If the body of the supplied response is a Java InputStream, reads its string
-;; value and converts it using json->clj. Otherwise, returns the body
-;; unchanged. In general, it should be possible to throw a Ring response at
-;; this function and get back usable Clojure data.
-(defn response->clj [{body :body}]
-  (if (instance? java.io.InputStream body)
-    (json->clj (slurp body))
-    body))
+;; value and converts it using a technique appropriate for the content type.
+;; Otherwise, returns the body unchanged. In general, it should be possible to
+;; throw a Ring response at this function and get back usable Clojure data.
+(defn response->clj [response]
+  (let [body (:body response)
+        content-type ((:headers response) "Content-Type")]
+    (if (instance? java.io.InputStream body)
+      ; content type string can be "type; encoding", so use re-find
+      (condp re-find content-type
+        #"^application/json"
+        (json->clj (slurp body))
+        #"^application/transit\+json"
+        (transit/read (transit/reader body :json)))
+      body)))
 
 (defn has-values?
   "True if the candidate map has every key-value pair defined in the exemplar map."
@@ -46,13 +60,13 @@
   (select-keys user #{:username :password}))
 
 (defn login-request
-  "Given a Peridot session and a user object, generates a Ring request
-  representing a login request for that user."
+  "Given a Peridot session and a user object, applies a Peridot request
+  representing a login request for that user, and returns the response."
   [session user]
-  (request session "/api/users/login"
-           :request-method :post
-           :content-type "application/json"
-           :body (cheshire/generate-string (credentials-for user))))
+  (peridot/request session "/api/users/login"
+                   :request-method :post
+                   :content-type "application/json"
+                   :body (cheshire/generate-string (credentials-for user))))
 
 (defn pg-collation
   "Given a string, returns the string as Postgres interprets it under the us_EN

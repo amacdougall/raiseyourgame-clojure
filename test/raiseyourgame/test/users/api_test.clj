@@ -7,7 +7,7 @@
             [raiseyourgame.test.fixtures :as fixtures]
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
-            [peridot.core :refer [session request]]
+            [peridot.core :refer [request]]
             [cheshire.core :as cheshire]
             [taoensso.timbre :refer [debug]]
             [conman.core :refer [with-transaction]]))

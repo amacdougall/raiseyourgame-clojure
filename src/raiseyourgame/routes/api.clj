@@ -4,7 +4,8 @@
             [compojure.api.sweet :refer :all]))
 
 (defapi api-routes
-  {:swagger
+  {:formats [:json-kw :edn :transit-msgpack :transit-json]
+   :swagger
    {:ui "/swagger-ui"
     :data {:info {:title "Raise Your API"
                   :description "Transit API docs for raiseyourga.me"}}}}
