@@ -3,7 +3,6 @@
   (:require [raiseyourgame.db.core :as db]
             [camel-snake-kebab.core :refer [->kebab-case-keyword]]
             [bugsbio.squirrel :refer [to-sql to-clj]]
-            [cheshire.core :as cheshire]
             [buddy.hashers :as hashers]
             [taoensso.timbre :refer [debug]])
   (:import java.sql.SQLException))

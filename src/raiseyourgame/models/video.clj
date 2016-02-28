@@ -2,7 +2,6 @@
   "Namespace containing database and domain logic for video maps."
   (:require [raiseyourgame.db.core :as db]
             [bugsbio.squirrel :refer [to-sql to-clj]]
-            [cheshire.core :as cheshire]
             [buddy.hashers :as hashers]
             [taoensso.timbre :refer [debug]])
   (:import java.sql.SQLException))

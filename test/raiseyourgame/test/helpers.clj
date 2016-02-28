@@ -5,15 +5,30 @@
             [cognitect.transit :as transit]
             [peridot.core :as peridot]
             [taoensso.timbre :refer [debug]]
-            [camel-snake-kebab.core :refer [->kebab-case-keyword]]))
+            [camel-snake-kebab.core :refer [->kebab-case-keyword]])
+  (:import [java.io ByteArrayOutputStream ByteArrayInputStream]))
 
 ;; A Peridot session, but with an "accept" header specifying Transit.
 (defn session [app]
   (-> (peridot/session app)
-    (peridot/header "Accept" "application/transit+json")))
+    (peridot/header "accept" "application/transit+json")))
 
 (defn json->clj [raw-json]
   (cheshire/parse-string raw-json ->kebab-case-keyword))
+
+(defn transit-read
+  "Given an InputStream, reads its contents as Transit, returning Clojure
+  data."
+  [in]
+  (transit/read (transit/reader in :json)))
+
+(defn transit-write
+  "Given any Clojure data, writes its contents as Transit, returning a
+  string containing the Transit-encoded data."
+  [x]
+  (let [out (ByteArrayOutputStream. 4096)]
+    (-> out (transit/writer :json) (transit/write x))
+    (.toString out)))
 
 ;; If the body of the supplied response is a Java InputStream, reads its string
 ;; value and converts it using a technique appropriate for the content type.
@@ -28,7 +43,7 @@
         #"^application/json"
         (json->clj (slurp body))
         #"^application/transit\+json"
-        (transit/read (transit/reader body :json)))
+        (transit-read body))
       body)))
 
 (defn has-values?
@@ -65,8 +80,8 @@
   [session user]
   (peridot/request session "/api/users/login"
                    :request-method :post
-                   :content-type "application/json"
-                   :body (cheshire/generate-string (credentials-for user))))
+                   :content-type "application/transit+json"
+                   :body (transit-write (credentials-for user))))
 
 (defn pg-collation
   "Given a string, returns the string as Postgres interprets it under the us_EN

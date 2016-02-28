@@ -8,7 +8,6 @@
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
             [peridot.core :refer [request]]
-            [cheshire.core :as cheshire]
             [taoensso.timbre :refer [debug]]
             [conman.core :refer [with-transaction]]))
 
@@ -24,11 +23,11 @@
 
 (deftest test-user-create
   (with-rollback-transaction [t-conn db/conn]
-    (let [body (cheshire/generate-string fixtures/user-values)
+    (let [body (transit-write fixtures/user-values)
           response (-> (session app)
                      (request "/api/users"
                               :request-method :post
-                              :content-type "application/json"
+                              :content-type "application/transit+json"
                               :body body)
                      :response)
           user (response->clj response)]
@@ -54,11 +53,11 @@
           with-dupe-email (assoc fixtures/user-values :username "available")
           test-user-creation
           (fn [user-values error-keys]
-            (let [body (cheshire/generate-string user-values)
+            (let [body (transit-write user-values)
                   response (-> (session app)
                              (request "/api/users"
                                       :request-method :post
-                                      :content-type "application/json"
+                                      :content-type "application/transit+json"
                                       :body body)
                              :response)
                   response-body (response->clj response)]
@@ -223,8 +222,8 @@
         (-> (session app)
           (request "/api/users/login"
                    :request-method :post
-                   :content-type "application/json"
-                   :body (cheshire/generate-string credentials))
+                   :content-type "application/transit+json"
+                   :body (transit-write credentials))
           :response)
         authenticated-user (response->clj response)]
     (is (= 200 (:status response)) "login returned 200 response")
@@ -236,8 +235,8 @@
         (-> (session app)
           (request "/api/users/login"
                    :request-method :post
-                   :content-type "application/json"
-                   :body (cheshire/generate-string credentials))
+                   :content-type "application/transit+json"
+                   :body (transit-write credentials))
           (request "/api/users/current")
           :response)
         current-user (response->clj response)]
@@ -251,8 +250,8 @@
         (-> (session app)
           (request "/api/users/login"
                    :request-method :post
-                   :content-type "application/json"
-                   :body (cheshire/generate-string invalid-credentials))
+                   :content-type "application/transit+json"
+                   :body (transit-write invalid-credentials))
           :response)]
     (is (= 401 (:status response))
         "logging in with incorrect password should fail")))
@@ -274,8 +273,8 @@
             (-> (session app)
               (request (format "/api/users/%d" (:user-id expected))
                        :request-method :put
-                       :content-type "application/json"
-                       :body (cheshire/generate-string expected))
+                       :content-type "application/transit+json"
+                       :body (transit-write expected))
               :response)]
         (is (= 401 (:status response))
             "attempting to update user while logged out should fail"))
@@ -286,14 +285,14 @@
               ; log in first...
               (request "/api/users/login"
                        :request-method :post
-                       :content-type "application/json"
-                       :body (cheshire/generate-string
+                       :content-type "application/transit+json"
+                       :body (transit-write
                                (credentials-for fixtures/user-values)))
               ; ...and then update a nonexistent user
               (request (format "/api/users/%d" -1)
                        :request-method :put
-                       :content-type "application/json"
-                       :body (cheshire/generate-string expected))
+                       :content-type "application/transit+json"
+                       :body (transit-write expected))
               :response)]
         (is (= 404 (:status response))
             "attempting to update nonexistent user should fail"))
@@ -304,14 +303,14 @@
               ; log in first...
               (request "/api/users/login"
                        :request-method :post
-                       :content-type "application/json"
-                       :body (cheshire/generate-string
+                       :content-type "application/transit+json"
+                       :body (transit-write
                                (credentials-for fixtures/user-values)))
               ; ...and then update an impermissible user
               (request (format "/api/users/%d" (:user-id moderator))
                        :request-method :put
-                       :content-type "application/json"
-                       :body (cheshire/generate-string
+                       :content-type "application/transit+json"
+                       :body (transit-write
                                (assoc moderator :username "syabuki")))
               :response)]
         (is (= 403 (:status response))
@@ -324,14 +323,14 @@
               ; log in first...
               (request "/api/users/login"
                        :request-method :post
-                       :content-type "application/json"
-                       :body (cheshire/generate-string
+                       :content-type "application/transit+json"
+                       :body (transit-write
                                (credentials-for fixtures/user-values)))
               ; ...and then update sending an unavailable username
               (request (format "/api/users/%d" (:user-id original))
                        :request-method :put
-                       :content-type "application/json"
-                       :body (cheshire/generate-string bad-username))
+                       :content-type "application/transit+json"
+                       :body (transit-write bad-username))
               :response)]
         (is (= 400 (:status response))
             "attempting to update to unavailable username should fail"))
@@ -343,14 +342,14 @@
               ; log in first...
               (request "/api/users/login"
                        :request-method :post
-                       :content-type "application/json"
-                       :body (cheshire/generate-string
+                       :content-type "application/transit+json"
+                       :body (transit-write
                                (credentials-for fixtures/user-values)))
               ; ...and then update sending an unavailable email
               (request (format "/api/users/%d" (:user-id original))
                        :request-method :put
-                       :content-type "application/json"
-                       :body (cheshire/generate-string bad-email))
+                       :content-type "application/transit+json"
+                       :body (transit-write bad-email))
               :response)]
         (is (= 400 (:status response))
             "attempting to update to unavailable email should fail")))))
@@ -365,14 +364,14 @@
               ; log in first...
               (request "/api/users/login"
                        :request-method :post
-                       :content-type "application/json"
-                       :body (cheshire/generate-string
+                       :content-type "application/transit+json"
+                       :body (transit-write
                                (credentials-for fixtures/user-values)))
               ; ...and then update self
               (request (format "/api/users/%d" (:user-id original))
                        :request-method :put
-                       :content-type "application/json"
-                       :body (cheshire/generate-string expected))
+                       :content-type "application/transit+json"
+                       :body (transit-write expected))
               :response)
             actual (response->clj response)]
         ; since update requires authorization, assume a user/private response
@@ -410,14 +409,14 @@
               ; log in as moderator...
               (request "/api/users/login"
                        :request-method :post
-                       :content-type "application/json"
-                       :body (cheshire/generate-string
+                       :content-type "application/transit+json"
+                       :body (transit-write
                                (credentials-for fixtures/moderator-values)))
               ; ...and then update the user
               (request (format "/api/users/%d" (:user-id original))
                        :request-method :put
-                       :content-type "application/json"
-                       :body (cheshire/generate-string expected))
+                       :content-type "application/transit+json"
+                       :body (transit-write expected))
               :response)
             actual (response->clj response)]
         ; since update requires authorization, assume a user/private response

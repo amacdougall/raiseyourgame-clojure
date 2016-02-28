@@ -10,7 +10,6 @@
             [clojure.test :refer :all]
             [clojure.java.jdbc :as jdbc]
             [peridot.core :refer [request]]
-            [cheshire.core :as cheshire]
             [conman.core :refer [with-transaction]]))
 
 (use-fixtures
@@ -26,8 +25,8 @@
 (defn- update-request [session video]
   (request session (format "/api/videos/%d" (:video-id video))
            :request-method :put
-           :content-type "application/json"
-           :body (cheshire/generate-string video)))
+           :content-type "application/transit+json"
+           :body (transit-write video)))
 
 (defn- remove-request [session video]
   (request session (format "/api/videos/%d" (:video-id video))
@@ -36,13 +35,13 @@
 (deftest test-video-create
   (with-rollback-transaction [t-conn db/conn]
     (let [user (user/create! fixtures/user-values)
-          body (cheshire/generate-string
+          body (transit-write
                  (assoc fixtures/video-values :user-id (:user-id user)))]
       (testing "without login"
         (let [response (-> (session app)
                          (request "/api/videos"
                                   :request-method :post
-                                  :content-type "application/json"
+                                  :content-type "application/transit+json"
                                   :body body)
                          :response)
               video (response->clj response)]
@@ -53,7 +52,7 @@
                          (login-request fixtures/user-values)
                          (request "/api/videos"
                                   :request-method :post
-                                  :content-type "application/json"
+                                  :content-type "application/transit+json"
                                   :body body)
                          :response)
               video (response->clj response)]
