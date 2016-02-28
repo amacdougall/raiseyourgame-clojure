@@ -4,14 +4,11 @@
             [compojure.api.sweet :refer :all]))
 
 (defapi api-routes
-  (ring.swagger.ui/swagger-ui
-    "/swagger-ui")
-  ;JSON docs available at the /swagger.json route
-  (swagger-docs
-    {:info {:title "Raise Your API"}})
+  {:swagger
+   {:ui "/swagger-ui"
+    :data {:info {:title "Raise Your API"
+                  :description "Transit API docs for raiseyourga.me"}}}}
 
-  (context* "/api" []
-    (context* "/users" []
-      users-routes)
-    (context* "/videos" []
-      videos-routes)))
+  (context "/api" []
+    (context "/users"  [] users-routes)
+    (context "/videos" [] videos-routes)))

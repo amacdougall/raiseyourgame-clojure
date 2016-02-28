@@ -34,8 +34,8 @@
                  [clout "2.1.2"]
 
                  ; fancy API routes
-                 [metosin/compojure-api "0.24.3"]
-                 [metosin/ring-swagger-ui "2.1.1"]
+                 [metosin/compojure-api "1.0.1"]
+                 [metosin/ring-swagger-ui "2.1.4-0"]
 
                  ; validation
                  [bouncer "0.3.3"] ; manual validation

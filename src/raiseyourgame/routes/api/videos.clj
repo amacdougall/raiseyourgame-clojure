@@ -8,9 +8,9 @@
             [taoensso.timbre :refer [debug]]))
 
 ;; Routes to be included in the "/api/videos" context.
-(defroutes* videos-routes
+(defroutes videos-routes
   ; lookup by id
-  (GET* "/:video-id" request
+  (GET "/:video-id" request
         :return Video
         :path-params [video-id :- Long]
         :summary "Numeric video id."
@@ -28,7 +28,7 @@
             (not-found "No video matched your request."))))
 
   ; create
-  (POST* "/" request
+  (POST "/" request
          :body-params [user-id :- Long
                        url :- String
                        title :- String
@@ -44,7 +44,7 @@
            (unauthorized "You must be logged in to create a video.")))
 
   ; update
-  (PUT* "/:video-id" request
+  (PUT "/:video-id" request
         :return Video
         :path-params [video-id :- Long]
         :body [incoming Video]
@@ -69,7 +69,7 @@
               ; refine this message if common failure types emerge
               (internal-server-error "The update could not be performed as requested.")))))
 
-  (DELETE* "/:video-id" request
+  (DELETE "/:video-id" request
            :path-params [video-id :- Long]
            :summary "ID of the video to be removed."
            ;; Return 204 No Content response, or 401/403 as appropriate

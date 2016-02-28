@@ -8,10 +8,10 @@
             [taoensso.timbre :refer [debug]]))
 
 ;; Routes to be included in the "/api/users" context.
-(defroutes* users-routes
+(defroutes users-routes
   ; NOTE: Route order matters! Only check the /:user-id route after others
   ; have failed to match.
-  (GET* "/" request
+  (GET "/" request
         :return {:page Long
                  :per-page Long
                  :users [User]}
@@ -47,7 +47,7 @@
                      :per-page per-page
                      :users (map apply-privacy users)}))))))
 
-  (GET* "/lookup" request
+  (GET "/lookup" request
         :return User
         :query-params [{user-id :- Long nil}
                        {username :- String nil}
@@ -78,13 +78,13 @@
               (ok (user/private user))
               (ok (user/public user))))))
 
-  (GET* "/current" request
+  (GET "/current" request
         :return User
         (if-let [current (:identity (:session request))]
           (ok (user/private current))
           (not-found)))
 
-  (GET* "/:user-id" request
+  (GET "/:user-id" request
         :return User
         :path-params [user-id :- Long]
         :summary "Numeric user id."
@@ -104,7 +104,7 @@
               (ok (user/public user))))))
 
   ; create
-  (POST* "/" request
+  (POST "/" request
          :body-params [username :- String
                        password :- String
                        name :- String
@@ -126,7 +126,7 @@
              (assoc-in response [:headers "Location"] location))))
 
   ; update
-  (PUT* "/:user-id" request
+  (PUT "/:user-id" request
         :path-params [user-id :- Long]
         :body [incoming User] ; desired values
         :return User
@@ -163,7 +163,7 @@
               (internal-server-error "The update could not be performed as requested.")))))
 
   ; remove
-  (DELETE* "/:user-id" request
+  (DELETE "/:user-id" request
            :path-params [user-id :- Long]
            :summary "ID of the user to be removed."
            ;; Return 204 No Content response, or 401/403 as appropriate
@@ -185,7 +185,7 @@
                  (internal-server-error "The user could not be removed as requested.")))))
 
   ; login
-  (POST* "/login" request
+  (POST "/login" request
          :return User
          :body-params [{email :- String ""}
                        {username :- String ""}
@@ -198,7 +198,7 @@
              (unauthorized))))
 
   ; videos by user
-  (GET* "/:user-id/videos" []
+  (GET "/:user-id/videos" []
         :return [Video]
         :path-params [user-id :- Long]
         :summary "Numeric user id."
