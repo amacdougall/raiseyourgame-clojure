@@ -1,5 +1,6 @@
 (ns raiseyourgame.core
-  (:require [reagent.core :as reagent :refer [atom]]
+  (:require [cognitect.transit :as transit]
+            [reagent.core :as reagent :refer [atom]]
             [re-frame.core :refer [register-handler dispatch dispatch-sync register-sub subscribe]]
             [secretary.core :as secretary]
             [ajax.core :refer [GET POST]])
@@ -8,15 +9,18 @@
   (:import [goog History]
            [goog.history EventType]))
 
-(def app-db (atom {:target nil}))
+(def initial-state {:target nil})
+
+(register-handler
+  :initialize-db
+  (fn [db]
+    (merge db initial-state)))
 
 (defn load-users []
   (GET "/api/users"
-       {:handler
-        (fn [users]
-          ; TODO: convert back to keyword form (actually just use Transit/EDN)
-          ; TODO: this is in {:page n, :per-page m, :users coll}, remember?
-          ; So extract the users.
+       {:response-format :transit
+        :handler
+        (fn [{:keys [page per-page users]}]
           (dispatch [:users-loaded users]))
         :error-handler
         (fn [error]
@@ -34,8 +38,7 @@
   :display-user-list
   display-user-list)
 
-(defn handle-users-loaded [db users]
-  (.log js/console "(handle-users-loaded)")
+(defn handle-users-loaded [db [sid users]]
   (assoc db :target {:type :users, :users users}))
 
 (register-handler
@@ -43,8 +46,7 @@
   handle-users-loaded)
 
 (defn users-query
-  [db, [sid cid]]
-  (.log js/console "(users-query)")
+  [db, [sid]]
   (assert (= sid :users-query))
   (reaction (get-in @db [:target :users])))
 
@@ -61,6 +63,8 @@
               (map render-user @users))))))
 
 (defn main []
+  (dispatch-sync [:initialize-db])
+  (dispatch [:display-user-list])
   (reagent/render [users-view]
                   (.getElementById js/document "app")))
 
