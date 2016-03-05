@@ -11,8 +11,7 @@
 
 (defn main []
   (dispatch-sync [:initialize-db])
-  (dispatch [:display-user-list])
-  (reagent/render [views/users-view]
+  (reagent/render [views/main-view]
                   (.getElementById js/document "app")))
 
 (main)
