@@ -3,7 +3,11 @@
             [raiseyourgame.subscriptions]
             [raiseyourgame.handlers]
             [reagent.core :as reagent]
-            [re-frame.core :refer [dispatch dispatch-sync]]))
+            [re-frame.core :refer [dispatch dispatch-sync]]
+            [devtools.core :as devtools]))
+
+(devtools/enable-feature! :sanity-hints :dirac)
+(devtools/install!)
 
 (defn main []
   (dispatch-sync [:initialize-db])

@@ -119,6 +119,7 @@
                                  [org.clojure/tools.nrepl "0.2.10"]
                                  [com.cemerick/piggieback "0.2.1"]
                                  [lein-figwheel "0.5.0-6"]
+                                 [binaryage/devtools "0.5.2"]
                                  [mvxcvi/puget "0.8.1"]]
                   :plugins [[lein-figwheel "0.5.0-6"]
                             [com.jakemccrary/lein-test-refresh "0.10.0"]]
