@@ -1,0 +1,21 @@
+html, body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  height: 100%;
+  padding-top: 40px;
+}
+
+div.main {
+  display: flex;
+  flex-direction: row
+
+  // diagnostic
+  div {
+    border: thin black solid;
+    margin: 4px;
+  }
+}
+
+div.nav {
+  min-width: 5rem;
+  width: 20%;
+}

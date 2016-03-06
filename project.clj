@@ -77,15 +77,23 @@
   ; migratus searches for :migration-dir in all classpath directories; since
   ; $PROJECT/resources is on the classpath, we use resources/migrations.
 
-  :plugins [[lein-environ "1.0.0"]
+  :plugins [[lein-auto "0.1.2"]
+            [lein-environ "1.0.0"]
             [migratus-lein "0.1.7"]
             [lein-cljsbuild "1.1.2" :exclusions [[org.clojure/clojure]]]
             [lein-sassc "0.10.4"]]
   :sassc [{:src "resources/scss/screen.scss"
            :output-to "resources/public/css/screen.css"
            :style "nested"
+           :import-path "resources/scss"}
+          {:src "resources/scss/admin_screen.scss"
+           :output-to "resources/public/css/admin_screen.css"
+           :style "nested"
            :import-path "resources/scss"}]
 
+  :auto {:default {:log-color :gray}
+         "sassc"  {:paths ["resources/scss"]
+                   :file-pattern #"\.scss$"}}
   :hooks [leiningen.sassc]
   :clean-targets ^{:protect false} [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
   :cljsbuild

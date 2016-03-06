@@ -2,7 +2,7 @@
   (:require [re-frame.core :refer [subscribe]]))
 
 (defn home-view []
-  [:h1 "Home page!"])
+  [:div "Home stuff."])
 
 (defn users-view []
   (let [users (subscribe [:users-query])
@@ -16,8 +16,12 @@
 (defn main-view []
   (let [target-type (subscribe [:target-type-query])]
     (fn main-view-renderer []
-      (condp = @target-type
-        nil
-        [home-view]
-        :users
-        [users-view]))))
+      [:div {:class "main"}
+       [:div {:class "nav"}
+        [:div "Home"]
+        [:div "Users"]]
+       (condp = @target-type
+         nil
+         [home-view]
+         :users
+         [users-view])])))

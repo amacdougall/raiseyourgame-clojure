@@ -1,0 +1,14 @@
+html, body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  height: 100%;
+  padding-top: 40px; }
+
+div.main {
+  display: flex;
+  flex-direction: row div;
+    flex-direction-border: thin black solid;
+    flex-direction-margin: 4px; }
+
+div.nav {
+  min-width: 5rem;
+  width: 20%; }
