@@ -1,5 +1,6 @@
 (ns raiseyourgame.views
-  (:require [re-frame.core :refer [subscribe]]))
+  (:require [raiseyourgame.routes :as routes :refer [href]]
+            [re-frame.core :refer [subscribe]]))
 
 (defn home-view []
   [:div "Home stuff."])
@@ -18,8 +19,8 @@
     (fn main-view-renderer []
       [:div {:class "main"}
        [:div {:class "nav"}
-        [:div [:a {:href "/admin"} "Home"]]
-        [:div [:a {:href "/admin/users"} "Users"]]
+        [:div [:a (href routes/home) "Home"]]
+        [:div [:a (href routes/users) "Users"]]
         [:div [:a "Videos"]]]
        (condp = @target-type
          nil
