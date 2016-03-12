@@ -65,6 +65,7 @@
                  [reagent-utils "0.1.7"]
                  [re-frame "0.7.0-alpha-2"]
                  [secretary "1.2.3"]
+                 [venantius/accountant "0.1.7"]
                  [cljs-ajax "0.5.3"]]
 
   :min-lein-version "2.5.3"
