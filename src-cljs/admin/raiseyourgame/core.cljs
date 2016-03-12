@@ -2,6 +2,7 @@
   (:require [raiseyourgame.views :as views]
             [raiseyourgame.subscriptions]
             [raiseyourgame.handlers]
+            [raiseyourgame.routes]
             [reagent.core :as reagent]
             [re-frame.core :refer [dispatch dispatch-sync]]
             [devtools.core :as devtools]))

@@ -140,7 +140,7 @@
                      :source-paths ["src-cljs/admin"]
                      :figwheel true
                      :compiler {:main raiseyourgame.core
-                                :asset-path "js/compiled/admin/out"
+                                :asset-path "/js/compiled/admin/out"
                                 :output-to "resources/public/js/compiled/admin/admin.js"
                                 :output-dir "resources/public/js/compiled/admin/out"
                                 :source-map-timestamp true}}

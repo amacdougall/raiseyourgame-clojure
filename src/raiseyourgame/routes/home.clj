@@ -11,5 +11,6 @@
   (layout/render "admin.html"))
 
 (defroutes home-routes
-  (GET "/" [] (home-page))
-  (GET "/admin" [] (admin-page)))
+  (GET "/admin" [] (admin-page))
+  (GET "/admin/*" [] (admin-page))
+  (GET "*" [] (home-page)))

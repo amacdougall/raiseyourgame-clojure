@@ -18,8 +18,9 @@
     (fn main-view-renderer []
       [:div {:class "main"}
        [:div {:class "nav"}
-        [:div "Home"]
-        [:div "Users"]]
+        [:div [:a {:href "/admin"} "Home"]]
+        [:div [:a {:href "/admin/users"} "Users"]]
+        [:div [:a "Videos"]]]
        (condp = @target-type
          nil
          [home-view]

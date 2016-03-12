@@ -2,10 +2,16 @@
   (:require [raiseyourgame.remote :as remote]
             [re-frame.core :refer [register-handler]]))
 
+(defn- clear-target [db]
+  (assoc db :target nil))
+
 (register-handler
   :initialize-db
-  (fn [db]
-    (assoc db :target nil)))
+  clear-target)
+
+(register-handler
+  :display-home
+  clear-target)
 
 (register-handler
   :display-user-list
