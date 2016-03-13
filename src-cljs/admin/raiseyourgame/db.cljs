@@ -1,3 +1,5 @@
 (ns raiseyourgame.db)
 
-(def initial-state {:target nil})
+(def initial-state
+  {:current-user nil
+   :target nil})

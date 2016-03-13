@@ -21,7 +21,7 @@
    :path-exists? (fn [path] (secretary/locate-route path))})
 
 (defn main []
-  (dispatch-sync [:initialize-db])
+  (dispatch-sync [:initialize])
   (reagent/render [views/main-view]
                   (.getElementById js/document "app"))
 

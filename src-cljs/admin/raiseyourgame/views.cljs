@@ -2,6 +2,9 @@
   (:require [raiseyourgame.routes :as routes]
             [re-frame.core :refer [subscribe]]))
 
+(defn login-view []
+  [:div "Log in here."])
+
 (defn home-view []
   [:div "Home stuff."])
 
@@ -15,15 +18,16 @@
             (map render-user @users)))))
 
 (defn main-view []
-  (let [target-type (subscribe [:target-type-query])]
+  (let [target-type (subscribe [:target-type-query])
+        current-user (subscribe [:current-user-query])]
     (fn main-view-renderer []
       [:div {:class "main"}
        [:div {:class "nav"}
         [:div [:a {:href (routes/home)} "Home"]]
         [:div [:a {:href (routes/users)} "Users"]]
         [:div [:a "Videos"]]]
-       (condp = @target-type
-         nil
-         [home-view]
-         :users
-         [users-view])])))
+       (if (nil? @current-user)
+         [login-view]
+         (condp = @target-type
+           nil    [home-view]
+           :users [users-view]))])))

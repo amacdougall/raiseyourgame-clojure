@@ -1,17 +1,25 @@
 (ns raiseyourgame.handlers
   (:require [raiseyourgame.remote :as remote]
+            [raiseyourgame.db :refer [initial-state]]
             [re-frame.core :refer [register-handler]]))
 
-(defn- clear-target [db]
-  (assoc db :target nil))
+;; Handler run at app startup. Loads current user, if any. Resets the db to
+;; db/initial-state.
+(register-handler
+  :initialize
+  (fn [db]
+    (remote/load-current-user)
+    initial-state))
 
 (register-handler
-  :initialize-db
-  clear-target)
+  :current-user-loaded
+  (fn [db [_ current-user]]
+    (assoc db :current-user current-user)))
 
 (register-handler
   :display-home
-  clear-target)
+  (fn [db]
+    (assoc db :target nil)))
 
 (register-handler
   :display-user-list
