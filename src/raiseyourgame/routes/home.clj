@@ -13,4 +13,6 @@
 (defroutes home-routes
   (GET "/admin" [] (admin-page))
   (GET "/admin/*" [] (admin-page))
-  (GET "*" [] (home-page)))
+  ; TODO: enumerate valid client-side routes; direct to home-page
+  ; example: (GET "/video/:video-id" [] (home-page))
+  (GET "/" [] (home-page)))
