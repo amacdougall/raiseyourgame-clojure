@@ -1,9 +1,15 @@
 (ns raiseyourgame.views
   (:require [raiseyourgame.routes :as routes]
-            [re-frame.core :refer [subscribe]]))
+            [re-frame.core :refer [subscribe]]
+            [re-com.core :as re-com]))
 
 (defn login-view []
-  [:div "Log in here."])
+  [:div
+   [:h1 "Log in here."]
+   [re-com/input-text
+    :model ""
+    :on-change #(.log js/console "stuff changed: %o" %)]
+   ])
 
 (defn home-view []
   [:div "Home stuff."])
