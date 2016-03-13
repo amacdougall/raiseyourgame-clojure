@@ -8,6 +8,16 @@
     (reaction (:current-user @db))))
 
 (register-sub
+  :login-credentials-query
+  (fn [db _]
+    (reaction (:login-credentials @db))))
+
+(register-sub
+  :login-errors-query
+  (fn [db _]
+    (reaction (:login-errors @db))))
+
+(register-sub
   :target-type-query
   (fn [db _]
     (reaction (get-in @db [:target :type]))))

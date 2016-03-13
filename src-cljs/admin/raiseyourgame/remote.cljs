@@ -21,6 +21,21 @@
             (dispatch [:current-user-loaded nil])
             (default-error-handler error)))}))
 
+(defn login [username password]
+  (POST "/api/users/login"
+        {:format :transit
+         :response-format :transit
+         :headers {"Content-Type" "application/transit+json"}
+         :params {:username username, :password password}
+         :handler
+         (fn [user]
+           (dispatch [:login-successful user]))
+         :error-handler
+         (fn [error]
+           ; TODO: dispatch login-error event: be sure to distinguish between
+           ; 400, 401 and 500 errors
+           (.log js/console "Login error: %o" error))}))
+
 (defn load-users []
   (GET "/api/users"
        {:response-format :transit

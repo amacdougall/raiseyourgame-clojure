@@ -14,7 +14,21 @@
 (register-handler
   :current-user-loaded
   (fn [db [_ current-user]]
-    (assoc db :current-user current-user)))
+    (if (nil? current-user)
+      (assoc db :current-user nil
+                :login-credentials {:username nil, :password nil})
+      (assoc db :current-user current-user))))
+
+(register-handler
+  :login
+  (fn [db [_ username password]]
+    (remote/login username password)
+    db))
+
+(register-handler
+  :login-successful
+  (fn [db [_ user]]
+    (assoc db :current-user user)))
 
 (register-handler
   :display-home
