@@ -9,13 +9,13 @@
 
 (register-sub
   :form-values-query
-  (fn [db form-id]
-    (reaction (get-in @db [form-id :values]))))
+  (fn [db [_ form-id]]
+    (reaction (get-in @db [:forms form-id :values]))))
 
 (register-sub
   :form-errors-query
-  (fn [db form-id]
-    (reaction (get-in @db [form-id :errors]))))
+  (fn [db [_ form-id]]
+    (reaction (get-in @db [:forms form-id :errors]))))
 
 (register-sub
   :target-type-query

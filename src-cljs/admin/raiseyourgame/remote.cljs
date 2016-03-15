@@ -33,14 +33,8 @@
          :response-format :transit
          :headers {"Content-Type" "application/transit+json"}
          :params credentials
-         :handler
-         (fn [user]
-           (dispatch [:login-successful user]))
-         :error-handler
-         (fn [error]
-           ; TODO: dispatch login-error event: be sure to distinguish between
-           ; 400, 401 and 500 errors
-           (.log js/console "Login error: %o" error))}))
+         :handler #(dispatch [:login-successful %])
+         :error-handler #(dispatch [:login-error %])}))
 
 (defn load-users []
   (GET "/api/users"

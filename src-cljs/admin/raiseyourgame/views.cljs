@@ -11,7 +11,6 @@
        [:h1 "Log in here."]
        [:form
         [:label {:for :username} "User"]
-        ; TODO: also populate local values on Chrome autofill!
         [rc/input-text
          :attr {:id :username, :name :username}
          :model (or (:username @values) "")
@@ -27,6 +26,8 @@
          :change-on-blur? false
          :on-change (fn [s]
                       (dispatch [:update-form-value :login :password s]))]
+        (when (:login-failed? @errors)
+          [:div "Error! This login totes failed."])
         [rc/button
          :label "Log In"
          :on-click (fn [event]
