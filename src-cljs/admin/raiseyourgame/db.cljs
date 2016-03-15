@@ -2,4 +2,7 @@
 
 (def initial-state
   {:current-user nil
-   :target nil})
+   ; data to be viewed or edited in the admin view
+   :target nil
+   ; values and errors of forms as they are filled, keyed by form id
+   :forms {}})

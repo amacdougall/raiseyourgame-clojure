@@ -8,14 +8,14 @@
     (reaction (:current-user @db))))
 
 (register-sub
-  :login-credentials-query
-  (fn [db _]
-    (reaction (:login-credentials @db))))
+  :form-values-query
+  (fn [db form-id]
+    (reaction (get-in @db [form-id :values]))))
 
 (register-sub
-  :login-errors-query
-  (fn [db _]
-    (reaction (:login-errors @db))))
+  :form-errors-query
+  (fn [db form-id]
+    (reaction (get-in @db [form-id :errors]))))
 
 (register-sub
   :target-type-query

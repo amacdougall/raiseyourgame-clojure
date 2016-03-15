@@ -4,9 +4,8 @@
             [re-com.core :as rc]))
 
 (defn login-view []
-  (let [credentials (subscribe [:login-credentials-query])
-        errors (subscribe [:login-errors-query])
-        values (atom {})]
+  (let [values (subscribe [:form-values-query :login])
+        errors (subscribe [:form-errors-query :login])]
     (fn []
       [:div
        [:h1 "Log in here."]
@@ -15,22 +14,24 @@
         ; TODO: also populate local values on Chrome autofill!
         [rc/input-text
          :attr {:id :username, :name :username}
-         :model (or (:username @credentials) "")
+         :model (or (:username @values) "")
          :placeholder "Username or email"
+         :change-on-blur? false
          :on-change (fn [s]
-                      (swap! values #(assoc % :username s)))]
+                      (dispatch [:update-form-value :login :username s]))]
         [:label {:for :password} "Password"]
         [rc/input-text
          :attr {:id :password, :name :password, :type :password}
-         :model (or (:password @credentials) "")
+         :model (or (:password @values) "")
          :placeholder ""
+         :change-on-blur? false
          :on-change (fn [s]
-                      (swap! values #(assoc % :password s)))]
+                      (dispatch [:update-form-value :login :password s]))]
         [rc/button
          :label "Log In"
          :on-click (fn [event]
                      (.preventDefault event)
-                     (dispatch [:login (:username @values) (:password @values)]))]]])))
+                     (dispatch [:login]))]]])))
 
 (defn home-view []
   [:div "Home stuff."])

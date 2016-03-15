@@ -9,7 +9,10 @@
         (:status-text error)
         (:response error)))
 
-(defn load-current-user []
+(defn load-current-user
+  "Loads the currently logged-in user. Dispatches :current-user-loaded with the
+  result, which will be either a user map or nil."
+  []
   (GET "/api/users/current"
        {:response-format :transit
         :handler
@@ -21,12 +24,15 @@
             (dispatch [:current-user-loaded nil])
             (default-error-handler error)))}))
 
-(defn login [username password]
+(defn login
+  "Given credentials map with :username and :password values, attempts to log
+  in. Dispatches :login-successful on success; :login-error otherwise."
+  [credentials]
   (POST "/api/users/login"
         {:format :transit
          :response-format :transit
          :headers {"Content-Type" "application/transit+json"}
-         :params {:username username, :password password}
+         :params credentials
          :handler
          (fn [user]
            (dispatch [:login-successful user]))

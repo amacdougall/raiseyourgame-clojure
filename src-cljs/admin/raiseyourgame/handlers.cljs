@@ -14,15 +14,17 @@
 (register-handler
   :current-user-loaded
   (fn [db [_ current-user]]
-    (if (nil? current-user)
-      (assoc db :current-user nil
-                :login-credentials {:username nil, :password nil})
-      (assoc db :current-user current-user))))
+    (assoc db :current-user current-user)))
+
+(register-handler
+  :update-form-value
+  (fn [db [_ form-id k v]]
+    (assoc-in db [:forms form-id k] v)))
 
 (register-handler
   :login
-  (fn [db [_ username password]]
-    (remote/login username password)
+  (fn [db _]
+    (remote/login (select-keys @db [:username :password]))
     db))
 
 (register-handler
