@@ -187,11 +187,10 @@
   ; login
   (POST "/login" request
         :return User
-        :body-params [{email :- String ""}
-                      {username :- String ""}
+        :body-params [username :- String
                       password :- String]
-        :summary "Username or email, and unhashed password."
-        (let [user (user/lookup {:email email, :username username})]
+        :summary "Username and unhashed password."
+        (let [user (user/lookup {:username username})]
           (if (user/valid-password? user password)
             (-> (ok (user/private user))
               (assoc :session (assoc (:session request) :identity user)))
