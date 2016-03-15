@@ -12,20 +12,23 @@
             [devtools.core :as devtools])
   (:import goog.history.Html5History))
 
-(devtools/enable-feature! :sanity-hints :dirac)
-(devtools/install!)
+(defn initialize []
+  (devtools/enable-feature! :sanity-hints :dirac)
+  (devtools/install!)
 
-; Auto-converts links covered by Secretary into client-side routing dispatch.
-(accountant/configure-navigation!
-  {:nav-handler (fn [path] (secretary/dispatch! path))
-   :path-exists? (fn [path] (secretary/locate-route path))})
+  ; Auto-converts links covered by Secretary into client-side routing dispatch.
+  (accountant/configure-navigation!
+    {:nav-handler (fn [path] (secretary/dispatch! path))
+     :path-exists? (fn [path] (secretary/locate-route path))})
 
-(defn main []
+  ; initialize RYG-specific data
   (dispatch-sync [:initialize])
-  (reagent/render [views/main-view]
-                  (.getElementById js/document "app"))
 
   ; run initial client-side route, if any
   (secretary/dispatch! (.-pathname (.-location js/window))))
 
-(main)
+; run reagent/render whenever this namespace is loaded
+(reagent/render [views/main-view] (.getElementById js/document "app"))
+
+; only run init function once on document load
+(.addEventListener js/window "DOMContentLoaded" initialize)
