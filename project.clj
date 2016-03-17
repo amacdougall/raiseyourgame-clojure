@@ -18,6 +18,7 @@
                  [environ "1.0.0"]
 
                  ; data wrangling
+                 [com.rpl/specter "0.9.2"]
                  [com.cognitect/transit-clj "0.8.285"]
                  [camel-snake-kebab "0.3.2"]
                  [clj-time "0.11.0"]

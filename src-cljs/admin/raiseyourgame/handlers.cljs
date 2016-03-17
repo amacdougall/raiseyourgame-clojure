@@ -1,7 +1,8 @@
 (ns raiseyourgame.handlers
   (:require [raiseyourgame.remote :as remote]
             [raiseyourgame.db :refer [initial-state]]
-            [re-frame.core :refer [register-handler dispatch]]))
+            [re-frame.core :refer [register-handler dispatch]]
+            [com.rpl.specter :as s]))
 
 ;; Handler run at app startup. Loads current user, if any. Resets the db to
 ;; db/initial-state.
@@ -38,7 +39,9 @@
 (register-handler
   :login-successful
   (fn [db [_ user]]
-    (assoc db :current-user user)))
+    (->> db
+      (s/setval [:current-user] user)
+      (s/transform [:forms] #(dissoc % :login)))))
 
 (register-handler
   :login-error
