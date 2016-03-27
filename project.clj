@@ -133,10 +133,14 @@
                                  [binaryage/devtools "0.5.2"]
                                  [mvxcvi/puget "0.8.1"]]
                   :plugins [[lein-figwheel "0.5.0-6"]
+                            ; WARNING: this is a locally installed dev version!
+                            ; see (PR number))
+                            [lein-doo "0.1.8-SNAPSHOT"]
                             [com.jakemccrary/lein-test-refresh "0.10.0"]]
                   :test-refresh {:notify-command ["lein-test-refresh-notify"]
                                  :notify-on-success true
                                  :quiet true}
+                  :doo {:paths {:karma "node_modules/karma/bin/karma"}}
                   :cljsbuild
                   {:builds
                    [{:id "admin-dev"
@@ -146,7 +150,18 @@
                                 :asset-path "/js/compiled/admin/out"
                                 :output-to "resources/public/js/compiled/admin/admin.js"
                                 :output-dir "resources/public/js/compiled/admin/out"
-                                :source-map-timestamp true}}
+                                :source-map-timestamp true
+                                :optimizations :none}}
+                    {:id "admin-test"
+                     :source-paths ["src-cljs/admin" "test-cljs/admin"]
+
+                     ; WARNING: including asset-path and output-dir in the
+                     ; compiler settings of test build will prevent `lein doo
+                     ; phantom` and `lein doo slimer` from working. I don't
+                     ; have the grit to even begin to figure out why.
+                     :compiler {:main raiseyourgame.runner
+                                :output-to "resources/public/js/compiled/admin-test/test.js"
+                                :optimizations :none}}
                     {:id "app-dev"
                      :source-paths ["src-cljs/app"]
                      :figwheel {:on-jsload "raiseyourgame.core/main"}
@@ -170,6 +185,7 @@
                   :env {:dev        true
                         :port       3000
                         :nrepl-port 7000}}
+   ; essentially unused; lein test-refresh uses the dev profile
    :project/test {:env {:test       true
                         :port       3001
                         :nrepl-port 7001}}

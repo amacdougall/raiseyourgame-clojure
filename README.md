@@ -22,6 +22,21 @@ webserver with `(start-http-server <port>)` and `(stop-http-server)`.
 `lein test` will run the tests, but you can also use `lein test-refresh` to autorun
 tests on file changes.
 
+## Running CLJS Tests
+
+The CLJS tests use https://github.com/bensu/doo; follow the instructions in the
+Doo readme to set up the Karma test runner. Run the tests under Chrome or
+Firefox:
+
+```
+lein doo <runner> admin-test [once]
+```
+
+The `chrome`, `firefox`, `phantom`, and `slimer` runners are known to be
+working; I didn't trouble myself to set up the `node` runner, since the CLJS
+will only ever run in the browser anyway.
+
+
 ## License
 
-Copyright © 2015 Alan MacDougall
+Copyright © 2016 Alan MacDougall

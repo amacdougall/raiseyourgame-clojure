@@ -10,5 +10,7 @@ profiles.clj
 /.env
 *.log
 resources/public/js
+/out
 .nrepl-port
 scratch.*
+/node_modules
