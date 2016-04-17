@@ -196,6 +196,14 @@
               (assoc :session (assoc (:session request) :identity user)))
             (unauthorized))))
 
+  (POST "/logout" request
+        :summary "Logs out the current user, if any."
+        (let [current (:identity (:session request))]
+          (if current
+            (-> (no-content)
+              (assoc :session (assoc (:session request) :identity nil)))
+            (not-found))))
+
   ; videos by user
   (GET "/:user-id/videos" []
        :return [Video]

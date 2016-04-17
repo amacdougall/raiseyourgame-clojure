@@ -1,3 +1,7 @@
+;; Namespace containing tests of the users API. These are black-box tests; as
+;; much as possible, we should test entirely by making API requests and
+;; inspecting the responses. The details of the underlying system are a
+;; distraction at best.
 (ns raiseyourgame.test.users.api-test
   (:require [raiseyourgame.db.core :as db]
             [raiseyourgame.db.migrations :as migrations]
@@ -261,6 +265,34 @@
     (fixtures/create-test-user!)
     (exercise-login-routes
       (select-keys fixtures/user-values #{:username :password}))))
+
+(deftest test-logout
+  (with-rollback-transaction [t-conn db/conn]
+    (let [user (fixtures/create-test-user!)]
+      ; attempt to log out while already logged out
+      (let [response
+            (-> (session app)
+              (request "/api/users/logout" :request-method :post)
+              :response)]
+        (is (= 404 (:status response))
+            "logging out while already logged out should be an error"))
+      ; log in, then out
+      (let [response
+            (-> (session app)
+              (login-request fixtures/user-values)
+              (request "/api/users/logout" :request-method :post)
+              :response)]
+        (is (= 204 (:status response))
+            "logging out while logged in should succeed"))
+      
+      (let [response
+            (-> (session app)
+              (login-request fixtures/user-values)
+              (request "/api/users/logout" :request-method :post)
+              (request "/api/users/current" :response :status)
+              :response)]
+        (is (= 404 (:status response))
+            "current user should return 404 after logging out")))))
 
 (deftest test-user-update-failures
   (with-rollback-transaction [t-conn db/conn]
