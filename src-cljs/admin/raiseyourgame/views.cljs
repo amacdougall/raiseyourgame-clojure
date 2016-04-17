@@ -30,7 +30,7 @@
          :label "Log In"
          :on-click (fn [event]
                      (.preventDefault event)
-                     (dispatch [:login]))]]])))
+                     (dispatch [:login-form-submit]))]]])))
 
 (defn home []
   [:div "Home stuff."])
