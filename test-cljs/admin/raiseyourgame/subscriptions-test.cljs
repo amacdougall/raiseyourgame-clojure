@@ -6,7 +6,9 @@
 (deftest test-current-user-query
   (let [user {:username "Alan"}
         db {:current-user user}]
-    (is (= (sub/current-user-query db [:current-user-query]) user))))
+    (is (= (sub/current-user-query db [:current-user-query]) user)))
+  (let [db {:current-user nil}]
+    (is (= (sub/current-user-query db [:current-user-query]) nil))))
 
 (deftest test-form-values-query
   (let [values {:name "Alan"}
