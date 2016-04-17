@@ -72,6 +72,37 @@
       (r/login {:username "Ryo" :password "password"})
       (is @dispatched?))))
 
+;; Demonstrate that logout dispatches logout-success or logout-failure.
+(deftest test-logout
+  ;; test success
+  (let [dispatched? (atom false)]
+    (with-redefs
+      [ajax.core/POST
+       (fn [uri {handler :handler}]
+         (is (= uri "/api/users/logout"))
+         (handler {:status 204})) ; call with mock response
+       re-frame.core/dispatch
+       (fn [[event-id]]
+         (is (= event-id :logout-successful))
+         (reset! dispatched? true))]
+      (r/logout)
+      (is @dispatched?)))
+  
+  ;; test failure
+  (let [dispatched? (atom false)]
+    (with-redefs
+      [ajax.core/POST
+       (fn [uri {error-handler :error-handler}]
+         (is (= uri "/api/users/logout"))
+         (error-handler {:status 404})) ; call with mock response
+       re-frame.core/dispatch
+       (fn [[event-id]]
+         (is (= event-id :logout-failed))
+         (reset! dispatched? true))]
+      (r/logout)
+      (is @dispatched?)))
+  )
+
 (deftest test-load-users
   (let [dispatched? (atom false)
         mock-users-response {:page 1, :per-page 30

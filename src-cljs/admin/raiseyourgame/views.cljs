@@ -6,7 +6,9 @@
 (defn status-bar [current-user]
   [:div {:class "status-bar"} ; TODO: BEMify
    (if current-user
-     [:div "Logged in as " [:a {:href "http://www.example.com"} (:username current-user)]]
+     [:div
+      [:div "Logged in as " [:a {:href "http://www.example.com"} (:username current-user)]]
+      [:div [:a {:href (routes/logout)} "Log out"]]]
      [:div [:a {:href "http://www.example.com"} "Log in"]])])
 
 (defn login []

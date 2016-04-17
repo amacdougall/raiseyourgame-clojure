@@ -36,6 +36,14 @@
          :handler #(dispatch [:login-successful %])
          :error-handler #(dispatch [:login-error %])}))
 
+(defn logout
+  "Attempt to log out the current user, if any. Dispatches :logout-successful
+  on success; :logout-failed otherwise."
+  []
+  (POST "/api/users/logout"
+        {:handler #(dispatch [:logout-successful])
+         :error-handler #(dispatch [:logout-failed %])}))
+
 (defn load-users []
   (GET "/api/users"
        {:response-format :transit

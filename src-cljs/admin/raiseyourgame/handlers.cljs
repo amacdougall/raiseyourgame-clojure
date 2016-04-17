@@ -52,6 +52,21 @@
   db)
 (register-handler :login-error login-error)
 
+;; Handle logout by making a logout API request.
+(defn logout [db _]
+  (remote/logout)
+  db)
+(register-handler :logout logout)
+
+;; Handle logout success by clearing the current user from the app db.
+(defn logout-successful [db]
+  (assoc db :current-user nil))
+(register-handler :logout-success logout-success)
+
+(defn logout-failed [db error]
+  (.log js/console "Logout failed! Error: %o" error))
+(register-handler :logout-failed logout-failed)
+
 (defn display-home [db]
   (assoc db :target nil))
 (register-handler :display-home display-home)

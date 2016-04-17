@@ -69,6 +69,19 @@
     (with-redefs [re-frame.core/dispatch (expect-login-error-dispatch :system-error? true)]
       (is (= (h/login-error {} [:login-error {:status 500}]) {})))))
 
+;; Demonstrate that the :logout handler invokes remote/logout.
+(deftest test-logout
+  (let [remote-called? (atom false)
+        db {:current-user {:username "Alan"}}]
+    (with-redefs [raiseyourgame.remote/logout #(reset! remote-called? true)]
+      (is (h/logout db) db)
+      (is @remote-called?))))
+
+;; Demonstrate that logout success clears the current user from the app db.
+(deftest test-logout-successful
+  (let [db {:current-user {:username "Alan"}}]
+    (is (h/logout-successful db) (assoc db :current-user nil))))
+
 ;; Demonstrate that display-home handler sets :target to nil.
 (deftest test-display-home
   (is (= (h/display-home (assoc initial-state :target :something))

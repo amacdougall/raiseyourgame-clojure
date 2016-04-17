@@ -7,3 +7,6 @@
 
 (defroute users "/admin/users" []
   (re-frame/dispatch [:display-user-list]))
+
+(defroute logout "/admin/logout" []
+  (re-frame/dispatch [:logout]))
