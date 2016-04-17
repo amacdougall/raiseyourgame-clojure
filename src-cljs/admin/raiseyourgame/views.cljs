@@ -3,6 +3,12 @@
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]))
 
+(defn status-bar [current-user]
+  [:div {:class "status-bar"} ; TODO: BEMify
+   (if current-user
+     [:div "Logged in as " [:a {:href "http://www.example.com"} (:username current-user)]]
+     [:div [:a {:href "http://www.example.com"} "Log in"]])])
+
 (defn login []
   (let [values (subscribe [:form-values-query :login])
         errors (subscribe [:form-errors-query :login])]
@@ -48,6 +54,7 @@
         current-user (subscribe [:current-user-query])]
     (fn []
       [:div {:class "main"}
+       (status-bar @current-user)
        [:div {:class "nav"}
         [:div [:a {:href (routes/home)} "Home"]]
         [:div [:a {:href (routes/users)} "Users"]]
