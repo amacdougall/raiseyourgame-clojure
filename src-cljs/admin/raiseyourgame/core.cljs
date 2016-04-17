@@ -28,7 +28,7 @@
   (secretary/dispatch! (.-pathname (.-location js/window))))
 
 ; run reagent/render whenever this namespace is loaded
-(reagent/render [views/main-view] (.getElementById js/document "app"))
+(reagent/render [views/main] (.getElementById js/document "app"))
 
 ; only run init function once on document load
 (.addEventListener js/window "DOMContentLoaded" initialize)

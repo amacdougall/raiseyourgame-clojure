@@ -3,7 +3,7 @@
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]))
 
-(defn login-view []
+(defn login []
   (let [values (subscribe [:form-values-query :login])
         errors (subscribe [:form-errors-query :login])]
     (fn []
@@ -16,16 +16,14 @@
          :model (or (:username @values) "")
          :placeholder "Username or email"
          :change-on-blur? false
-         :on-change (fn [s]
-                      (dispatch [:update-form-value :login :username s]))]
+         :on-change #(dispatch [:update-form-value :login :username %])]
         [:label {:for :password} "Password"]
         [rc/input-text
          :attr {:id :password, :name :password, :type :password}
          :model (or (:password @values) "")
          :placeholder ""
          :change-on-blur? false
-         :on-change (fn [s]
-                      (dispatch [:update-form-value :login :password s]))]
+         :on-change #(dispatch [:update-form-value :login :password %])]
         (when (:login-failed? @errors)
           [:div "Error! This login totes failed."])
         [rc/button
@@ -34,20 +32,18 @@
                      (.preventDefault event)
                      (dispatch [:login]))]]])))
 
-(defn home-view []
+(defn home []
   [:div "Home stuff."])
 
-(defn users-view []
-  (let [users (subscribe [:users-query])
-        render-user
-        (fn [user]
-          [:div [:p (str "User name: " (:username user))]])]
+(defn users []
+  (let [user-list (subscribe [:users-query])
+        render-user #([:div [:p (str "User name: " (:username %))]])]
     (fn []
       (into [:div
              [:h1 "User list"]]
-            (map render-user @users)))))
+            (map render-user @user-list)))))
 
-(defn main-view []
+(defn main []
   (let [target-type (subscribe [:target-type-query])
         current-user (subscribe [:current-user-query])]
     (fn []
@@ -57,7 +53,7 @@
         [:div [:a {:href (routes/users)} "Users"]]
         [:div [:a "Videos"]]]
        (if (nil? @current-user)
-         [login-view]
+         [login]
          (condp = @target-type
-           nil    [home-view]
-           :users [users-view]))])))
+           nil    [home]
+           :users [users]))])))
