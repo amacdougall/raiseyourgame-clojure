@@ -80,7 +80,10 @@
 ;; Demonstrate that logout success clears the current user from the app db.
 (deftest test-logout-successful
   (let [db {:current-user {:username "Alan"}}]
-    (is (h/logout-successful db) (assoc db :current-user nil))))
+    (with-redefs [re-frame.core/dispatch
+                  (fn [[event-type]]
+                    (is (= event-type :display-home)))]
+      (is (= (h/logout-successful db) (assoc db :current-user nil))))))
 
 ;; Demonstrate that display-home handler sets :target to nil.
 (deftest test-display-home

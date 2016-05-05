@@ -60,8 +60,9 @@
 
 ;; Handle logout success by clearing the current user from the app db.
 (defn logout-successful [db]
+  (dispatch [:display-home])
   (assoc db :current-user nil))
-(register-handler :logout-success logout-success)
+(register-handler :logout-successful logout-successful)
 
 (defn logout-failed [db error]
   (.log js/console "Logout failed! Error: %o" error))
